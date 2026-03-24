@@ -1,0 +1,93 @@
+clear;
+close all;
+warning off;
+
+% p_list = 5 : 10;
+p_list = 3 : 5;
+num_n = length(p_list);
+
+min_points = 64;
+tol = 1e-5;
+fprintf("min_points: %d\n", min_points);
+fprintf("tol: %e\n", tol);
+
+for it = 1 : num_n
+    p = p_list(it);
+    n = 2^p;
+    N = n^2;
+    M = 8 * N;
+    fprintf("M: %d, N: %d\n", M, N);
+    
+    nx = n;
+    ny = n;
+    x = rand(M, 2);
+
+    % NUDFT2.
+    tic;
+    A = NUDFT2_2D(nx, ny);
+    A.Construct_ID_Full(x, min_points, tol);
+    t_construct = toc;
+    fprintf("Construct time: %.4e\n", t_construct);
+
+    hss_rank = A.Rank();
+    fprintf("HSS rank: %d\n", hss_rank);
+
+    mem_exact = M * N;
+    mem = A.Storage();
+    mem_ratio = mem / mem_exact;
+    fprintf("Mem ratio: %.4e\n", mem_ratio);
+
+    % Apply.
+    u_ex = randn(N, 1) + randn(N, 1) * 1i;
+
+    tic;
+    f_nufft = MY_NUFFT2_2D(u_ex, x, nx, ny);
+    t_nufft = toc;
+    fprintf("NUFFT time: %.4e\n", t_nufft);
+
+    tic;
+    f = A.Apply(u_ex);
+    t_apply = toc;
+    fprintf("Apply time: %.4e\n", t_apply);
+
+    df = f - f_nufft;
+    rel_err = norm(df) / norm(f_nufft);
+    fprintf("Rel err: %.4e\n", rel_err);
+
+    % URV Factorization.
+    tic;
+    A.URV_Factor();
+    t_factor = toc;
+    fprintf("Factor time: %.4e\n", t_factor);
+
+    % Solution: RHS (approximately) in range(A).
+    fprintf("RHS (approximately) in range(A)\n");
+    u_ex = randn(N, 1) + randn(N, 1) * 1i;
+    f_nufft = MY_NUFFT2_2D(u_ex, x, nx, ny);
+
+    tic;
+    u_solve = A.URV_Solve(f_nufft);
+    t_solve = toc;
+    fprintf("Solve time: %.4e\n", t_solve);
+
+    r = f_nufft - MY_NUFFT2_2D(u_solve, x, nx, ny);
+    rel_res = norm(r) / norm(f_nufft);
+    fprintf("Rel res: %e\n", rel_res);
+
+    t_total = t_construct + t_factor + t_solve;
+    fprintf("Total time: %e\n", t_total);
+
+    save("./data/typeII_2d_results_" + string(p) + ".mat", ...
+        "t_construct", ...
+        "hss_rank", ...
+        "mem", "mem_exact", "mem_ratio", ...
+        ...
+        "t_apply", "t_nufft", ...
+        "rel_err", ...
+        ...
+        "t_factor", ...
+        "t_solve", ...
+        "rel_res", ...
+        ...
+        "t_total");
+end

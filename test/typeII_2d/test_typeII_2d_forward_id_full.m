@@ -1,11 +1,13 @@
 %% Basic Settings.
 clear;
 close all;
+warning off;
 
 p = 5;
 
 min_points = 64;
 rank_or_tol = 1e-3;
+
 fprintf("min_points: %d\n", min_points);
 if rank_or_tol >= 1
     fprintf("rank: %d\n", rank_or_tol);
@@ -17,7 +19,7 @@ end
 nx = 2^p;
 ny = 2^p;
 N = nx * ny;
-M = 4 * N;
+M = 8 * N;
 N_offset = 0;
 fprintf("M: %d, N: %d\n", M, N);
 

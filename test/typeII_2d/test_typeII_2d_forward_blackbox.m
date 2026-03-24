@@ -1,24 +1,23 @@
 %% Basic Settings.
 clear;
 close all;
+warning off;
 
 p = 5;
 
 min_points = 64;
-rank_or_tol = 1e-3;
+target_rank = 3 * 2^p * p;
+tol = 1e-5;
+
 fprintf("min_points: %d\n", min_points);
-if rank_or_tol >= 1
-    fprintf("rank: %d\n", rank_or_tol);
-else
-    fprintf("tol: %.4e\n", rank_or_tol);
-end
+fprintf("rank: %d\n", target_rank);
+fprintf("tol: %.4e\n", tol);
 
 %% Generate points x and omega.
 nx = 2^p;
 ny = 2^p;
 N = nx * ny;
-M = 4 * N;
-N_offset = 0;
+M = 8 * N;
 fprintf("M: %d, N: %d\n", M, N);
 
 % Perturbation.
@@ -33,7 +32,7 @@ x = rand(M, 2);
 %% NUDFT2.
 tic;
 A = NUDFT2_2D(nx, ny);
-A.Construct_ID_Full(x, min_points, rank_or_tol);
+A.Construct_BlackBox(x, min_points, target_rank, tol);
 t_construct = toc;
 fprintf("Construct time: %.4e\n", t_construct);
 
@@ -61,23 +60,3 @@ fprintf("Apply time: %.4e\n", t_apply);
 df = f - f_nufft;
 rel_err = norm(df) / norm(f_nufft);
 fprintf("Rel err: %.4e\n", rel_err);
-
-%% URV Factorization.
-tic;
-A.URV_Factor();
-t_factor = toc;
-fprintf("Factor time: %.4e\n", t_factor);
-
-%% Solution: RHS (approximately) in range(A).
-fprintf("RHS (approximately) in range(A)\n");
-u_ex = randn(N, 1) + randn(N, 1) * 1i;
-f_nufft = MY_NUFFT2_2D(u_ex, x, nx, ny);
-
-tic;
-u_solve = A.URV_Solve(f_nufft);
-t_solve = toc;
-fprintf("Solve time: %.4e\n", t_solve);
-
-r = f_nufft - MY_NUFFT2_2D(u_solve, x, nx, ny);
-rel_res = norm(r) / norm(f_nufft);
-fprintf("Rel res: %e\n", rel_res);

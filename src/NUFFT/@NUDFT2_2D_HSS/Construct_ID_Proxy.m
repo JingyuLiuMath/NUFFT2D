@@ -1,4 +1,4 @@
-function Construct(A, rank_or_tol)
+function Construct_ID_Proxy(A, rank_or_tol)
 % Construct
 
 % Jingyu Liu, February 4, 2025.
@@ -9,7 +9,7 @@ arguments (Input)
 end
 
 for level = A.max_level_ : -1 : 1
-    A.ConstructGenerators(level, rank_or_tol);
+    A.ConstructGenerators_ID_Proxy(level, rank_or_tol);
 end
 
 A.ConstructRootGenerators();

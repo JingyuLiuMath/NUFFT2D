@@ -57,13 +57,13 @@ if A.level_ == level
     end
 
     % Generate proxy surface.
-    col_x_start = A.pos_start_ / N;
-    col_x_end = A.pos_end_ / N;
-    x_prony = GenerateProxySurface(N, ...
-        col_x_start - half_length, ...
-        col_x_end + half_length, ...
+    col_pt_start = A.pos_start_ / N;
+    col_pt_end = A.pos_end_ / N;
+    proxy = GenerateProxySurface(N, ...
+        col_pt_start - half_length, ...
+        col_pt_end + half_length, ...
         proxy_size);
-    proxy_surface = exp(-2 * pi * 1i * x_prony);
+    proxy_surface = exp(-2 * pi * 1i * proxy);
 
     % Construct U using proxy surface.
     z_I = exp(-2 * pi * 1i * A.row_x_);  % row points.
