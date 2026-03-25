@@ -22,6 +22,8 @@ ny = A.ny_;
 N = A.col_global_size_;
 x_kernel_fun = @(z, w) NUFFT2_Kernel(z, w, nx);
 y_kernel_fun = @(z, w) NUFFT2_Kernel(z, w, ny);
+x_kernel_fun_real = @(z, w) NUFFT2_Kernel_Real(z, w, nx);
+y_kernel_fun_real = @(z, w) NUFFT2_Kernel_Real(z, w, ny);
 
 if A.level_ == level
     if A.leaf_ == 0
@@ -32,14 +34,16 @@ if A.level_ == level
             A.row_ind_ = [A.row_ind_; A.children_{i}.row_ind_];
             A.col_ind_ = [A.col_ind_; A.children_{i}.col_ind_];
             c_xy_I = xy(A.children_{i}.row_ind_, :);
-            c_gamma_x_I = exp(-2 * pi * 1i * c_xy_I(:, 1));
-            c_gamma_y_I = exp(-2 * pi * 1i * c_xy_I(:, 2));
+            % c_gamma_x_I = exp(-2 * pi * 1i * c_xy_I(:, 1));
+            % c_gamma_y_I = exp(-2 * pi * 1i * c_xy_I(:, 2));
             for j = [1 : (i - 1), (i + 1) : A.num_children_]
                 c_col_pos_J = col_pos(A.children_{j}.col_ind_, :);
-                c_xi_x_J = exp(-2 * pi * 1i * c_col_pos_J(:, 1) / nx);
-                c_xi_y_J = exp(-2 * pi * 1i * c_col_pos_J(:, 2) / ny);
-                Ax = x_kernel_fun(c_gamma_x_I, c_xi_x_J);
-                Ay = y_kernel_fun(c_gamma_y_I, c_xi_y_J);
+                % c_xi_x_J = exp(-2 * pi * 1i * c_col_pos_J(:, 1) / nx);
+                % c_xi_y_J = exp(-2 * pi * 1i * c_col_pos_J(:, 2) / ny);
+                % Ax = x_kernel_fun(c_gamma_x_I, c_xi_x_J);
+                % Ay = y_kernel_fun(c_gamma_y_I, c_xi_y_J);
+                Ax = x_kernel_fun_real(c_xy_I(:, 1), c_col_pos_J(:, 1) / nx);
+                Ay = y_kernel_fun_real(c_xy_I(:, 2), c_col_pos_J(:, 2) / ny);
                 A.Bmat_{i, j} = Ax .* Ay;
             end
         end
@@ -47,31 +51,35 @@ if A.level_ == level
 
     % Construct U.
     xy_I = xy(A.row_ind_, :);
-    gamma_x_I = exp(-2 * pi * 1i * xy_I(:, 1));
-    gamma_y_I = exp(-2 * pi * 1i * xy_I(:, 2));
+    % gamma_x_I = exp(-2 * pi * 1i * xy_I(:, 1));
+    % gamma_y_I = exp(-2 * pi * 1i * xy_I(:, 2));
     Jc = (1 : N)';
     Jc(A.self_col_ind_) = [];
     Jc = intersect(Jc, col_active);
     col_pos_Jc = col_pos(Jc, :);
-    xi_x_Jc = exp(-2 * pi * 1i * col_pos_Jc(:, 1) / nx);
-    xi_y_Jc = exp(-2 * pi * 1i * col_pos_Jc(:, 2) / ny);
-    Ax_I_Jc = x_kernel_fun(gamma_x_I, xi_x_Jc);
-    Ay_I_Jc = y_kernel_fun(gamma_y_I, xi_y_Jc);
+    % xi_x_Jc = exp(-2 * pi * 1i * col_pos_Jc(:, 1) / nx);
+    % xi_y_Jc = exp(-2 * pi * 1i * col_pos_Jc(:, 2) / ny);
+    % Ax_I_Jc = x_kernel_fun(gamma_x_I, xi_x_Jc);
+    % Ay_I_Jc = y_kernel_fun(gamma_y_I, xi_y_Jc);
+    Ax_I_Jc = x_kernel_fun_real(xy_I(:, 1), col_pos_Jc(:, 1) / nx);
+    Ay_I_Jc = y_kernel_fun_real(xy_I(:, 2), col_pos_Jc(:, 2) / ny);
     A_I_Jc = Ax_I_Jc .* Ay_I_Jc;
     [row_sk, U, A.row_rank_] = LowRank_Row_ID(A_I_Jc, rank_or_tol);
 
     % Construct V.
     col_pos_J = col_pos(A.col_ind_, :);
-    xi_x_J = exp(-2 * pi * 1i * col_pos_J(:, 1) / nx);
-    xi_y_J = exp(-2 * pi * 1i * col_pos_J(:, 2) / ny);
+    % xi_x_J = exp(-2 * pi * 1i * col_pos_J(:, 1) / nx);
+    % xi_y_J = exp(-2 * pi * 1i * col_pos_J(:, 2) / ny);
     Ic = (1 : M)';
     Ic(A.self_row_ind_) = [];
     Ic = intersect(Ic, row_active);
     xy_Ic = xy(Ic, :);
-    gamma_x_Ic = exp(-2 * pi * 1i * xy_Ic(:, 1));
-    gamma_y_Ic = exp(-2 * pi * 1i * xy_Ic(:, 2));
-    Ax_Ic_J = x_kernel_fun(gamma_x_Ic, xi_x_J);
-    Ay_Ic_J = y_kernel_fun(gamma_y_Ic, xi_y_J);
+    % gamma_x_Ic = exp(-2 * pi * 1i * xy_Ic(:, 1));
+    % gamma_y_Ic = exp(-2 * pi * 1i * xy_Ic(:, 2));
+    % Ax_Ic_J = x_kernel_fun(gamma_x_Ic, xi_x_J);
+    % Ay_Ic_J = y_kernel_fun(gamma_y_Ic, xi_y_J);
+    Ax_Ic_J = x_kernel_fun_real(xy_Ic(:, 1), col_pos_J(:, 1) / nx);
+    Ay_Ic_J = y_kernel_fun_real(xy_Ic(:, 2), col_pos_J(:, 2) / ny);
     A_Ic_J = Ax_Ic_J .* Ay_Ic_J;
     [col_sk, V, A.col_rank_] = LowRank_ID(A_Ic_J, rank_or_tol);
 
@@ -87,8 +95,10 @@ if A.level_ == level
         A.Vmat_ = V;
 
         % Assign full mat.
-        Ax = x_kernel_fun(gamma_x_I, xi_x_J);
-        Ay = y_kernel_fun(gamma_y_I, xi_y_J);
+        % Ax = x_kernel_fun(gamma_x_I, xi_x_J);
+        % Ay = y_kernel_fun(gamma_y_I, xi_y_J);
+        Ax = x_kernel_fun_real(xy_I(:, 1), col_pos_J(:, 1) / nx);
+        Ay = y_kernel_fun_real(xy_I(:, 2), col_pos_J(:, 2) / ny);
         A.Amat_ = Ax .* Ay;
     else
         % Assign R and W.

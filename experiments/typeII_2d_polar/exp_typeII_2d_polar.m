@@ -15,14 +15,25 @@ for it = 1 : num_n
     p = p_list(it);
     n = 2^p;
     N = n^2;
-    M = 8 * N;
+    
+    c = 0.5 + 1i * 0.5;
+    r = (0 : (2 * n - 1))' / (2 * n);
+    r = r * sqrt(2) / 2;
+    t = (0 : (2 * n - 1))' / (2 * n);
+    z = c + r .* exp(2 * pi * 1i * t');
+    z = z(:);
+    x = [real(z), imag(z)];
+    x = x(x(:, 1) >= 0, :);
+    x = x(x(:, 1) < 1, :);
+    x = x(x(:, 2) >= 0, :);
+    x = x(x(:, 2) < 1, :);
+    M = size(x, 1);
 
     fprintf("\n\n");
     fprintf("M: %d, N: %d\n", M, N);
     
     nx = n;
     ny = n;
-    x = rand(M, 2);
 
     % NUDFT2.
     tic;
