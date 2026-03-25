@@ -41,7 +41,7 @@ fprintf("cond(A): %.4e\n", kappa_A);
 %% NUDFT2.
 tic;
 A = NUDFT2_2D(nx, ny);
-A.Construct_ID_Full(x, min_points, rank_or_tol);
+A.Construct_ID_Algebraic(x, min_points, rank_or_tol);
 t_construct = toc;
 fprintf("Construct time: %.4e\n", t_construct);
 
