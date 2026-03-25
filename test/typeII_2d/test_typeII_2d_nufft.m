@@ -1,26 +1,20 @@
-% *************************************************************************
-% Basic Settings.
+%% Basic Settings.
 clear;
 close all;
 
 p = 5;
-% -------------------------------------------------------------------------
 
-
-% *************************************************************************
-% Generate points x and omega.
+%% Generate points x and omega.
 nx = 2^p;
-ny = 2^(p + 1);
+ny = 2^p;
 N = nx * ny;
 M = 2 * N;
 fprintf("M: %d, N: %d\n", M, N);
 
 % Random
 xy = rand(M, 2);
-% -------------------------------------------------------------------------
 
-% *************************************************************************
-% Apply.
+%% Apply.
 u_ex = randn(N, 1) + randn(N, 1) * 1i;
 A = NUDFT2_2D_Matrix(xy, nx, ny);
 
@@ -37,5 +31,3 @@ rel_apply_err_norm = norm(df) / norm(f_ex);
 fprintf("Relative application error: %.4e\n", rel_apply_err_norm);
 fprintf("Exact comp time: %.4e\n", t_ex);
 fprintf("NUFFT comp time: %.4e\n", t_nufft);
-% -------------------------------------------------------------------------
-

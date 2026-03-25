@@ -60,7 +60,7 @@ if A.level_ == level
     A_I_Jc = Ax_I_Jc .* Ay_I_Jc;
     [row_sk, U, A.row_rank_] = LowRank_Row_ID(A_I_Jc, rank_or_tol);
 
-    % Construct V using proxy surface.
+    % Construct V.
     col_pos_J = col_pos(A.col_ind_, :);
     xi_x_J = exp(-2 * pi * 1i * col_pos_J(:, 1) / nx);
     xi_y_J = exp(-2 * pi * 1i * col_pos_J(:, 2) / ny);
@@ -74,6 +74,12 @@ if A.level_ == level
     Ay_Ic_J = y_kernel_fun(gamma_y_Ic, xi_y_J);
     A_Ic_J = Ax_Ic_J .* Ay_Ic_J;
     [col_sk, V, A.col_rank_] = LowRank_ID(A_Ic_J, rank_or_tol);
+
+    % figure();
+    % plot(xy_I(:, 1), xy_I(:, 2), "rx", "DisplayName", "row pts");
+    % hold on;
+    % plot(col_pos_J(:, 1) / nx, col_pos_J(:, 2) / ny, "go", "DisplayName", "col pts");
+    % keyboard;
 
     if A.leaf_ == 1
         % Assign U and V.

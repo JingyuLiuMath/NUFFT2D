@@ -23,9 +23,8 @@ theta_z = angle(z);
 xi = z * w';
 theta = angle(xi);
 k_z_w = expm1(theta_z * N * 1i) ./ expm1(theta * 1i) / N;
-if max(isnan(k_z_w(:))) == 1
-    keyboard;
-end
+% tmp_ind = find(abs(k_z_w) < 1e-12);
+% k_z_w(tmp_ind) = 0;
 
 % xi = z * w';
 % theta = angle(xi);

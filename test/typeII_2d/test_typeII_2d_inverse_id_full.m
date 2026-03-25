@@ -19,15 +19,8 @@ end
 nx = 2^p;
 ny = 2^p;
 N = nx * ny;
-M = 8 * N;
-N_offset = 0;
+M = 2 * N;
 fprintf("M: %d, N: %d\n", M, N);
-
-% Perturbation.
-% perturb_size = 0.2;
-% x = (0 : (M - 1))' / M;
-% x = x + (rand(M, 1) * 2 - 1) * perturb_size / M;
-% x = sort(x);
 
 % Random
 x = rand(M, 2);

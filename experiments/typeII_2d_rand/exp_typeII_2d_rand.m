@@ -2,7 +2,7 @@ clear;
 close all;
 warning off;
 
-% p_list = 5 : 10;
+% p_list = 5 : 9;
 p_list = 3 : 5;
 num_n = length(p_list);
 
