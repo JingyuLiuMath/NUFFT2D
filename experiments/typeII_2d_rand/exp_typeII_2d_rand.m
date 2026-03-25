@@ -6,16 +6,14 @@ warning off;
 p_list = 3 : 5;
 num_n = length(p_list);
 
-min_points = 64;
 tol = 1e-5;
-fprintf("min_points: %d\n", min_points);
 fprintf("tol: %e\n", tol);
 
 for it = 1 : num_n
     p = p_list(it);
     n = 2^p;
     N = n^2;
-    M = 8 * N;
+    M = 2 * N;
 
     fprintf("\n\n");
     fprintf("M: %d, N: %d\n", M, N);
@@ -23,6 +21,9 @@ for it = 1 : num_n
     nx = n;
     ny = n;
     x = rand(M, 2);
+
+    min_points = n * p;
+    fprintf("min_points: %d\n", min_points);
 
     % NUDFT2.
     tic;

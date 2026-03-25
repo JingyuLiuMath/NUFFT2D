@@ -6,9 +6,7 @@ warning off;
 p_list = 3 : 5;
 num_n = length(p_list);
 
-min_points = 64;
 tol = 1e-5;
-fprintf("min_points: %d\n", min_points);
 fprintf("tol: %e\n", tol);
 
 for it = 1 : num_n
@@ -16,17 +14,7 @@ for it = 1 : num_n
     n = 2^p;
     N = n^2;
     
-    c = 0.5 + 1i * 0.5;
-    r = (0 : (2 * n - 1))' / (2 * n);
-    r = r * sqrt(2) / 2;
-    t = (0 : (2 * n - 1))' / (2 * n);
-    z = c + r .* exp(2 * pi * 1i * t');
-    z = z(:);
-    x = [real(z), imag(z)];
-    x = x(x(:, 1) >= 0, :);
-    x = x(x(:, 1) < 1, :);
-    x = x(x(:, 2) >= 0, :);
-    x = x(x(:, 2) < 1, :);
+    x = PolarGrid(n);
     M = size(x, 1);
 
     fprintf("\n\n");
@@ -34,6 +22,9 @@ for it = 1 : num_n
     
     nx = n;
     ny = n;
+
+    min_points = n * p;
+    fprintf("min_points: %d\n", min_points);
 
     % NUDFT2.
     tic;

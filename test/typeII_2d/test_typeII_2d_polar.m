@@ -22,26 +22,16 @@ ny = n;
 N = nx * ny;
 
 % Random
-c = 0.5 + 1i * 0.5;
-r = (0 : (2 * n - 1))' / (2 * n);
-r = r * sqrt(2) / 2;
-t = (0 : (2 * n - 1))' / (2 * n);
-z = c + r .* exp(2 * pi * 1i * t');
-z = z(:);
-x = [real(z), imag(z)];
-x = x(x(:, 1) >= 0, :);
-x = x(x(:, 1) < 1, :);
-x = x(x(:, 2) >= 0, :);
-x = x(x(:, 2) < 1, :);
+x = PolarGrid(n);
 M = size(x, 1);
+
+fprintf("M: %d, N: %d\n", M, N);
 
 figure();
 plot(x(:, 1), x(:, 2), "Marker", ".", "LineStyle", "none");
 axis equal;
 xlim([0, 1]);
 ylim([0, 1]);
-
-fprintf("M: %d, N: %d\n", M, N);
 
 %% NUDFT2_Matrix.
 A = NUDFT2_2D_Matrix(x, nx, ny);
