@@ -1,8 +1,8 @@
 #!/bin/bash
 
-#SBATCH --job-name=polarid_full
-#SBATCH --output=polarid_full_%j.out
-#SBATCH --error=polarid_full_%j.err
+#SBATCH --job-name=polar
+#SBATCH --output=polar_%j.out
+#SBATCH --error=polar_%j.err
 #SBATCH --nodelist=bigMem0
 #SBATCH --time=18:00:00
 #SBATCH --cpus-per-task=16
