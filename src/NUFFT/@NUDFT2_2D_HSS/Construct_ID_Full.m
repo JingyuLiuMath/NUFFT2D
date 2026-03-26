@@ -10,14 +10,14 @@ arguments (Input)
     rank_or_tol (1, 1) double;
 end
 
-row_active = (1 : A.row_global_size_)';
-col_active = (1 : A.col_global_size_)';
+row_inact = [];
+col_inact = [];
 for level = A.max_level_ : -1 : 1
     A.ConstructGenerators_ID_Full(...
         xy, col_pos, ...
-        row_active, col_active, ...
+        row_inact, col_inact, ...
         level, rank_or_tol);
-    [row_active, col_active] = A.CollectActive(level);
+    [row_inact, col_inact] = A.Deactivate(level, row_inact, col_inact);
 end
 
 A.ConstructRootGenerators2(xy, col_pos);

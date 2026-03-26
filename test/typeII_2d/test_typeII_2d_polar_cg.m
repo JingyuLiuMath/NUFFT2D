@@ -42,8 +42,8 @@ tic;
 [u_solve, flag, relres, iter, resvec] = INUDFT2_2D_CG(x, nx, ny, f_nufft, tol, maxit);
 t_solve = toc;
 fprintf("Solve time: %.4e\n", t_solve);
+fprintf("Iter number: %d\n", iter);
 
 r = f_nufft - MY_NUFFT2_2D(u_solve, x, nx, ny);
 rel_res = norm(r) / norm(f_nufft);
 fprintf("Rel res: %e\n", rel_res);
-

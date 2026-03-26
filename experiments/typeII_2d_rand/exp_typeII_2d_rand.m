@@ -28,7 +28,7 @@ for it = 1 : num_n
     % NUDFT2.
     tic;
     A = NUDFT2_2D(nx, ny);
-    A.Construct_ID_Full(x, min_points, tol);
+    A.Construct_ID_Algebraic(x, min_points, tol);
     t_construct = toc;
     fprintf("Construct time: %.4e\n", t_construct);
 

@@ -20,6 +20,6 @@ for j = 1 : (k - 1)
     d(j + 1) = beta(j + 1) - alpha(j + 1);
 end
 
-[col_sk, V, k] = LowRank_ID(d .* Y', k);
+[col_sk, V, k, ~] = LowRank_ID(d .* Y', k);
 
 end

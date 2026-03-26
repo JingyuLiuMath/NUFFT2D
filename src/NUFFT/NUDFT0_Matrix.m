@@ -1,12 +1,9 @@
 function A = NUDFT0_Matrix(m, n)
-% NUDFT_Matrix
-
 
 arguments (Input)
     m (1, 1) double;
     n (1, 1) double;
 end
-
 
 arguments (Output)
     A (:, :) double;

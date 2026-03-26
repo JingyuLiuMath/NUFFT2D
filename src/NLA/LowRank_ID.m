@@ -1,4 +1,4 @@
-function [sk, V, k] = LowRank_ID(A, rank_or_tol)
+function [sk, V, k, re] = LowRank_ID(A, rank_or_tol)
 % LowRank_ID Interpolative decomposition. A = A(:, sk) * V'.
 
 % Jingyu Liu, November 19, 2024.
@@ -15,6 +15,7 @@ arguments (Output)
     sk (1, :) double;
     V (:, :) double;
     k (1, 1) double;
+    re (1, :) double;
 end
 
 [sk, re, T, k] = ID(A, rank_or_tol);

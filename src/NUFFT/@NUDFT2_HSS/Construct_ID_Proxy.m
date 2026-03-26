@@ -1,7 +1,4 @@
 function Construct_ID_Proxy(A, rank_or_tol)
-% Construct
-
-% Jingyu Liu, November 24, 2024.
 
 arguments (Input)
     A NUDFT2_HSS;

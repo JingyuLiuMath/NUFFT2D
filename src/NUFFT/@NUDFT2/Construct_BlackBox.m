@@ -1,7 +1,4 @@
 function Construct_BlackBox(A, x, min_points, target_rank, tol)
-% BlackBoxConstruct
-
-% Jingyu Liu, December 8, 2024.
 
 arguments (Input)
     A NUDFT2;

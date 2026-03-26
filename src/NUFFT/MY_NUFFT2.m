@@ -1,12 +1,7 @@
 function f = MY_NUFFT2(u, x, N, method, acc)
 % MY_NUFFT2
 
-% f[j] = \sum_{k = 0}^{N - 1} exp(-2 * pi * 1i * k * x[j]) u[k]
-% for 0 <= j < M.
-% N = size(u, 1).
-% M = size(f, 1) = length(x).
-
-% Jingyu Liu, November 17, 2024.
+% f[j] = \sum_{k = 0}^{N - 1} exp(-2 * pi * 1i * x[j] * k) u[k]
 
 arguments (Input)
     u (:, :) double;

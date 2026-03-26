@@ -5,8 +5,6 @@ classdef (Abstract) HSS < handle
         % *****************************************************************
         % PROPERTY: Tree.
         level_ (1, 1) double = 0;
-        level_order_ (1, 1) double = 0;
-        node_order_ (1, 1) double = 0;
         leaf_ (1, 1) double = 0;
         max_level_ (1, 1) double = 0;
         children_ (1, :) cell;
@@ -21,6 +19,8 @@ classdef (Abstract) HSS < handle
         col_size_ (1, 1) double = 0;
         row_rank_ (1, 1) double = 0;  % size(U, 2), rank of the col space.
         col_rank_ (1, 1) double = 0;  % size(V, 2), rank of the row space.
+        row_offset_ (1, 1) double = 0;
+        col_offset_ (1, 1) double = 0;
         % -----------------------------------------------------------------
 
         % *****************************************************************

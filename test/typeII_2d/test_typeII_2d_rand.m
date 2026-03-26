@@ -5,10 +5,8 @@ warning off;
 
 p = 5;
 
-min_points = 64;
 rank_or_tol = 1e-3;
 
-fprintf("min_points: %d\n", min_points);
 if rank_or_tol >= 1
     fprintf("rank: %d\n", rank_or_tol);
 else
@@ -16,16 +14,32 @@ else
 end
 
 %% Generate points x and omega.
-nx = 2^p;
-ny = 2^p;
+n = 2^p;
+nx = n;
+ny = n;
 N = nx * ny;
-M = 2 * N;
-fprintf("M: %d, N: %d\n", M, N);
+M = 4 * N;
 
 % Random
 x = rand(M, 2);
 
+fprintf("M: %d, N: %d\n", M, N);
+
+figure();
+plot(x(:, 1), x(:, 2), "Marker", ".", "LineStyle", "none");
+axis equal;
+xlim([0, 1]);
+ylim([0, 1]);
+
+%% NUDFT2_Matrix.
+A = NUDFT2_2D_Matrix(x, nx, ny);
+kappa_A = cond(A);
+fprintf("cond(A): %.4e\n", kappa_A);
+
 %% NUDFT2.
+min_points = p * n;
+fprintf("min_points: %d\n", min_points);
+
 tic;
 A = NUDFT2_2D(nx, ny);
 A.Construct_ID_Full(x, min_points, rank_or_tol);

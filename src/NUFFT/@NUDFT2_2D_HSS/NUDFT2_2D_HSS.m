@@ -1,7 +1,4 @@
 classdef NUDFT2_2D_HSS < HSS
-    % NUDFT2_2D_HSS
-
-    % Jingyu Liu, January 27, 2025.
 
     properties
         % *****************************************************************
@@ -28,8 +25,8 @@ classdef NUDFT2_2D_HSS < HSS
         % PROPERTY: HSS row and cols.
         row_ind_ (:, 1);
         col_ind_ (:, 1);
-        self_row_ind_ (:, 1);
-        self_col_ind_ (:, 1);
+        row_re_ (:, 1);
+        col_re_ (:, 1);
         % -----------------------------------------------------------------
     end
     
@@ -38,7 +35,7 @@ classdef NUDFT2_2D_HSS < HSS
                  nx, ny, ...
                  x_pos_start, x_pos_end, ...
                  y_pos_start, y_pos_end, ...
-                 level, level_order, node_order)
+                 level, row_offset, col_offset)
              arguments (Input)
                  nx (1, 1) double;
                  ny (1, 1) double
@@ -47,8 +44,8 @@ classdef NUDFT2_2D_HSS < HSS
                  y_pos_start (1, 1) double = 0;
                  y_pos_end (1, 1) double = ny - 1;
                  level (1, 1) double = 0;
-                 level_order (1, 1) double = 0;
-                 node_order (1, 1) double = 0;
+                 row_offset (1, 1) double = 0;
+                 col_offset (1, 1) double = 0;
              end
 
              arguments (Output)
@@ -67,8 +64,8 @@ classdef NUDFT2_2D_HSS < HSS
              A.y_col_size_ = y_pos_end - y_pos_start + 1;
              A.col_size_ = A.x_col_size_ * A.y_col_size_;
              A.level_ = level;
-             A.level_order_ = level_order;
-             A.node_order_ = node_order;
+             A.row_offset_ = row_offset;
+             A.col_offset_ = col_offset;
 
          end
          

@@ -17,6 +17,6 @@ for j = 1 : (k - 1)
     d(j + 1) = beta(j + 1) - alpha(j + 1);
 end
 
-[row_sk, U, k] = LowRank_Row_ID(W .* d.', k);
+[row_sk, U, k, ~] = LowRank_Row_ID(W .* d.', k);
 
 end

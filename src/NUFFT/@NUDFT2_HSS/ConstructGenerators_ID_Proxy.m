@@ -1,7 +1,4 @@
 function ConstructGenerators_ID_Proxy(A, level, rank_or_tol)
-% ConstructGenerators
-
-% Jingyu Liu, November 24, 2024.
 
 arguments (Input)
     A NUDFT2_HSS;
@@ -68,7 +65,7 @@ if A.level_ == level
     % Construct U using proxy surface.
     z_I = exp(-2 * pi * 1i * A.row_x_);  % row points.
     A_I_proxy = kernel_fun(z_I, proxy_surface);
-    [row_sk, U, A.row_rank_] ...
+    [row_sk, U, A.row_rank_, ~] ...
         = LowRank_Row_ID(A_I_proxy, rank_or_tol);
     % *****************************************************************
     % Plot row points and proxy surface.
@@ -91,7 +88,7 @@ if A.level_ == level
     % Construct V using proxy surface.
     w_J = exp(-2 * pi * 1i * A.col_pos_ / N);  % col points.
     A_proxy_J = kernel_fun(proxy_surface, w_J);
-    [col_sk, V, A.col_rank_] ...
+    [col_sk, V, A.col_rank_, ~] ...
         = LowRank_ID(A_proxy_J, rank_or_tol);
 
     if A.leaf_ == 1

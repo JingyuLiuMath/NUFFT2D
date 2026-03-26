@@ -1,13 +1,10 @@
 function A = NUDFT2_2D_Matrix(xy, nx, ny)
-% NUDFT_Matrix
-
 
 arguments (Input)
     xy (:, 2) double;
     nx (1, 1) double;
     ny (1, 1) double;
 end
-
 
 arguments (Output)
     A (:, :) double;

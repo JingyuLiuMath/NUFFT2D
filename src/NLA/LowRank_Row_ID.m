@@ -1,4 +1,4 @@
-function [sk, U, k] = LowRank_Row_ID(A, rank_or_tol)
+function [sk, U, k, re] = LowRank_Row_ID(A, rank_or_tol)
 % LowRank_Row_ID Interpolative decomposition. A = U * A(sk, :).
 
 % Jingyu Liu, November 19, 2024.
@@ -15,6 +15,7 @@ arguments (Output)
     sk (1, :) double;
     U (:, :) double;
     k (1, 1) double;
+    re (1, :) double;
 end
 
 [sk, re, Z, k] = Row_ID(A, rank_or_tol);

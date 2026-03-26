@@ -1,5 +1,4 @@
 function K = NUFFT2_Kernel_Real(x, y, N)
-% NUFFT2_Kernel_Real
 
 arguments (Input)
     x (:, 1) double;

@@ -1,14 +1,10 @@
 classdef NUDFT2_2D < handle
-    % NUDFT2_2D
-
-    % Jingyu Liu, January 27, 2025.
-
-    % NUDFT2-2D Problem.
-    % f(j) = \sum_{k1 = 0}^{N1 - 1} \sum_{k2 = 0}^{N2 - 1}
-    %          exp(-2 * pi * 1i * (x(j, 1) * k1 + x(j, 2) *k2),
-    % j = 0, 1, ..., M - 1.
-    % where x[j] is non-uniform.
-
+    
+    % A[j, (kx, ky)] = exp(-2 * pi * 1i * x[j] * kx) ...
+    %     * exp(-2 * pi * 1i * y[j] * ky),
+    % 0 <= j < M, 0 <= kx < nx, 0 <= ky < ny.
+    % N = nx * ny.
+    
     % Row size: M.
     % Col size: N.
     

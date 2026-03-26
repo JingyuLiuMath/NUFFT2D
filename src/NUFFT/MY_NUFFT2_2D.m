@@ -1,6 +1,11 @@
 function f = MY_NUFFT2_2D(u, xy, nx, ny, method, acc)
 % MY_NUFFT2_2D
 
+% f[j] = \sum_{kx = 0}^{nx - 1} \sum_{ky = 0}^{ny - 1} ...
+%     exp(-2 * pi * 1i * x[j] * kx)
+%     * exp(-2 * pi * 1i * y[j] * ky)
+%     * u[kx, ky].
+
 arguments (Input)
     u (:, :) double;
     xy (:, 2) double;

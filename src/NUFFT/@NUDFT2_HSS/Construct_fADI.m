@@ -1,7 +1,4 @@
 function Construct_fADI(A, tol)
-% Construct_fADI
-
-% Jingyu Liu, April 14, 2025.
 
 arguments (Input)
     A NUDFT2_HSS;

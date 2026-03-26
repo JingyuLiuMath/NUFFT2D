@@ -1,7 +1,4 @@
 function ConstructRootGenerators(A)
-% ConstructGenerators
-
-% Jingyu Liu, November 20, 2024.
 
 arguments (Input)
     A NUDFT2_HSS;

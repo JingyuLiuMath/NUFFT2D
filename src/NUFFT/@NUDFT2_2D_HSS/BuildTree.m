@@ -52,6 +52,7 @@ else
     q = zeros(A.col_size_, 1);
     it = 0;
     row_offset = 0;
+    col_offset = 0;
     y_col_offset = 0;
     I = cell(1, A.num_children_);
     for ity = 1 : 2
@@ -60,14 +61,15 @@ else
         for itx = 1 : 2
             it = it + 1;
             curr_x_col_size = x_child_size(itx);
+            curr_col_size = curr_x_col_size * curr_y_col_size;
             A.children_{it} = NUDFT2_2D_HSS(A.nx_, A.ny_, ...
                 A.x_pos_start_ + x_col_offset, ...
                 A.x_pos_start_ + x_col_offset + curr_x_col_size - 1, ...
                 A.y_pos_start_ + y_col_offset, ...
                 A.y_pos_start_ + y_col_offset + curr_y_col_size - 1, ...
                 A.level_ + 1, ...
-                A.level_order_ * 4 + it - 1, ...
-                A.node_order_ * 4 + it);
+                A.row_offset_ + row_offset, ...
+                A.col_offset_ + col_offset);
 
             Ix = FindID_ExtendArc(...
                 A.nx_, ...
@@ -84,6 +86,7 @@ else
             p((row_offset + 1) : (row_offset + curr_row_size)) = I{it};
 
             row_offset = row_offset + curr_row_size;
+            col_offset = col_offset + curr_col_size;
             x_col_offset = x_col_offset + curr_x_col_size;
         end
         y_col_offset = y_col_offset + curr_y_col_size;

@@ -1,7 +1,4 @@
 function [u, flag, relres, iter, resvec] = INUDFT2_CG(x, N, f, tol, maxit)
-% INUDFT_CG
-
-% Jingyu Liu, March 4, 2025.
 
 arguments (Input)
     x (:, 1) double;

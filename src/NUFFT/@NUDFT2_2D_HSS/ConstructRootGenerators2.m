@@ -1,7 +1,4 @@
 function ConstructRootGenerators2(A, xy, col_pos)
-% ConstructGenerators
-
-% Jingyu Liu, November 20, 2024.
 
 arguments (Input)
     A NUDFT2_2D_HSS;
@@ -19,6 +16,9 @@ x_kernel_fun_real = @(z, w) NUFFT2_Kernel_Real(z, w, nx);
 y_kernel_fun_real = @(z, w) NUFFT2_Kernel_Real(z, w, ny);
 
 if A.leaf_ == 1
+    A.row_ind_ = A.row_offset_ + (1 : A.row_size_)';
+    A.col_ind_ = A.col_offset_ + (1 : A.col_size_)';
+    
     xy_I = xy(A.row_ind_, :);
     % gamma_x_I = exp(-2 * pi * 1i * xy_I(:, 1));
     % gamma_y_I = exp(-2 * pi * 1i * xy_I(:, 2));

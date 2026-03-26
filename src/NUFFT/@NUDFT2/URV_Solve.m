@@ -1,7 +1,4 @@
 function u = URV_Solve(A, f)
-% URV_Solve
-
-% Jingyu Liu, December 8, 2024.
 
 arguments (Input)
     A NUDFT2;

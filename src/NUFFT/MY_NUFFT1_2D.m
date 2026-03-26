@@ -1,12 +1,10 @@
 function f = MY_NUFFT1_2D(u, omega, mx, my, method, acc)
-% MY_NUFFT1
+% MY_NUFFT1_2D
 
-% f[j] = \sum_{k = 0}^{N - 1} exp(-2 * pi * 1i * (j / M) * omega[k]) u[k]
-% for 0 <= j < M.
-% N = size(u, 1) = length(omega).
-% M = size(f, 1).
-
-% Jingyu Liu, November 17, 2024.
+% f[k] = \sum_{jx = 0}^{mx - 1} \sum_{jy = 0}^{my - 1} ...
+%     exp(-2 * pi * 1i * (jx / mx) * omega[k, 1]) ...
+%     * exp(-2 * pi * 1i * (jy / my) * omega[k, 2]) ...
+%     * u[jx, jy]
 
 arguments (Input)
     u (:, :) double;

@@ -1,7 +1,4 @@
 function Construct_ID_Full(A, xy, min_points, rank_or_tol)
-% Construct
-
-% Jingyu Liu, December 8, 2024.
 
 arguments (Input)
     A NUDFT2_2D;
@@ -21,10 +18,13 @@ eta = ceil(M / N);
 [A.xy_perm_, A.omega_perm_] = A.AFinv_HSS_.BuildTree(xy, min_points, eta, 1);
 [~, A.xy_inv_perm_] = sort(A.xy_perm_, "ascend");
 [~, A.omega_inv_perm_] = sort(A.omega_perm_, "ascend");
-A.AFinv_HSS_.AssignHSSRowColumn(A.xy_perm_, A.omega_perm_);
+
 x_col_pos = (0 : (nx - 1))';
 y_col_pos = (0 : (ny - 1))';
 col_pos = TensorProduct2D(x_col_pos, y_col_pos);
-A.AFinv_HSS_.Construct_ID_Full(xy, col_pos, rank_or_tol);
+
+xy_p = xy(A.xy_perm_, :);
+col_pos_q = col_pos(A.omega_perm_, :);
+A.AFinv_HSS_.Construct_ID_Full(xy_p, col_pos_q, rank_or_tol);
 
 end

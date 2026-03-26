@@ -1,7 +1,4 @@
 function x_proxy = GenerateProxySurface(N, x_start, x_end, proxy_size)
-% GenerateProxySurface Generate proxy surface points.
-
-% Jingyu Liu, November 19, 2024.
 
 arguments (Input)
     N (1, 1) double;

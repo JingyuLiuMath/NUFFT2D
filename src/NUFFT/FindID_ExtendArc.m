@@ -5,8 +5,6 @@ function I = FindID_ExtendArc(M, pos_start, pos_end, x)
 %  z = exp(2 * pi * x) are included in the arc
 %  {exp(2 * pi * 1i * t / M): pos_start - 1 / 2 <= t < pos_end + 1 / 2}.
 
-% Jingyu Liu, November 19, 2024.
-
 arguments (Input)
     M (1, 1) double;
     pos_start (1, 1) double;

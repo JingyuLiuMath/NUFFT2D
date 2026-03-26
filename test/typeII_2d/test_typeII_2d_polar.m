@@ -5,10 +5,8 @@ warning off;
 
 p = 5;
 
-min_points = 64;
-rank_or_tol = 1e-5;
+rank_or_tol = 1e-3;
 
-fprintf("min_points: %d\n", min_points);
 if rank_or_tol >= 1
     fprintf("rank: %d\n", rank_or_tol);
 else
@@ -39,6 +37,9 @@ kappa_A = cond(A);
 fprintf("cond(A): %.4e\n", kappa_A);
 
 %% NUDFT2.
+min_points = p * n;
+fprintf("min_points: %d\n", min_points);
+
 tic;
 A = NUDFT2_2D(nx, ny);
 A.Construct_ID_Algebraic(x, min_points, rank_or_tol);

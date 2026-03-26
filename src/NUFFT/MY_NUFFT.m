@@ -6,8 +6,6 @@ function f = MY_NUFFT(u, x, omega, method, acc)
 % N = size(u, 1) = length(omega).
 % M = size(f, 1) = length(x).
 
-% Jingyu Liu, November 17, 2024.
-
 arguments (Input)
     u (:, :) double;
     x (:, 1) double = (0 : (size(u, 1) - 1))' / size(u, 1);

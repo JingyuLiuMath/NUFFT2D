@@ -1,5 +1,4 @@
 function k_z_w = NUFFT2_Kernel(z, w, N)
-% NUFFT2_Kernel
 
 arguments (Input)
     z (:, 1) double;

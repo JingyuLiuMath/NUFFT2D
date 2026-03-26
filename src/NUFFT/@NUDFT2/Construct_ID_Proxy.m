@@ -1,7 +1,4 @@
 function Construct_ID_Proxy(A, x, min_points, rank_or_tol)
-% Construct
-
-% Jingyu Liu, December 8, 2024.
 
 arguments (Input)
     A NUDFT2;

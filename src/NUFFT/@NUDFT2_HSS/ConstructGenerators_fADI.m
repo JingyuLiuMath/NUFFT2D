@@ -1,7 +1,4 @@
 function ConstructGenerators_fADI(A, level, rank_or_tol)
-% ConstructGenerators
-
-% Jingyu Liu, November 24, 2024.
 
 arguments (Input)
     A NUDFT2_HSS;
