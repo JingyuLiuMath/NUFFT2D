@@ -87,6 +87,7 @@ fprintf("RHS (approximately) in range(A)\n");
 u_ex = randn(N, 1) + randn(N, 1) * 1i;
 f_nufft = MY_NUFFT2_2D(u_ex, x, nx, ny);
 
+fprintf("Direct Solver\n");
 tic;
 u_solve = A.URV_Solve(f_nufft);
 t_solve = toc;
@@ -94,8 +95,13 @@ fprintf("Direct solve time: %.4e\n", t_solve);
 
 r = f_nufft - MY_NUFFT2_2D(u_solve, x, nx, ny);
 rel_res = norm(r) / norm(f_nufft);
-fprintf("Direct rel res: %e\n", rel_res);
+fprintf("Rel res: %e\n", rel_res);
 
+e = u_ex - u_solve;
+rel_acc = norm(e) / norm(u_ex);
+fprintf("Rel acc: %.4e\n", rel_acc);
+
+fprintf("Iterative Solver\n");
 tic;
 [u_solve, flag, relres, iter, resvec] = INUDFT2_2D_PCG(A, x, nx, ny, f_nufft, tol, maxit);
 t_solve = toc;
@@ -104,4 +110,8 @@ fprintf("Iter number: %d\n", iter);
 
 r = f_nufft - MY_NUFFT2_2D(u_solve, x, nx, ny);
 rel_res = norm(r) / norm(f_nufft);
-fprintf("Iterative rel res: %e\n", rel_res);
+fprintf("Rel res: %e\n", rel_res);
+
+e = u_ex - u_solve;
+rel_acc = norm(e) / norm(u_ex);
+fprintf("Rel acc: %.4e\n", rel_acc);

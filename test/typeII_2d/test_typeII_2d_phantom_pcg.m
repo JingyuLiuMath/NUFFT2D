@@ -7,11 +7,16 @@ p = 5;
 
 rank_or_tol = 1e-3;
 
+tol = 1e-8;
+maxit = 100;
+
 if rank_or_tol >= 1
     fprintf("rank: %d\n", rank_or_tol);
 else
     fprintf("tol: %.4e\n", rank_or_tol);
 end
+fprintf("tol: %.4e\n", tol);
+fprintf("maxit: %d\n", maxit);
 
 %% Generate points x and omega.
 n = 2^p;
@@ -77,15 +82,16 @@ A.URV_Factor();
 t_factor = toc;
 fprintf("Factor time: %.4e\n", t_factor);
 
-%% Solution: RHS (approximately) in range(A).
-fprintf("RHS (approximately) in range(A)\n");
-u_ex = randn(N, 1) + randn(N, 1) * 1i;
+%% MRI Reconstruction.
+P = phantom('Modified Shepp-Logan', n);
+u_ex = reshape(P, N, []);
 f_nufft = MY_NUFFT2_2D(u_ex, x, nx, ny);
 
+fprintf("Direct Solver\n");
 tic;
 u_solve = A.URV_Solve(f_nufft);
 t_solve = toc;
-fprintf("Solve time: %.4e\n", t_solve);
+fprintf("Direct solve time: %.4e\n", t_solve);
 
 r = f_nufft - MY_NUFFT2_2D(u_solve, x, nx, ny);
 rel_res = norm(r) / norm(f_nufft);
@@ -94,3 +100,39 @@ fprintf("Rel res: %e\n", rel_res);
 e = u_ex - u_solve;
 rel_acc = norm(e) / norm(u_ex);
 fprintf("Rel acc: %.4e\n", rel_acc);
+
+fprintf("Iterative Solver\n");
+tic;
+[u_solve, flag, relres, iter, resvec] = INUDFT2_2D_PCG(A, x, nx, ny, f_nufft, tol, maxit);
+t_iter = toc;
+fprintf("Iterative solve time: %.4e\n", t_iter);
+fprintf("Iter number: %d\n", iter);
+u_solve = real(u_solve);
+
+r = f_nufft - MY_NUFFT2_2D(u_solve, x, nx, ny);
+rel_res = norm(r) / norm(f_nufft);
+fprintf("Rel res: %e\n", rel_res);
+
+e = u_ex - u_solve;
+rel_acc = norm(e) / norm(u_ex);
+fprintf("Rel acc: %.4e\n", rel_acc);
+
+P_reconstruct = reshape(u_solve, n, n);
+
+figure;
+subplot(1, 2, 1);
+imagesc(P);
+colormap gray;
+axis image;
+axis off;
+title('Original Shepp-Logan Phantom', 'FontSize', 12);
+colorbar;
+subplot(1, 2, 2);
+imagesc(P_reconstruct);
+colormap gray;
+axis image;
+axis off;
+title('Reconstructed Phantom', 'FontSize', 12);
+colorbar;
+sgtitle('Reconstruction Comparison', ...
+    'FontSize', 14, 'FontWeight', 'bold');

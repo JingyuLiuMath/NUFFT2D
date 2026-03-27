@@ -1,8 +1,8 @@
 #!/bin/bash
 
-#SBATCH --job-name=polar
-#SBATCH --output=polar_%j.out
-#SBATCH --error=polar_%j.err
+#SBATCH --job-name=phantom_pcg
+#SBATCH --output=phantom_pcg_%j.out
+#SBATCH --error=phantom_pcg_%j.err
 #SBATCH --nodelist=bigMem0
 #SBATCH --time=18:00:00
 #SBATCH --cpus-per-task=16
@@ -14,4 +14,4 @@ export CPATH=$CPATH:/home/jyliu/NUFFT2D/extern/fftw-3.3.10/build_double/include:
 
 module unload MATLAB
 module load MATLAB/R2023b
-matlab -r 'cd /home/jyliu/NUFFT2D; nufft2d_startup; cd experiments/typeII_2d_polar; exp_typeII_2d_polar;'
+matlab -r 'cd /home/jyliu/NUFFT2D; nufft2d_startup; cd experiments/typeII_2d_phantom_pcg; exp_typeII_2d_phantom_pcg;'

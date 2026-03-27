@@ -47,3 +47,7 @@ fprintf("Iter number: %d\n", iter);
 r = f_nufft - MY_NUFFT2_2D(u_solve, x, nx, ny);
 rel_res = norm(r) / norm(f_nufft);
 fprintf("Rel res: %e\n", rel_res);
+
+e = u_ex - u_solve;
+rel_acc = norm(e) / norm(u_ex);
+fprintf("Rel acc: %.4e\n", rel_acc);
