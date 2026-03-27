@@ -2,13 +2,13 @@ clear;
 close all;
 warning off;
 
-% p_list = 5 : 9;
-p_list = 3 : 5;
+p_list = 5 : 8;
+% p_list = 3 : 5;
 num_n = length(p_list);
 
 tol = 1e-12;
-% maxit = 500;
-maxit = 100;
+maxit = 500;
+% maxit = 100;
 fprintf("tol: %.4e\n", tol);
 fprintf("maxit: %d\n", maxit);
 

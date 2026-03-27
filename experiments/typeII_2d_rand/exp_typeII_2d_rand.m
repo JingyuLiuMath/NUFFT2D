@@ -2,11 +2,11 @@ clear;
 close all;
 warning off;
 
-% p_list = 5 : 9;
-p_list = 3 : 5;
+p_list = 5 : 8;
+% p_list = 3 : 5;
 num_n = length(p_list);
 
-tol = 1e-5;
+tol = 1e-8;
 fprintf("tol: %e\n", tol);
 
 for it = 1 : num_n
