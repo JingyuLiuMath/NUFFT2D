@@ -19,10 +19,8 @@ end
 
 num_rhs = size(f, 2);
 
-% pcg.
-f = MY_NUFFT1(f, omega, N);
-op_A = @(v) MY_NUFFT1(MY_NUFFT2(v, x, N), omega, N);
-op_M = @(v) A.URV_Solve(A.URV_StarSolve(v));
+op_A = @(v, opt) afun(v, opt, xy, nx, ny);
+op_M = @(v, opt) mfun(v, opt, A);
 
 u = zeros(N, num_rhs);
 flag = zeros(1, num_rhs);
@@ -31,6 +29,27 @@ iter = zeros(1, num_rhs);
 resvec = cell(1, num_rhs);
 for it = 1 : num_rhs
     [u(:, it), flag(it), relres(it), iter(it), resvec{it}] = pcg(op_A, f(:, it), tol, maxit, op_M);
+end
+
+end
+
+function y = afun(v, opt, x, N)
+
+if strcmp(opt,'notransp')
+    y = MY_NUFFT2(v, x, N);
+else
+    omega = -N * x;
+    y = MY_NUFFT1(v, omega, N);
+end
+
+end
+
+function y = mfun(v, opt, A)
+
+if strcmp(opt,'notransp')
+    y = A.URV_Solve(v);
+else
+    y = A.URV_StarSolve(v);
 end
 
 end

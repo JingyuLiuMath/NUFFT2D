@@ -20,7 +20,7 @@ ny = n;
 N = nx * ny;
 
 % Random
-x = PolarGrid(n);
+x = PolarGrid2(n);
 M = size(x, 1);
 
 fprintf("M: %d, N: %d\n", M, N);

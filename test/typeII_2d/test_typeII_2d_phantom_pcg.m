@@ -101,9 +101,25 @@ e = u_ex - u_solve;
 rel_acc = norm(e) / norm(u_ex);
 fprintf("Rel acc: %.4e\n", rel_acc);
 
-fprintf("Iterative Solver\n");
+fprintf("LSQR without Precond\n");
 tic;
-[u_solve, flag, relres, iter, resvec] = INUDFT2_2D_PCG(A, x, nx, ny, f_nufft, tol, maxit);
+[u_solve, ~, ~, iter, ~] = INUDFT2_2D_CG(x, nx, ny, f_nufft, tol, maxit);
+t_iter = toc;
+fprintf("Iterative solve time: %.4e\n", t_iter);
+fprintf("Iter number: %d\n", iter);
+u_solve = real(u_solve);
+
+r = f_nufft - MY_NUFFT2_2D(u_solve, x, nx, ny);
+rel_res = norm(r) / norm(f_nufft);
+fprintf("Rel res: %e\n", rel_res);
+
+e = u_ex - u_solve;
+rel_acc = norm(e) / norm(u_ex);
+fprintf("Rel acc: %.4e\n", rel_acc);
+
+fprintf("LSQR with Precond\n");
+tic;
+[u_solve, ~, ~, iter, ~] = INUDFT2_2D_PCG(A, x, nx, ny, f_nufft, tol, maxit);
 t_iter = toc;
 fprintf("Iterative solve time: %.4e\n", t_iter);
 fprintf("Iter number: %d\n", iter);

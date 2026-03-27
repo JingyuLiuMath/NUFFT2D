@@ -18,9 +18,7 @@ end
 
 num_rhs = size(f, 2);
 
-omega = -N * x;
-f = MY_NUFFT1(f, omega, N);
-op_A = @(v) MY_NUFFT1(MY_NUFFT2(v, x, N), omega, N);
+op_A = @(v, opt) afun(v, opt, xy, nx, ny);
 
 u = zeros(N, num_rhs);
 flag = zeros(1, num_rhs);
@@ -29,6 +27,17 @@ iter = zeros(1, num_rhs);
 resvec = cell(1, num_rhs);
 for it = 1 : num_rhs
     [u(:, it), flag(it), relres(it), iter(it), resvec{it}] = pcg(op_A, f(:, it), tol, maxit);
+end
+
+end
+
+function y = afun(v, opt, x, N)
+
+if strcmp(opt,'notransp')
+    y = MY_NUFFT2(v, x, N);
+else
+    omega = -N * x;
+    y = MY_NUFFT1(v, omega, N);
 end
 
 end
