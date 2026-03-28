@@ -16,7 +16,6 @@ nx = n;
 ny = n;
 N = nx * ny;
 
-% Random
 x = PolarGrid(n);
 M = size(x, 1);
 
@@ -33,9 +32,9 @@ A = NUDFT2_2D_Matrix(x, nx, ny);
 kappa_A = cond(A);
 fprintf("cond(A): %.4e\n", kappa_A);
 
-%% Solution: RHS (approximately) in range(A).
-fprintf("RHS (approximately) in range(A)\n");
-u_ex = randn(N, 1) + randn(N, 1) * 1i;
+%% MRI Reconstruction.
+P = phantom('Modified Shepp-Logan', n);
+u_ex = reshape(P, N, []);
 f_nufft = MY_NUFFT2_2D(u_ex, x, nx, ny);
 
 tic;
@@ -43,6 +42,7 @@ tic;
 t_solve = toc;
 fprintf("Solve time: %.4e\n", t_solve);
 fprintf("Iter number: %d\n", iter);
+u_solve = real(u_solve);
 
 r = f_nufft - MY_NUFFT2_2D(u_solve, x, nx, ny);
 rel_res = norm(r) / norm(f_nufft);

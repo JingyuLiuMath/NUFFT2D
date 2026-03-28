@@ -19,7 +19,6 @@ nx = n;
 ny = n;
 N = nx * ny;
 
-% Random
 x = PolarGrid(n);
 M = size(x, 1);
 
@@ -77,15 +76,16 @@ A.URV_Factor();
 t_factor = toc;
 fprintf("Factor time: %.4e\n", t_factor);
 
-%% Solution: RHS (approximately) in range(A).
-fprintf("RHS (approximately) in range(A)\n");
-u_ex = randn(N, 1) + randn(N, 1) * 1i;
+%% MRI Reconstruction.
+P = phantom('Modified Shepp-Logan', n);
+u_ex = reshape(P, N, []);
 f_nufft = MY_NUFFT2_2D(u_ex, x, nx, ny);
 
 tic;
 u_solve = A.URV_Solve(f_nufft);
 t_solve = toc;
 fprintf("Solve time: %.4e\n", t_solve);
+u_solve = real(u_solve);
 
 r = f_nufft - MY_NUFFT2_2D(u_solve, x, nx, ny);
 rel_res = norm(r) / norm(f_nufft);
@@ -94,3 +94,23 @@ fprintf("Rel res: %e\n", rel_res);
 e = u_ex - u_solve;
 rel_acc = norm(e) / norm(u_ex);
 fprintf("Rel acc: %.4e\n", rel_acc);
+
+P_reconstruct = reshape(u_solve, n, n);
+
+figure;
+subplot(1, 2, 1);
+imagesc(P);
+colormap gray;
+axis image;
+axis off;
+title('Original Shepp-Logan Phantom', 'FontSize', 12);
+colorbar;
+subplot(1, 2, 2);
+imagesc(P_reconstruct);
+colormap gray;
+axis image;
+axis off;
+title('Reconstructed Phantom', 'FontSize', 12);
+colorbar;
+sgtitle('Reconstruction Comparison', ...
+    'FontSize', 14, 'FontWeight', 'bold');
