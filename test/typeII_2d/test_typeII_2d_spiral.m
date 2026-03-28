@@ -5,7 +5,7 @@ warning off;
 
 p = 5;
 
-rank_or_tol = 1e-3;
+rank_or_tol = 1e-5;
 
 if rank_or_tol >= 1
     fprintf("rank: %d\n", rank_or_tol);
