@@ -2,8 +2,8 @@ clear;
 close all;
 warning off;
 
-p_list = 5 : 8;
-% p_list = 3 : 5;
+% p_list = 5 : 8;
+p_list = 3 : 5;
 num_n = length(p_list);
 
 tol = 1e-8;
@@ -13,14 +13,15 @@ for it = 1 : num_n
     p = p_list(it);
     n = 2^p;
     N = n^2;
-    M = size(PolarGrid(n), 1);
-
+    
+    x = rand(size(PolarGrid(n), 1), 2);
+    M = size(x, 1);
+    
     fprintf("\n\n");
     fprintf("M: %d, N: %d\n", M, N);
     
     nx = n;
     ny = n;
-    x = rand(M, 2);
 
     min_points = n * p;
     fprintf("min_points: %d\n", min_points);
@@ -63,15 +64,16 @@ for it = 1 : num_n
     t_factor = toc;
     fprintf("Factor time: %.4e\n", t_factor);
 
-    % Solution: RHS (approximately) in range(A).
-    fprintf("RHS (approximately) in range(A)\n");
-    u_ex = randn(N, 1) + randn(N, 1) * 1i;
+    % MRI Reconstruction.
+    P = phantom('Modified Shepp-Logan', n);
+    u_ex = reshape(P, N, []);
     f_nufft = MY_NUFFT2_2D(u_ex, x, nx, ny);
 
     tic;
     u_solve = A.URV_Solve(f_nufft);
     t_solve = toc;
     fprintf("Solve time: %.4e\n", t_solve);
+    u_solve = real(u_solve);
 
     r = f_nufft - MY_NUFFT2_2D(u_solve, x, nx, ny);
     rel_res = norm(r) / norm(f_nufft);
@@ -80,6 +82,8 @@ for it = 1 : num_n
     e = u_ex - u_solve;
     rel_acc = norm(e) / norm(u_ex);
     fprintf("Rel acc: %.4e\n", rel_acc);
+
+    P_reconstruct = reshape(u_solve, n, n);
 
     t_total = t_construct + t_factor + t_solve;
     fprintf("Total time: %e\n", t_total);
@@ -96,6 +100,7 @@ for it = 1 : num_n
         "t_solve", ...
         "rel_res", ...
         "rel_acc", ...
+        "P", "P_reconstruct", ...
         ...
         "t_total");
 end

@@ -2,7 +2,7 @@ function Construct_ID_Algebraic(A, H, rank_or_tol)
 
 arguments (Input)
     A NUDFT2_2D_HSS;
-    H(:, :) double;
+    H (:, :) double;
     rank_or_tol (1, 1) double;
 end
 

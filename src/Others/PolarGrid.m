@@ -3,7 +3,7 @@ function x = PolarGrid(n, alpha_radius, alpha_t)
 arguments (Input)
     n (1, 1) double;
     alpha_radius (1, 1) double = 1;
-    alpha_t (1, 1) double = 2;
+    alpha_t (1, 1) double = 4;
 end
 
 arguments (Output)

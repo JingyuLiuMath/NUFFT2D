@@ -15,10 +15,14 @@ classdef NUDFT2_HSS < HSS
         
         % *****************************************************************
         % PROPERTY: HSS row and cols.
-        row_ind_ (:, 1);
-        col_ind_ (:, 1);
-        row_re_ (:, 1);
-        col_re_ (:, 1);
+        row_sk_size_ (1, 1) double;
+        col_sk_size_ (1, 1) double;
+        row_sk_offset_ (1, 1) double;
+        col_sk_offset_(1, 1) double;
+        row_ind_ (:, 1) double;
+        col_ind_ (:, 1) double;
+        row_re_ (:, 1) double;
+        col_re_ (:, 1) double;
         % -----------------------------------------------------------------
     end
     
