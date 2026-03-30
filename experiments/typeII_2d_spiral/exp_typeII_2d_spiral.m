@@ -13,9 +13,8 @@ for it = 1 : num_n
     p = p_list(it);
     n = 2^p;
     N = n^2;
-    M = 4 * N;
     
-    x = SpiralGrid(M);
+    x = SpiralGrid(4 * N / p, p);
     M = size(x, 1);
 
     fprintf("\n\n");
@@ -30,7 +29,7 @@ for it = 1 : num_n
     % NUDFT2.
     tic;
     A = NUDFT2_2D(nx, ny);
-    A.Construct_ID_Algebraic(x, min_points, tol);
+    A.Construct_ID_Full(x, min_points, tol);
     t_construct = toc;
     fprintf("Construct time: %.4e\n", t_construct);
 
@@ -90,6 +89,8 @@ for it = 1 : num_n
     fprintf("Total time: %e\n", t_total);
 
     save("./data/typeII_2d_results_" + string(p) + ".mat", ...
+        "M", "N", ...
+        ...
         "t_construct", ...
         "hss_rank", ...
         "mem", "mem_exact", "mem_ratio", ...

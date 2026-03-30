@@ -24,7 +24,7 @@ nx = n;
 ny = n;
 N = nx * ny;
 
-x = SpiralGrid(2 * N);
+x = SpiralGrid(N, 4);
 M = size(x, 1);
 
 fprintf("M: %d, N: %d\n", M, N);
@@ -46,7 +46,7 @@ fprintf("min_points: %d\n", min_points);
 
 tic;
 A = NUDFT2_2D(nx, ny);
-A.Construct_ID_Algebraic(x, min_points, rank_or_tol);
+A.Construct_ID_Full(x, min_points, rank_or_tol);
 t_construct = toc;
 fprintf("Construct time: %.4e\n", t_construct);
 

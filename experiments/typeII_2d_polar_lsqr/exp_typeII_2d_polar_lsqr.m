@@ -6,6 +6,8 @@ p_list = 5 : 9;
 % p_list = 3 : 5;
 num_n = length(p_list);
 
+alpha_t = 4;
+
 tol = 1e-12;
 maxit = 500;
 % maxit = 100;
@@ -17,7 +19,7 @@ for it = 1 : num_n
     n = 2^p;
     N = n^2;
     
-    x = PolarGrid(n);
+    x = PolarGrid(n, 1, alpha_t);
     M = size(x, 1);
 
     fprintf("\n\n");
@@ -51,7 +53,9 @@ for it = 1 : num_n
 
     P_reconstruct = reshape(u_solve, n, n);
 
-    save("./data/typeII_2d_results_" + string(p) + ".mat", ...        ...
+    save("./data/typeII_2d_results_" + string(p) + "_alpha_" + string(alpha_t) + ".mat", ...
+        "M", "N", ...
+        ...
         "t_iter", ...
         "iter", ...
         "rel_res", ...

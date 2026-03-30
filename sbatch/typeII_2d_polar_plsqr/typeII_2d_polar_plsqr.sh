@@ -1,11 +1,11 @@
 #!/bin/bash
 
-#SBATCH --job-name=phantom_plsqr
+#SBATCH --job-name=polar_plsqr
 #SBATCH --output=phantom_plsqr_%j.out
 #SBATCH --error=phantom_plsqr_%j.err
 #SBATCH --nodelist=bigMem0
 #SBATCH --time=18:00:00
-#SBATCH --exclusive
+#SBATCH --cpus-per-task=16
 
 export PATH=$PATH:/home/jyliu/NUFFT2D/extern/fftw-3.3.10/build_double/bin:/home/jyliu/NUFFT2D/extern/fftw-3.3.10/build_single/bin
 export LIBRARY_PATH=$LIBRARY_PATH:/home/jyliu/NUFFT2D/extern/fftw-3.3.10/build_double/lib:/home/jyliu/NUFFT2D/extern/fftw-3.3.10/build_single/lib
@@ -14,4 +14,4 @@ export CPATH=$CPATH:/home/jyliu/NUFFT2D/extern/fftw-3.3.10/build_double/include:
 
 module unload MATLAB
 module load MATLAB/R2023b
-matlab -r 'cd /home/jyliu/NUFFT2D; nufft2d_startup; cd experiments/typeII_2d_phantom_plsqr; exp_typeII_2d_phantom_plsqr;'
+matlab -r 'cd /home/jyliu/NUFFT2D; nufft2d_startup; cd experiments/typeII_2d_polar_plsqr; exp_typeII_2d_polar_plsqr;'
