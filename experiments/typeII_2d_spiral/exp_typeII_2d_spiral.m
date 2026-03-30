@@ -13,10 +13,11 @@ for it = 1 : num_n
     p = p_list(it);
     n = 2^p;
     N = n^2;
-    M = 3 * N;
-
-    x = rand(M, 2);
+    M = 4 * N;
     
+    x = SpiralGrid(M);
+    M = size(x, 1);
+
     fprintf("\n\n");
     fprintf("M: %d, N: %d\n", M, N);
     
