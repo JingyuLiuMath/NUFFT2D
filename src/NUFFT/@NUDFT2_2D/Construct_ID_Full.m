@@ -15,7 +15,7 @@ N = A.N_;
 
 A.AFinv_HSS_ = NUDFT2_2D_HSS(nx, ny);
 eta = ceil(M / N);
-[A.xy_perm_, A.omega_perm_] = A.AFinv_HSS_.BuildTree(xy, min_points, eta, 1);
+[A.xy_perm_, A.omega_perm_] = A.AFinv_HSS_.BuildTree(xy, min_points, eta, 0);
 [~, A.xy_inv_perm_] = sort(A.xy_perm_, "ascend");
 [~, A.omega_inv_perm_] = sort(A.omega_perm_, "ascend");
 
