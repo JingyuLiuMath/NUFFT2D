@@ -29,9 +29,9 @@ xlim([0, 1]);
 ylim([0, 1]);
 
 %% NUDFT2_Matrix.
-A = NUDFT2_2D_Matrix(x, nx, ny);
-kappa_A = cond(A);
-fprintf("cond(A): %.1e\n", kappa_A);
+% A = NUDFT2_2D_Matrix(x, nx, ny);
+% kappa_A = cond(A);
+% fprintf("cond(A): %.1e\n", kappa_A);
 
 %% MRI Reconstruction.
 P = phantom('Modified Shepp-Logan', n);
@@ -47,7 +47,7 @@ u_solve = real(u_solve);
 
 r = f_nufft - MY_NUFFT2_2D(u_solve, x, nx, ny);
 rel_res = norm(r) / norm(f_nufft);
-fprintf("Rel res: %e\n", rel_res);
+fprintf("Rel res: %.1e\n", rel_res);
 
 e = u_ex - u_solve;
 rel_acc = norm(e) / norm(u_ex);

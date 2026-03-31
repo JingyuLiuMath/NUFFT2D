@@ -31,9 +31,9 @@ xlim([0, 1]);
 ylim([0, 1]);
 
 %% NUDFT2_Matrix.
-A = NUDFT2_2D_Matrix(x, nx, ny);
-kappa_A = cond(A);
-fprintf("cond(A): %.1e\n", kappa_A);
+% A = NUDFT2_2D_Matrix(x, nx, ny);
+% kappa_A = cond(A);
+% fprintf("cond(A): %.1e\n", kappa_A);
 
 %% NUDFT2.
 min_points = p * n;
@@ -91,7 +91,7 @@ u_direct = real(u_direct);
 
 r = f_nufft - MY_NUFFT2_2D(u_direct, x, nx, ny);
 rel_res = norm(r) / norm(f_nufft);
-fprintf("Rel res: %e\n", rel_res);
+fprintf("Rel res: %.1e\n", rel_res);
 
 e = u_ex - u_direct;
 rel_acc = norm(e) / norm(u_ex);
@@ -107,7 +107,7 @@ u_cg = real(u_cg);
 
 r = f_nufft - MY_NUFFT2_2D(u_cg, x, nx, ny);
 rel_res = norm(r) / norm(f_nufft);
-fprintf("Rel res: %e\n", rel_res);
+fprintf("Rel res: %.1e\n", rel_res);
 
 e = u_ex - u_cg;
 rel_acc = norm(e) / norm(u_ex);
@@ -123,7 +123,7 @@ u_pcg = real(u_pcg);
 
 r = f_nufft - MY_NUFFT2_2D(u_pcg, x, nx, ny);
 rel_res = norm(r) / norm(f_nufft);
-fprintf("Rel res: %e\n", rel_res);
+fprintf("Rel res: %.1e\n", rel_res);
 
 e = u_ex - u_pcg;
 rel_acc = norm(e) / norm(u_ex);
