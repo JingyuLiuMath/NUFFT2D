@@ -6,7 +6,7 @@ p_list = 5 : 9;
 % p_list = 3 : 5;
 num_n = length(p_list);
 
-tol_hss = 1e-4;
+tol_hss = 1e-8;
 
 fprintf("tol_hss: %.1e\n", tol_hss);
 

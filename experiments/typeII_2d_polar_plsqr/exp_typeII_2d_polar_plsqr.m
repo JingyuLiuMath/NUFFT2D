@@ -7,7 +7,7 @@ p_list = 5 : 9;
 num_n = length(p_list);
 
 alpha_t = 4;
-tol_hss = 1e-2;
+tol_hss = 1e-4;
 tol_cg = 1e-12;
 maxit = 500;
 % maxit = 100;
