@@ -11,8 +11,8 @@ if A.leaf_ == 0
     A.URV_Solve_MergeVector();
 end
 
-m = size(A.URV_P_, 1);
-n = size(A.URV_A_re_re_, 1);
+m = size(A.URV_A_re_re_, 1);
+n = size(A.URV_A_re_re_, 2);
 
 A.fvec_ = A.URV_P_' * A.fvec_;
 if m >= n

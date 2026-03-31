@@ -3,7 +3,7 @@ clear;
 close all;
 warning off;
 
-p = 6;
+p = 5;
 
 tol_hss = 1e-5;
 

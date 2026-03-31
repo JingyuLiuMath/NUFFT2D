@@ -11,8 +11,8 @@ if A.leaf_ == 0
     A.URV_StarSolve_MergeVector();
 end
 
-m = size(A.URV_P_, 1);
-n = size(A.URV_A_re_re_, 1);
+m = size(A.URV_A_re_re_, 1);
+n = size(A.URV_A_re_re_, 2);
 
 if m >= n
     A.fvec_ = [A.URV_A_re_re_(1 : n, :)' \ A.uvec_; ...
