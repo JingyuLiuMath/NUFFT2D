@@ -13,7 +13,7 @@ end
 
 m = size(A.Amat_, 1);
 n = size(A.Amat_, 2);
-% fprintf("m: %d, n: %d\n", m, n);
+fprintf("m: %d, n: %d\n", m, n);
 
 [A.URV_P_, A.URV_A_re_re_] = qr(A.Amat_);
 

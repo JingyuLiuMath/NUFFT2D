@@ -6,7 +6,7 @@ p_list = 5 : 9;
 % p_list = 3 : 5;
 num_n = length(p_list);
 
-tol_hss = 1e-8;
+tol_hss = 1e-6;
 
 fprintf("tol_hss: %.1e\n", tol_hss);
 
@@ -14,7 +14,7 @@ for it = 1 : num_n
     p = p_list(it);
     n = 2^p;
     N = n^2;
-    M = 3 * N;
+    M = ceil(0.8 * p * N);
 
     x = rand(M, 2);
     

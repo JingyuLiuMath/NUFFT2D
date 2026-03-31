@@ -6,13 +6,11 @@ p_list = 5 : 9;
 % p_list = 3 : 5;
 num_n = length(p_list);
 
-alpha_t = 4;
-tol_hss = 1e-4;
+tol_hss = 1e-3;
 tol_cg = 1e-12;
 maxit = 500;
 % maxit = 100;
 
-fprintf("alpha_t: %d\n", alpha);
 fprintf("tol_hss: %.1e\n", tol_hss);
 fprintf("tol_cg: %.1e\n", tol_cg);
 fprintf("maxit: %d\n", maxit);
@@ -21,11 +19,13 @@ for it = 1 : num_n
     p = p_list(it);
     n = 2^p;
     N = n^2;
-
-    x = PolarGrid(n, 1, alpha_t);
+    
+    alpha = 4;
+    x = PolarGrid(n, 1, alpha);
     M = size(x, 1);
 
     fprintf("\n\n");
+    fprintf("alpha: %d\n", alpha);
     fprintf("M: %d, N: %d\n", M, N);
 
     nx = n;
@@ -62,8 +62,12 @@ for it = 1 : num_n
     f_nufft = MY_NUFFT2_2D(u_ex, x, nx, ny);
 
     fprintf("Direct Solver\n");
+    tic;
     u_solve = A.URV_Solve(f_nufft);
+    t_solve = toc;
+    fprintf("Direct Solve time: %.1e\n", t_solve);
     u_solve = real(u_solve);
+    
     r = f_nufft - MY_NUFFT2_2D(u_solve, x, nx, ny);
     rel_res = norm(r) / norm(f_nufft);
     fprintf("Rel res: %.1e\n", rel_res);
@@ -94,7 +98,7 @@ for it = 1 : num_n
     t_total = t_pre + t_iter;
     fprintf("Total time: %.1e\n", t_total);
 
-    save("./data/typeII_2d_results_" + string(p) + "_alpha_" + string(alpha_t) + ".mat", ...
+    save("./data/typeII_2d_results_" + string(p) + "_alpha_" + string(alpha) + ".mat", ...
         "M", "N", ...
         ...
         "t_construct", ...
