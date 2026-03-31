@@ -22,7 +22,7 @@ hx = 1 / nx;
 hy = 1 / ny;
 nx_ny = max(nx, ny);
 proxy_layer_size = log2(nx_ny);
-sampling_size = 3 * nx_ny * proxy_layer_size;
+sampling_size = 2 * nx_ny * proxy_layer_size;
 
 if A.level_ == level
     if A.leaf_ == 1
@@ -113,7 +113,7 @@ if A.level_ == level
         y_pt_start, y_pt_end)];
     col_proxy_surface_real = [col_proxy_surface_real; ...
         RandRectangular(sampling_size, ...
-        x_pt_end + hx, x_pt_start + proxy_layer_size * hx, ...
+        x_pt_end + hx, x_pt_end + proxy_layer_size * hx, ...
         y_pt_start, y_pt_end)];
     col_proxy_surface_real = [col_proxy_surface_real; ...
         RandRectangular(proxy_layer_size^2, ...
@@ -125,25 +125,26 @@ if A.level_ == level
         y_pt_end + hy, y_pt_end + proxy_layer_size * hy)];
     col_proxy_surface_real = [col_proxy_surface_real; ...
         RandRectangular(proxy_layer_size^2, ...
-        x_pt_end + hx, x_pt_start + proxy_layer_size * hx, ...
+        x_pt_end + hx, x_pt_end + proxy_layer_size * hx, ...
         y_pt_start - proxy_layer_size * hy, y_pt_start - hy)];
     col_proxy_surface_real = [col_proxy_surface_real; ...
         RandRectangular(proxy_layer_size^2, ...
-        x_pt_end + hx, x_pt_start + proxy_layer_size * hx, ...
+        x_pt_end + hx, x_pt_end + proxy_layer_size * hx, ...
         y_pt_end + hy, y_pt_end + proxy_layer_size * hy)];
 
+    tmp_ind = col_proxy_surface_real(:, 1) < 0;
+    col_proxy_surface_real(tmp_ind, 1) = col_proxy_surface_real(tmp_ind, 1) + 1;
+    tmp_ind = col_proxy_surface_real(:, 1) >= 1;
+    col_proxy_surface_real(tmp_ind, 1) = col_proxy_surface_real(tmp_ind, 1) - 1;
+
+    tmp_ind = col_proxy_surface_real(:, 2) < 0;
+    col_proxy_surface_real(tmp_ind, 2) = col_proxy_surface_real(tmp_ind, 2) + 1;
+    tmp_ind = col_proxy_surface_real(:, 2) >= 1;
+    col_proxy_surface_real(tmp_ind, 2) = col_proxy_surface_real(tmp_ind, 2) - 1;
+    
     col_proxy_surface = [...
         exp(-2 * pi * 1i * col_proxy_surface_real(:, 1)), ...
         exp(-2 * pi * 1i * col_proxy_surface_real(:, 2))];
-
-    % figure();
-    % plot(A.row_xy_(:, 1), A.row_xy_(:, 2), "rx", "DisplayName", "row pts");
-    % hold on;
-    % plot(A.col_pos_(:, 1) / nx, A.col_pos_(:, 2) / ny, "go", "DisplayName", "col pts");
-    % plot(proxy_surface_real(:, 1), proxy_surface_real(:, 2), "bx", "DisplayName", "proxy pts");
-    % legend;
-    % axis equal;
-
 
     % Construct U using proxy surface.
     xy_I = xy(A.row_ind_, :);
@@ -154,6 +155,15 @@ if A.level_ == level
     A_I_proxy = Ax_I_proxy .* Ay_I_proxy;
     [row_sk, U, A.row_rank_, row_re] = LowRank_Row_ID(A_I_proxy, rank_or_tol);
     
+    % figure();
+    % plot(xy_I(:, 1), xy_I(:, 2), "rx", "DisplayName", "row pts");
+    % hold on;
+    % plot(row_proxy_surface_real(:, 1), row_proxy_surface_real(:, 2), "bx", "DisplayName", "proxy pts");
+    % legend;
+    % xlim([0, 1]);
+    % ylim([0, 1]);
+    % axis equal;
+
     E_I_proxy = A_I_proxy - U * A_I_proxy(row_sk, :);
     rel_err_I_proxy = norm(E_I_proxy, "fro") / norm(A_I_proxy, "fro");
     fprintf("rel_err_I_proxy: %.4e\n", rel_err_I_proxy);
@@ -172,7 +182,7 @@ if A.level_ == level
     rel_err_I_Jc = norm(E_I_Jc, "fro") / norm(A_I_Jc, "fro");
     fprintf("rel_err_I_Jc: %.4e\n", rel_err_I_Jc);
 
-    if rel_err_I_Jc > rank_or_tol * 100
+    if rel_err_I_Jc > rank_or_tol * 10
         figure();
         plot(xy_I(:, 1), xy_I(:, 2), "rx", "DisplayName", "row pts");
         hold on;
@@ -216,6 +226,15 @@ if A.level_ == level
     A_proxy_J = Ax_proxy_J .* Ay_proxy_J;
     [col_sk, V, A.col_rank_, col_re] = LowRank_ID(A_proxy_J, rank_or_tol);
     
+    % figure();
+    % plot(col_pos_J(:, 1) / nx, col_pos_J(:, 2) / ny, "go", "DisplayName", "col pts");
+    % hold on;
+    % plot(col_proxy_surface_real(:, 1), col_proxy_surface_real(:, 2), "bx", "DisplayName", "proxy pts");
+    % legend;
+    % xlim([0, 1]);
+    % ylim([0, 1]);
+    % axis equal;
+
     E_proxy_J = A_proxy_J - A_proxy_J(:, col_sk) * V';
     rel_err_proxy_J = norm(E_proxy_J, "fro") / norm(A_proxy_J, "fro");
     fprintf("rel_err_proxy_J: %.4e\n", rel_err_proxy_J);
@@ -234,7 +253,7 @@ if A.level_ == level
     rel_err_Ic_J = norm(E_Ic_J, "fro") / norm(A_Ic_J, "fro");
     fprintf("rel_err_Ic_J: %.4e\n", rel_err_Ic_J);
 
-    if rel_err_Ic_J > rank_or_tol * 100
+    if rel_err_Ic_J > rank_or_tol * 10
         figure();
         plot(col_pos_J(:, 1) / nx, col_pos_J(:, 2) / ny, "rx", "DisplayName", "col pts");
         hold on;

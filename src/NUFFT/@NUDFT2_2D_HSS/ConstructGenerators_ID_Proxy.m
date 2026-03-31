@@ -101,7 +101,7 @@ if A.level_ == level
         y_pt_start, y_pt_end)];
     col_proxy_surface_real = [col_proxy_surface_real; ...
         RandRectangular(sampling_size, ...
-        x_pt_end + hx, x_pt_start + proxy_layer_size * hx, ...
+        x_pt_end + hx, x_pt_end + proxy_layer_size * hx, ...
         y_pt_start, y_pt_end)];
     col_proxy_surface_real = [col_proxy_surface_real; ...
         RandRectangular(proxy_layer_size^2, ...
@@ -113,13 +113,13 @@ if A.level_ == level
         y_pt_end + hy, y_pt_end + proxy_layer_size * hy)];
     col_proxy_surface_real = [col_proxy_surface_real; ...
         RandRectangular(proxy_layer_size^2, ...
-        x_pt_end + hx, x_pt_start + proxy_layer_size * hx, ...
+        x_pt_end + hx, x_pt_end + proxy_layer_size * hx, ...
         y_pt_start - proxy_layer_size * hy, y_pt_start - hy)];
     col_proxy_surface_real = [col_proxy_surface_real; ...
         RandRectangular(proxy_layer_size^2, ...
-        x_pt_end + hx, x_pt_start + proxy_layer_size * hx, ...
+        x_pt_end + hx, x_pt_end + proxy_layer_size * hx, ...
         y_pt_end + hy, y_pt_end + proxy_layer_size * hy)];
-    
+
     tmp_ind = col_proxy_surface_real(:, 1) < 0;
     col_proxy_surface_real(tmp_ind, 1) = col_proxy_surface_real(tmp_ind, 1) + 1;
     tmp_ind = col_proxy_surface_real(:, 1) >= 1;
@@ -135,17 +135,21 @@ if A.level_ == level
         exp(-2 * pi * 1i * col_proxy_surface_real(:, 2))];
 
     % figure();
-    % plot(A.col_pos_(:, 1) / nx, A.col_pos_(:, 2) / ny, "rx", "DisplayName", "col pts");
-    % hold on;
-    % plot(col_proxy_surface_real(:, 1), col_proxy_surface_real(:, 2), "bx", "DisplayName", "proxy pts");
-    % legend;
-    % axis equal;
-
-    % figure();
     % plot(A.row_xy_(:, 1), A.row_xy_(:, 2), "rx", "DisplayName", "row pts");
     % hold on;
     % plot(row_proxy_surface_real(:, 1), row_proxy_surface_real(:, 2), "bx", "DisplayName", "proxy pts");
     % legend;
+    % xlim([0, 1]);
+    % ylim([0, 1]);
+    % axis equal;
+
+    % figure();
+    % plot(A.col_pos_(:, 1) / nx, A.col_pos_(:, 2) / ny, "rx", "DisplayName", "col pts");
+    % hold on;
+    % plot(col_proxy_surface_real(:, 1), col_proxy_surface_real(:, 2), "bx", "DisplayName", "proxy pts");
+    % legend;
+    % xlim([0, 1]);
+    % ylim([0, 1]);
     % axis equal;
 
     % Construct U using proxy surface.
