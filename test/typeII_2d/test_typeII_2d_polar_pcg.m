@@ -5,17 +5,12 @@ warning off;
 
 p = 5;
 
-rank_or_tol = 1e-3;
-
-tol = 1e-8;
+tol_hss = 1e-3;
+tol_cg = 1e-8;
 maxit = 100;
 
-if rank_or_tol >= 1
-    fprintf("rank: %d\n", rank_or_tol);
-else
-    fprintf("tol: %.4e\n", rank_or_tol);
-end
-fprintf("tol: %.4e\n", tol);
+fprintf("tol_hss: %.1e\n", tol_hss);
+fprintf("tol_cg: %.1e\n", tol_cg);
 fprintf("maxit: %d\n", maxit);
 
 %% Generate points x and omega.
@@ -38,7 +33,7 @@ ylim([0, 1]);
 %% NUDFT2_Matrix.
 A = NUDFT2_2D_Matrix(x, nx, ny);
 kappa_A = cond(A);
-fprintf("cond(A): %.4e\n", kappa_A);
+fprintf("cond(A): %.1e\n", kappa_A);
 
 %% NUDFT2.
 min_points = p * n;
@@ -46,17 +41,18 @@ fprintf("min_points: %d\n", min_points);
 
 tic;
 A = NUDFT2_2D(nx, ny);
-A.Construct_ID_Full(x, min_points, rank_or_tol);
+A.Construct_ID_Proxy(x, min_points, tol_hss);
 t_construct = toc;
-fprintf("Construct time: %.4e\n", t_construct);
+fprintf("Construct time: %.1e\n", t_construct);
 
 r = A.Rank();
 fprintf("HSS rank: %d\n", r);
 
 mem_exact = M * N;
 mem = A.Storage();
+fprintf("Memory (GB): %.1e\n", double_to_gb(mem));
 mem_ratio = mem / mem_exact;
-fprintf("Mem ratio: %.4e\n", mem_ratio);
+fprintf("Mem ratio: %.1e\n", mem_ratio);
 
 %% Apply.
 u_ex = randn(N, 1) + randn(N, 1) * 1i;
@@ -64,22 +60,22 @@ u_ex = randn(N, 1) + randn(N, 1) * 1i;
 tic;
 f_nufft = MY_NUFFT2_2D(u_ex, x, nx, ny);
 t_nufft = toc;
-fprintf("NUFFT time: %.4e\n", t_nufft);
+fprintf("NUFFT time: %.1e\n", t_nufft);
 
 tic;
 f = A.Apply(u_ex);
 t_apply = toc;
-fprintf("Apply time: %.4e\n", t_apply);
+fprintf("Apply time: %.1e\n", t_apply);
 
 df = f - f_nufft;
 rel_err = norm(df) / norm(f_nufft);
-fprintf("Rel err: %.4e\n", rel_err);
+fprintf("Rel err: %.1e\n", rel_err);
 
 %% URV Factorization.
 tic;
 A.URV_Factor();
 t_factor = toc;
-fprintf("Factor time: %.4e\n", t_factor);
+fprintf("Factor time: %.1e\n", t_factor);
 
 %% MRI Reconstruction.
 P = phantom('Modified Shepp-Logan', n);
@@ -90,7 +86,7 @@ fprintf("Direct Solver\n");
 tic;
 u_direct = A.URV_Solve(f_nufft);
 t_solve = toc;
-fprintf("Direct solve time: %.4e\n", t_solve);
+fprintf("Direct solve time: %.1e\n", t_solve);
 u_direct = real(u_direct);
 
 r = f_nufft - MY_NUFFT2_2D(u_direct, x, nx, ny);
@@ -99,13 +95,13 @@ fprintf("Rel res: %e\n", rel_res);
 
 e = u_ex - u_direct;
 rel_acc = norm(e) / norm(u_ex);
-fprintf("Rel acc: %.4e\n", rel_acc);
+fprintf("Rel acc: %.1e\n", rel_acc);
 
 fprintf("LSQR without Precond\n");
 tic;
-[u_cg, ~, ~, iter, ~] = INUDFT2_2D_CG(x, nx, ny, f_nufft, tol, maxit);
+[u_cg, ~, ~, iter, ~] = INUDFT2_2D_CG(x, nx, ny, f_nufft, tol_cg, maxit);
 t_iter = toc;
-fprintf("Iterative solve time: %.4e\n", t_iter);
+fprintf("Iterative solve time: %.1e\n", t_iter);
 fprintf("Iter number: %d\n", iter);
 u_cg = real(u_cg);
 
@@ -115,13 +111,13 @@ fprintf("Rel res: %e\n", rel_res);
 
 e = u_ex - u_cg;
 rel_acc = norm(e) / norm(u_ex);
-fprintf("Rel acc: %.4e\n", rel_acc);
+fprintf("Rel acc: %.1e\n", rel_acc);
 
 fprintf("LSQR with Precond\n");
 tic;
-[u_pcg, ~, ~, iter, ~] = INUDFT2_2D_PCG(A, x, nx, ny, f_nufft, tol, maxit);
+[u_pcg, ~, ~, iter, ~] = INUDFT2_2D_PCG(A, x, nx, ny, f_nufft, tol_cg, maxit);
 t_iter = toc;
-fprintf("Iterative solve time: %.4e\n", t_iter);
+fprintf("Iterative solve time: %.1e\n", t_iter);
 fprintf("Iter number: %d\n", iter);
 u_pcg = real(u_pcg);
 
@@ -131,7 +127,7 @@ fprintf("Rel res: %e\n", rel_res);
 
 e = u_ex - u_pcg;
 rel_acc = norm(e) / norm(u_ex);
-fprintf("Rel acc: %.4e\n", rel_acc);
+fprintf("Rel acc: %.1e\n", rel_acc);
 
 P_reconstruct_direct = reshape(u_direct, n, n);
 P_reconstruct_cg = reshape(u_cg, n, n);

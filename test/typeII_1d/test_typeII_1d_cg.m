@@ -7,7 +7,7 @@ p = 10;
 
 tol = 1e-8;
 maxit = 100;
-fprintf("tol: %.4e\n", tol);
+fprintf("tol: %.1e\n", tol);
 fprintf("maxit: %d\n", maxit);
 
 %% Generate points x and omega.
@@ -32,7 +32,7 @@ f_nufft = MY_NUFFT2(u_ex, x, N);
 tic;
 [u_solve, flag, relres, iter, resvec] = INUDFT2_CG(x, N, f_nufft, tol, maxit);
 t_solve = toc;
-fprintf("Solve time: %.4e\n", t_solve);
+fprintf("Solve time: %.1e\n", t_solve);
 
 r = f_nufft - MY_NUFFT2(u_solve, x, N);
 rel_res = norm(r) / norm(f_nufft);
@@ -40,4 +40,4 @@ fprintf("Rel res: %e\n", rel_res);
 
 e = u_ex - u_solve;
 rel_acc = norm(e) / norm(u_ex);
-fprintf("Rel acc: %.4e\n", rel_acc);
+fprintf("Rel acc: %.1e\n", rel_acc);

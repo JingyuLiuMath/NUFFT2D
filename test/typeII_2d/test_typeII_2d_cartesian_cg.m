@@ -5,9 +5,10 @@ warning off;
 
 p = 5;
 
-tol = 1e-8;
+tol_cg = 1e-8;
 maxit = 100;
-fprintf("tol: %.4e\n", tol);
+
+fprintf("tol_cg: %.1e\n", tol_cg);
 fprintf("maxit: %d\n", maxit);
 
 %% Generate points x and omega.
@@ -30,7 +31,7 @@ ylim([0, 1]);
 %% NUDFT2_Matrix.
 A = NUDFT2_2D_Matrix(x, nx, ny);
 kappa_A = cond(A);
-fprintf("cond(A): %.4e\n", kappa_A);
+fprintf("cond(A): %.1e\n", kappa_A);
 
 %% MRI Reconstruction.
 P = phantom('Modified Shepp-Logan', n);
@@ -38,9 +39,9 @@ u_ex = reshape(P, N, []);
 f_nufft = MY_NUFFT2_2D(u_ex, x, nx, ny);
 
 tic;
-[u_solve, flag, relres, iter, resvec] = INUDFT2_2D_CG(x, nx, ny, f_nufft, tol, maxit);
+[u_solve, flag, relres, iter, resvec] = INUDFT2_2D_CG(x, nx, ny, f_nufft, tol_cg, maxit);
 t_solve = toc;
-fprintf("Solve time: %.4e\n", t_solve);
+fprintf("Solve time: %.1e\n", t_solve);
 fprintf("Iter number: %d\n", iter);
 u_solve = real(u_solve);
 
@@ -50,7 +51,7 @@ fprintf("Rel res: %e\n", rel_res);
 
 e = u_ex - u_solve;
 rel_acc = norm(e) / norm(u_ex);
-fprintf("Rel acc: %.4e\n", rel_acc);
+fprintf("Rel acc: %.1e\n", rel_acc);
 
 P_reconstruct = reshape(u_solve, n, n);
 

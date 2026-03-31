@@ -1,8 +1,8 @@
 #!/bin/bash
 
 #SBATCH --job-name=polar_plsqr
-#SBATCH --output=phantom_plsqr_%j.out
-#SBATCH --error=phantom_plsqr_%j.err
+#SBATCH --output=polar_plsqr_%j.out
+#SBATCH --error=polar_plsqr_%j.err
 #SBATCH --nodelist=bigMem0
 #SBATCH --time=18:00:00
 #SBATCH --cpus-per-task=16

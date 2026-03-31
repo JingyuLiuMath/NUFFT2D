@@ -11,7 +11,7 @@ tol = 1e-8;
 
 fprintf("min_points: %d\n", min_points);
 fprintf("rank: %d\n", target_rank);
-fprintf("tol: %.4e\n", tol);
+fprintf("tol: %.1e\n", tol);
 
 %% Generate points x and omega.
 N = 2^p;
@@ -32,7 +32,7 @@ tic;
 A = NUDFT2(N);
 A.Construct_BlackBox(x, min_points, target_rank, tol);
 t_construct = toc;
-fprintf("Construct time: %.4e\n", t_construct);
+fprintf("Construct time: %.1e\n", t_construct);
 
 r = A.Rank();
 fprintf("HSS rank: %d\n", r);
@@ -40,7 +40,7 @@ fprintf("HSS rank: %d\n", r);
 mem_exact = M * N;
 mem = A.Storage();
 mem_ratio = mem / mem_exact;
-fprintf("Mem ratio: %.4e\n", mem_ratio);
+fprintf("Mem ratio: %.1e\n", mem_ratio);
 
 %% Apply.
 u_ex = randn(N, 1) + randn(N, 1) * 1i;
@@ -48,22 +48,22 @@ u_ex = randn(N, 1) + randn(N, 1) * 1i;
 tic;
 f_nufft = MY_NUFFT2(u_ex, x, N);
 t_nufft = toc;
-fprintf("NUFFT time: %.4e\n", t_nufft);
+fprintf("NUFFT time: %.1e\n", t_nufft);
 
 tic;
 f = A.Apply(u_ex);
 t_apply = toc;
-fprintf("Apply time: %.4e\n", t_apply);
+fprintf("Apply time: %.1e\n", t_apply);
 
 df = f - f_nufft;
 rel_err = norm(df) / norm(f_nufft);
-fprintf("Rel err: %.4e\n", rel_err);
+fprintf("Rel err: %.1e\n", rel_err);
 
 %% URV Factorization.
 tic;
 A.URV_Factor();
 t_factor = toc;
-fprintf("Factor time: %.4e\n", t_factor);
+fprintf("Factor time: %.1e\n", t_factor);
 
 %% Solution: RHS (approximately) in range(A).
 fprintf("RHS (approximately) in range(A)\n");
@@ -73,7 +73,7 @@ f_nufft = MY_NUFFT2(u_ex, x, N);
 tic;
 u_solve = A.URV_Solve(f_nufft);
 t_solve = toc;
-fprintf("Solve time: %.4e\n", t_solve);
+fprintf("Solve time: %.1e\n", t_solve);
 
 r = f_nufft - MY_NUFFT2(u_solve, x, N);
 rel_res = norm(r) / norm(f_nufft);
@@ -81,4 +81,4 @@ fprintf("Rel res: %e\n", rel_res);
 
 e = u_ex - u_solve;
 rel_acc = norm(e) / norm(u_ex);
-fprintf("Rel acc: %.4e\n", rel_acc);
+fprintf("Rel acc: %.1e\n", rel_acc);
