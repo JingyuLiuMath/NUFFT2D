@@ -6,9 +6,10 @@ arguments (Input)
     rank_or_tol (1, 1) double;
 end
 
+M = A.row_global_size_;
 N = A.col_global_size_;
-half_length = 0.5 / N;
 kernel_fun = @(z, w) NUFFT2_Kernel(z, w, N);
+half_length = 0.5 / N;
 
 if A.level_ == level
     if A.leaf_ == 0

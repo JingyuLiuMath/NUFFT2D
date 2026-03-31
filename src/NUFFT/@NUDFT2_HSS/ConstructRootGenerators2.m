@@ -6,9 +6,9 @@ arguments (Input)
     col_pos (:, 1) double;
 end
 
+M = A.row_global_size_;
 N = A.col_global_size_;
 kernel_fun = @(z, w) NUFFT2_Kernel(z, w, N);
-
 if A.leaf_ == 1
     A.row_ind_ = A.row_offset_ + (1 : A.row_size_)';
     A.col_ind_ = A.col_offset_ + (1 : A.col_size_)';

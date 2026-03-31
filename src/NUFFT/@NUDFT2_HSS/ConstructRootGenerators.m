@@ -4,6 +4,7 @@ arguments (Input)
     A NUDFT2_HSS;
 end
 
+M = A.row_global_size_;
 N = A.col_global_size_;
 kernel_fun = @(z, w) NUFFT2_Kernel(z, w, N);
 

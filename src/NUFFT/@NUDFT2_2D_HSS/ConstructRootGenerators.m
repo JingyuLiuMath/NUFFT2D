@@ -4,8 +4,10 @@ arguments (Input)
     A NUDFT2_2D_HSS;
 end
 
+M = A.row_global_size_;
 nx = A.nx_;
 ny = A.ny_;
+N = A.col_global_size_;
 x_kernel_fun = @(z, w) NUFFT2_Kernel(z, w, nx);
 y_kernel_fun = @(z, w) NUFFT2_Kernel(z, w, ny);
 

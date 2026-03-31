@@ -6,6 +6,7 @@ arguments (Input)
     rank_or_tol (1, 1) double;
 end
 
+M = A.row_global_size_;
 N = A.col_global_size_;
 kernel_fun = @(z, w) NUFFT2_Kernel(z, w, N);
 
