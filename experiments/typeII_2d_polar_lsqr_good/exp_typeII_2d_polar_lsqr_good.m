@@ -2,13 +2,11 @@ clear;
 close all;
 warning off;
 
-p_list = 5 : 9;
-% p_list = 3 : 5;
+p_list = (5 : 9)';
 num_n = length(p_list);
 
 tol_cg = 1e-12;
 maxit = 500;
-% maxit = 100;
 
 fprintf("tol_cg: %.1e\n", tol_cg);
 fprintf("maxit: %d\n", maxit);
@@ -18,11 +16,11 @@ for it = 1 : num_n
     n = 2^p;
     N = n^2;
 
-    alpha = 4;
-    x = PolarGrid(n, 1, alpha);
+    alpha = p;
+    x = PolarGrid(n, 1, p);
     M = size(x, 1);
 
-    fprintf("\n\n");
+    fprintf("\n\n\n\n");
     fprintf("alpha: %d\n", alpha);
     fprintf("M: %d, N: %d\n", M, N);
     
@@ -37,10 +35,11 @@ for it = 1 : num_n
     u_ex = reshape(P, N, []);
     f_nufft = MY_NUFFT2_2D(u_ex, x, nx, ny);
 
+    fprintf("\nIterative Solver\n");
     tic;
     [u_solve, flag, relres, iter, resvec] = INUDFT2_2D_CG(x, nx, ny, f_nufft, tol_cg, maxit);
     t_iter = toc;
-    fprintf("Solve time: %.1e\n", t_iter);
+    fprintf("Time: %.1e\n", t_iter);
     fprintf("Iter number: %d\n", iter);
     u_solve = real(u_solve);
 
@@ -54,12 +53,10 @@ for it = 1 : num_n
 
     P_reconstruct = reshape(u_solve, n, n);
 
-    save("./data/typeII_2d_results_" + string(p) + "_alpha_" + string(alpha) + ".mat", ...
+    save("./data/typeII_2d_results_" + string(p) + ".mat", ...
         "M", "N", ...
         ...
-        "t_iter", ...
-        "iter", ...
-        "rel_res", ...
-        "rel_acc", ...
-        "P", "P_reconstruct");
+        "P", ...
+        ...
+        "t_iter", "iter", "rel_res", "rel_acc", "P_reconstruct");
 end
