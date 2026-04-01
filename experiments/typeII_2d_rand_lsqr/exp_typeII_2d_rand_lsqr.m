@@ -25,9 +25,6 @@ for it = 1 : num_n
     nx = n;
     ny = n;
 
-    min_points = n * p;
-    fprintf("min_points: %d\n", min_points);
-
     % MRI Reconstruction.
     P = phantom('Modified Shepp-Logan', n);
     u_ex = reshape(P, N, []);
