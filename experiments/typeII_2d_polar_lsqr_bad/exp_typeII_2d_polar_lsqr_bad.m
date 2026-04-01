@@ -15,11 +15,13 @@ for it = 1 : num_n
     p = p_list(it);
     n = 2^p;
     N = n^2;
-    M = 2 * N;
 
-    x = rand(M, 2);
+    alpha = 6;
+    x = PolarGrid(n, 1, p);
+    M = size(x, 1);
 
     fprintf("\n\n\n\n");
+    fprintf("alpha: %d\n", alpha);
     fprintf("M: %d, N: %d\n", M, N);
     
     nx = n;
