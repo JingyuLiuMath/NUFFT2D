@@ -6,6 +6,7 @@ p_list = (5 : 9)';
 num_n = length(p_list);
 
 tol_hss = 1e-2;
+% tol_hss = 1e-4;
 tol_cg = 1e-12;
 maxit = 500;
 
@@ -19,8 +20,8 @@ for it = 1 : num_n
     N = n^2;
     M = 2 * N;
 
-    alpha = p;
-    x = PolarGrid(n, 1, p);
+    alpha = 6;
+    x = PolarGrid(n, 1, alpha);
     M = size(x, 1);
 
     fprintf("\n\n\n\n");

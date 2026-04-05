@@ -5,6 +5,7 @@
 #SBATCH --error=polar_plsqr_bad_%j.err
 #SBATCH --nodelist=bigMem0
 #SBATCH --exclusive
+#SBATCH --time=18:00:00
 
 export PATH=$PATH:/home/jyliu/NUFFT2D/extern/fftw-3.3.10/build_double/bin:/home/jyliu/NUFFT2D/extern/fftw-3.3.10/build_single/bin
 export LIBRARY_PATH=$LIBRARY_PATH:/home/jyliu/NUFFT2D/extern/fftw-3.3.10/build_double/lib:/home/jyliu/NUFFT2D/extern/fftw-3.3.10/build_single/lib
@@ -22,6 +23,7 @@ echo "Job Name:         $SLURM_JOB_NAME"
 echo "Submit Directory: $SLURM_SUBMIT_DIR"
 echo "Submit Host:      $SLURM_SUBMIT_HOST"
 echo "Partition:        $SLURM_JOB_PARTITION"
+echo "QOS:              $SLURM_JOB_QOS"
 echo "Node List:        $SLURM_JOB_NODELIST"
 echo "Nodes:            $SLURM_NNODES"
 echo "Tasks:            $SLURM_NTASKS"

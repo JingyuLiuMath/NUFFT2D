@@ -16,8 +16,8 @@ for it = 1 : num_n
     n = 2^p;
     N = n^2;
 
-    alpha = 6;
-    x = PolarGrid(n, 1, p);
+    alpha = 5;
+    x = PolarGrid(n, 1, alpha);
     M = size(x, 1);
 
     fprintf("\n\n\n\n");
