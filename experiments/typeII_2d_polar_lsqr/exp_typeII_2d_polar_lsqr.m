@@ -5,8 +5,8 @@ warning off;
 p_list = (5 : 9)';
 num_n = length(p_list);
 
-alpha_list = [1.5, 2.0, 2.5]';
-num_alpha = length(alpha_list);
+beta_list = [0.5, 0.6, 0.7]';
+num_beta = length(beta_list);
 
 tol_cg = 1e-12;
 maxit = 500;
@@ -14,21 +14,21 @@ maxit = 500;
 fprintf("tol_cg: %.1e\n", tol_cg);
 fprintf("maxit: %d\n", maxit);
 
-for it_alpha = 1 : num_alpha
+for it_beta = 1 : num_beta
     for it_p = 1 : num_n
-        alpha = alpha_list(it_alpha);
+        beta = beta_list(it_beta);
         p = p_list(it_p);
 
         n = 2^p;
         nx = n;
         ny = n;
         N = nx * ny;
-        M = round(alpha * N);
-        x = rand(M, 2);
+        x = PolarGrid(n, 1, beta * p);
+        M = size(x, 1);
 
         fprintf("\n\n\n\n");
         fprintf("p: %d\n", p);
-        fprintf("alpha: %.1e\n", alpha);
+        fprintf("beta: %.1e\n", beta);
         fprintf("M: %d, N: %d\n", M, N);
         fprintf("M/N: %.1e\n", M / N);
 
@@ -55,9 +55,9 @@ for it_alpha = 1 : num_alpha
 
         P_reconstruct = reshape(u_solve, n, n);
 
-        save("./data/typeII_2d_points_" + string(p) + "_" + string(alpha) + ".mat", "x");
+        save("./data/typeII_2d_points_" + string(p) + "_" + string(beta) + ".mat", "x");
         
-        save("./data/typeII_2d_results_" + string(p) + "_" + string(alpha) + ".mat", ...
+        save("./data/typeII_2d_results_" + string(p) + "_" + string(beta) + ".mat", ...
             "M", "N", ...
             ...
             "P", ...

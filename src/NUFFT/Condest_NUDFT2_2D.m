@@ -56,27 +56,12 @@ end
 
 function y = nufft_normal_inv_op(v, opt, A, xy, nx, ny, maxit_pcg, tol_pcg)
 
-if isempty(v)
-    y = v;
-    return;
-end
-
 op_B = @(u) nufft_normal_op(u, 'notransp', xy, nx, ny);
 op_M = @(u) A.URV_Solve(A.URV_StarSolve(u));
 
 y = zeros(size(v));
 for it = 1 : size(v, 2)
-    rhs = v(:, it);
-    if norm(rhs) == 0
-        y(:, it) = zeros(size(rhs));
-        continue;
-    end
-
-    [y(:, it), flag] = pcg(op_B, rhs, tol_pcg, maxit_pcg, op_M);
-    if flag ~= 0 || any(~isfinite(y(:, it)))
-        error('Condest_NUDFT2_2D:PCGFailed', ...
-            'pcg failed while evaluating the inverse operator. flag=%d', flag);
-    end
+    y(:, it) = pcg(op_B, v(:, it), tol_pcg, maxit_pcg, op_M);
 end
 
 end

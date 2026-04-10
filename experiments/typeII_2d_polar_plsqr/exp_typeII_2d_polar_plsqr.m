@@ -5,10 +5,10 @@ warning off;
 p_list = (5 : 9)';
 num_n = length(p_list);
 
-alpha_list = [1.5, 2.0, 2.5]';
-num_alpha = length(alpha_list);
+beta_list = [0.5, 0.6, 0.7]';
+num_beta = length(beta_list);
 
-tol_hss_list = [1e-2, 1e-4]';
+tol_hss_list = [1e-4, 1e-2]';
 num_tol_hss = length(tol_hss_list);
 
 tol_cg = 1e-12;
@@ -22,10 +22,10 @@ fprintf("maxit_condest: %d\n", maxit_condest);
 fprintf("restarts: %d\n", restarts);
 
 for it_tol_hss = 1 : num_tol_hss
-    for it_alpha = 1 : num_alpha
+    for it_beta = 1 : num_beta
         for it_p = 1 : num_n
             tol_hss = tol_hss_list(it_tol_hss);
-            alpha = alpha_list(it_alpha);
+            beta = beta_list(it_beta);
             p = p_list(it_p);
 
             n = 2^p;
@@ -33,12 +33,12 @@ for it_tol_hss = 1 : num_tol_hss
             ny = n;
             N = nx * ny;
             
-            load("../typeII_2d_rand_lsqr/data/typeII_2d_points_" + string(p) + "_" + string(alpha) + ".mat");
+            load("../typeII_2d_polar_lsqr/data/typeII_2d_points_" + string(p) + "_" + string(beta) + ".mat");
             M = size(x, 1);
 
             fprintf("\n\n\n\n");
             fprintf("p: %d\n", p);
-            fprintf("alpha: %.1e\n", alpha);
+            fprintf("beta: %.1e\n", beta);
             fprintf("tol_hss: %.1e\n", tol_hss);
             fprintf("M: %d, N: %d\n", M, N);
             fprintf("M/N: %.1e\n", M / N);
@@ -139,7 +139,7 @@ for it_tol_hss = 1 : num_tol_hss
                 end
             end
 
-            save("./data/typeII_2d_results_" + string(p) + "_" + string(alpha) + "_tol_" + string(tol_hss) + ".mat", ...
+            save("./data/typeII_2d_results_" + string(p) + "_" + string(beta) + "_tol_" + string(tol_hss) + ".mat", ...
                 "M", "N", ...
                 ...
                 "t_construct", ...

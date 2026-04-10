@@ -1,8 +1,8 @@
 #!/bin/bash
 
-#SBATCH --job-name=polar_plsqr_good
-#SBATCH --output=polar_plsqr_good_%j.out
-#SBATCH --error=polar_plsqr_good_%j.err
+#SBATCH --job-name=polar_plsqr
+#SBATCH --output=polar_plsqr_%j.out
+#SBATCH --error=polar_plsqr_%j.err
 #SBATCH --nodelist=bigMem0
 #SBATCH --exclusive
 #SBATCH --time=18:00:00
@@ -23,6 +23,7 @@ echo "Job Name:         $SLURM_JOB_NAME"
 echo "Submit Directory: $SLURM_SUBMIT_DIR"
 echo "Submit Host:      $SLURM_SUBMIT_HOST"
 echo "Partition:        $SLURM_JOB_PARTITION"
+echo "QOS:              $SLURM_JOB_QOS"
 echo "Node List:        $SLURM_JOB_NODELIST"
 echo "Nodes:            $SLURM_NNODES"
 echo "Tasks:            $SLURM_NTASKS"
@@ -54,7 +55,7 @@ echo "Job started at: $(date)"
 echo "=========================================="
 echo ""
 
-matlab -r 'cd /home/jyliu/NUFFT2D; nufft2d_startup; cd experiments/typeII_2d_polar_plsqr_good; exp_typeII_2d_polar_plsqr_good;'
+matlab -r 'cd /home/jyliu/NUFFT2D; nufft2d_startup; cd experiments/typeII_2d_polar_plsqr; exp_typeII_2d_polar_plsqr;'
 
 echo ""
 echo "MATLAB finished at: $(date)"

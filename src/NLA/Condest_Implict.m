@@ -68,7 +68,7 @@ for r = 1 : restarts
     for k = 1 : maxit
         iter_total = iter_total + 1;
 
-        y = apply_forward(op, x);
+        y = op(x, 'notransp');
         est_k = norm(y, 1);
         if est_k > est
             est = est_k;
@@ -77,7 +77,7 @@ for r = 1 : restarts
 
         s = sign(y);
         s(s == 0) = 1;
-        z = apply_transpose(op, s);
+        z = op(s, 'transp');
 
         [zmax, j] = max(abs(z));
         hx = real(z' * x);
@@ -110,44 +110,5 @@ info.maxit = maxit;
 info.restarts = restarts;
 info.terminated_by_repeat = terminated_by_repeat;
 info.best_x = best_x;
-
-end
-
-function y = apply_forward(op, x)
-try
-    y = op(x, 'notransp');
-    return;
-catch ME_char
-end
-
-try
-    y = op(x, "notransp");
-    return;
-catch ME_string
-end
-
-try
-    y = op(x);
-    return;
-catch ME_single
-end
-
-error('Condest_Implict:InvalidOperatorSignature', ...
-    ['Operator call failed. Tried signatures: op(x, ''notransp''), ', ...
-    'op(x, "notransp"), op(x).\n', ...
-    'char-call error: %s\nstring-call error: %s\none-arg-call error: %s'], ...
-    ME_char.message, ME_string.message, ME_single.message);
-end
-
-function y = apply_transpose(op, x)
-try
-    y = op(x, "transp");
-    return;
-catch
-end
-
-error('Condest_Implict:TransposeUnavailable', ...
-    ['Conjugate-transpose action is required by Hager algorithm. ', ...
-    'Operator must support y = op(x, ''transp'').']);
 
 end
