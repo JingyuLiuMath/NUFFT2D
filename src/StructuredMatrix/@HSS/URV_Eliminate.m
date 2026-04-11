@@ -8,6 +8,8 @@ arguments (Input)
     level (1, 1) double;
 end
 
+A.urv_leaf_ = A.leaf_;
+
 if A.level_ == level
     if A.leaf_ == 0
         A.URV_Merge();
@@ -20,7 +22,7 @@ if A.level_ == level
 
     % Size reduction.
     if m >= (k + n)
-        [A.URV_Omega_, R] = qr([A.Umat_, A.Amat_]);
+        [A.URV_Omega_, R] = qr([A.Umat_, A.Amat_], "econ");
         A.URV_m_old_ = m;
         m = k + n;
         A.URV_m_new_ = m;
