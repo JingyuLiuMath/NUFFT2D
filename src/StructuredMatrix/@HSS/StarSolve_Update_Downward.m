@@ -10,7 +10,7 @@ arguments (Input)
 end
 
 if A.level_ == level
-    if A.level_ == max_level || A.urv_leaf_ == 1
+    if A.level_ == max_level || A.leaf_ == 1
         if isempty(A.URV_u_sk_)
             A.URV_u_sk_ = -A.URV_V_sk_ * A.uhvec_;
         else

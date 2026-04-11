@@ -26,12 +26,15 @@ else
 end
 
 % Compute fh;
+zhvec = cell(1, A.num_children_);
+for j = 1 : A.num_children_
+    zhvec{j} = A.children_{j}.URV_V_sk_' * A.children_{j}.URV_u_sk_;
+end
+
 for i = 1 : A.num_children_
     for j = [1 : (i - 1), (i + 1) : A.num_children_]
         A.children_{i}.fhvec_ ...
-            = A.children_{i}.fhvec_ ...
-            + A.Bmat_{i, j} * ...
-            (A.children_{j}.URV_V_sk_' * A.children_{j}.URV_u_sk_);
+            = A.children_{i}.fhvec_ + A.Bmat_{i, j} * zhvec{j};
     end
 end
 

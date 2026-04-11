@@ -52,7 +52,6 @@ classdef (Abstract) HSS < handle
         % *****************************************************************
         % PROPERTY: URV.
         % Matrices.
-        urv_leaf_ (1, 1) double;
         URV_m_old_ (1, 1) double;
         URV_m_new_ (1, 1) double;
         URV_re_size_ (1, 1) double;
