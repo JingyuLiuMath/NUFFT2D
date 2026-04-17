@@ -32,7 +32,7 @@ ylim([0, 1]);
 % fprintf("cond(A): %.1e\n", kappa_A);
 
 %% NUDFT2.
-min_points = p * n;
+min_points = 256;
 fprintf("min_points: %d\n", min_points);
 
 tic;

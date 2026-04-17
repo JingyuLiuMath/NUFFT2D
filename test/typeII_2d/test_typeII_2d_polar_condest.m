@@ -39,7 +39,7 @@ fprintf("Exact cond_2(A): %.6e\n", kappa_exact_2norm);
 fprintf("MATLAB condest sqrt(condest(A^H A)): %.6e\n", kappa_condest_1norm);
 
 %% HSS object.
-min_points = p * n;
+min_points = 256;
 fprintf("min_points: %d\n", min_points);
 
 tic;

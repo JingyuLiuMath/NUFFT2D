@@ -5,11 +5,10 @@ warning off;
 p_list = (5 : 9)';
 num_n = length(p_list);
 
-% beta_list = [0.6, 0.7]';
-beta_list = [0.7]';
+beta_list = [0.6, 0.7]';
 num_beta = length(beta_list);
 
-tol_hss_list = [1e-4]';
+tol_hss_list = [1e-4, 1e-2]';
 num_tol_hss = length(tol_hss_list);
 
 tol_cg = 1e-12;
@@ -45,7 +44,7 @@ for it_tol_hss = 1 : num_tol_hss
             fprintf("M: %d, N: %d\n", M, N);
             fprintf("M/N: %.1e\n", M / N);
 
-            min_points = n * p;
+            min_points = 256;
             fprintf("min_points: %d\n", min_points);
 
             % NUDFT2.

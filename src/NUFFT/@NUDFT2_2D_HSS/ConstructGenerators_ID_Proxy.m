@@ -7,16 +7,26 @@ arguments (Input)
 end
 
 M = A.row_global_size_;
+N = A.col_global_size_;
+
 nx = A.nx_;
 ny = A.ny_;
-N = A.col_global_size_;
-x_kernel_fun = @(z, w) NUFFT2_Kernel(z, w, nx);
-y_kernel_fun = @(z, w) NUFFT2_Kernel(z, w, ny);
 hx = 1 / nx;
 hy = 1 / ny;
-nx_ny = max(nx, ny);
-proxy_layer_size = log2(nx_ny);
-sampling_size = 2 * nx_ny * proxy_layer_size;
+n = max(nx, ny);
+
+x_kernel_fun = @(z, w) NUFFT2_Kernel(z, w, nx);
+y_kernel_fun = @(z, w) NUFFT2_Kernel(z, w, ny);
+
+local_nx = A.x_col_size_;
+local_ny = A.y_col_size_;
+local_n = max(local_nx, local_ny);
+
+% proxy_layer_size = log2(n);
+% sampling_size = 2 * n * proxy_layer_size;
+
+proxy_layer_size = log2(local_n);
+sampling_size = 4 * local_n * proxy_layer_size;
 
 if A.level_ == level
     if A.leaf_ == 0
@@ -134,23 +144,41 @@ if A.level_ == level
         exp(-2 * pi * 1i * col_proxy_surface_real(:, 1)), ...
         exp(-2 * pi * 1i * col_proxy_surface_real(:, 2))];
 
-    % figure();
-    % plot(A.row_xy_(:, 1), A.row_xy_(:, 2), "rx", "DisplayName", "row pts");
-    % hold on;
-    % plot(row_proxy_surface_real(:, 1), row_proxy_surface_real(:, 2), "bx", "DisplayName", "proxy pts");
-    % legend;
-    % xlim([0, 1]);
-    % ylim([0, 1]);
-    % axis equal;
-
-    % figure();
-    % plot(A.col_pos_(:, 1) / nx, A.col_pos_(:, 2) / ny, "rx", "DisplayName", "col pts");
-    % hold on;
-    % plot(col_proxy_surface_real(:, 1), col_proxy_surface_real(:, 2), "bx", "DisplayName", "proxy pts");
-    % legend;
-    % xlim([0, 1]);
-    % ylim([0, 1]);
-    % axis equal;
+    % if A.leaf_ == 1
+    %     figure();
+    %     plot(A.row_xy_(:, 1), A.row_xy_(:, 2), "rx", "DisplayName", "row pts");
+    %     hold on;
+    %     plot(row_proxy_surface_real(:, 1), row_proxy_surface_real(:, 2), "bx", "DisplayName", "proxy pts");
+    %     legend;
+    %     xlim([0, 1]);
+    %     ylim([0, 1]);
+    %     axis equal;
+    %     filename = "./figure/row_proxy_surface_" ...
+    %         + string(A.level_) ...
+    %         + "_" + string(A.row_offset_)  ...
+    %         + "_" + string(A.col_offset_)  ...
+    %         + "_" + string(A.row_size_) ...
+    %         + "_" + string(A.col_size_);
+    %     saveas(gcf, filename + ".png", "png");
+    %     saveas(gcf, filename + ".eps", "epsc");
+    % 
+    %     figure();
+    %     plot(A.col_pos_(:, 1) / nx, A.col_pos_(:, 2) / ny, "rx", "DisplayName", "col pts");
+    %     hold on;
+    %     plot(col_proxy_surface_real(:, 1), col_proxy_surface_real(:, 2), "bx", "DisplayName", "proxy pts");
+    %     legend;
+    %     xlim([0, 1]);
+    %     ylim([0, 1]);
+    %     axis equal;
+    %     filename = "./figure/col_proxy_surface_" ...
+    %         + string(A.level_) ...
+    %         + "_" + string(A.row_offset_)  ...
+    %         + "_" + string(A.col_offset_)  ...
+    %         + "_" + string(A.row_size_) ...
+    %         + "_" + string(A.col_size_);
+    %     saveas(gcf, filename + ".png", "png");
+    %     saveas(gcf, filename + ".eps", "epsc");
+    % end
 
     % Construct U using proxy surface.
     gamma_x_I = exp(-2 * pi * 1i * A.row_xy_(:, 1));

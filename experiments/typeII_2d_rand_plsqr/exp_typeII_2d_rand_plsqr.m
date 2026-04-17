@@ -44,7 +44,7 @@ for it_tol_hss = 1 : num_tol_hss
             fprintf("M: %d, N: %d\n", M, N);
             fprintf("M/N: %.1e\n", M / N);
 
-            min_points = n * p;
+            min_points = 256;
             fprintf("min_points: %d\n", min_points);
 
             % NUDFT2.
@@ -148,7 +148,7 @@ for it_tol_hss = 1 : num_tol_hss
                 clear A_exact ATA_exact;
             end
 
-            save("./data/typeII_2d_results_" + string(p) + "_" + string(alpha) + "_tol_" + string(tol_hss) + ".mat", ...
+            save("./data/typeII_2d_results_" + string(p) + "_" + string(alpha) + "_" + string(tol_hss) + ".mat", ...
                 "M", "N", ...
                 ...
                 "t_construct", ...
