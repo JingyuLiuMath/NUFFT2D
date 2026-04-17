@@ -2,14 +2,12 @@ clear;
 close all;
 
 p_list = (5 : 9)';
-% p_list = (5 : 8)';
 num_n = length(p_list);
 
-beta_list = [0.5, 0.6, 0.7]';
+beta_list = [0.6, 0.7]';
 num_beta = length(beta_list);
 
-% tol_hss_list = [1e-2, 1e-4];
-tol_hss_list = [1e-4];
+tol_hss_list = [1e-2, 1e-4];
 num_tol = length(tol_hss_list);
 
 n_list = 2.^p_list;
@@ -65,7 +63,7 @@ for it_beta = 1 : num_beta
     fprintf("beta = %.1e: ", beta);
     beta_av = mean(M_list(:, it_beta) ./ N_list ./ p_list);
     beta_av_list(it_beta) = beta_av;
-    fprintf("beta_av = %.2e: ", beta_av);
+    fprintf("beta_av = %.1e: ", beta_av);
     disp(M_list(:, it_beta) ./ N_list ./ p_list);
 end
 
@@ -82,7 +80,7 @@ for it_beta = 1 : num_beta
     fprintf("\\centering\n")
     fprintf("\\begin{tabular}{c c ccccc}\n")
     fprintf("\\toprule\n")
-    fprintf("\\(N\\) & Method & \\(t_{\\pre}\\) & \\(t_{\\iter}\\) & \\(n_{\\iter}\\) & \\(r_{\\solve}\\) & \\(e_{\\solve}\\) \\ \\n")
+    fprintf("\\(N\\) & Method & \\(t_{\\pre}\\) & \\(t_{\\iter}\\) & \\(n_{\\iter}\\) & \\(r_{\\solve}\\) & \\(e_{\\solve}\\) \\\\ \n")
     for it_n = 1 : num_n
         fprintf("\\midrule\n")
         n = n_list(it_n);
@@ -94,7 +92,7 @@ for it_beta = 1 : num_beta
         fprintf("& %d ", n_iter_list_lsqr(it_n, it_beta));
         fprintf("& %.1e ", rel_res_list_lsqr(it_n, it_beta));
         fprintf("& %.1e ", rel_acc_list_lsqr(it_n, it_beta));
-        fprintf("\\ \\n");
+        fprintf("\\\\ \n");
         for it_tol = 1 : num_tol
             tol_hss = tol_hss_list(it_tol);
             fprintf(" ");
@@ -109,7 +107,7 @@ for it_beta = 1 : num_beta
             fprintf("& %d ", n_iter_list_plsqr(it_n, it_tol, it_beta));
             fprintf("& %.1e ", rel_res_list_plsqr(it_n, it_tol, it_beta));
             fprintf("& %.1e ", rel_acc_list_plsqr(it_n, it_tol, it_beta));
-            fprintf("\\ \\n");
+            fprintf("\\\\ \n");
         end
     end
     fprintf("\\bottomrule\n")

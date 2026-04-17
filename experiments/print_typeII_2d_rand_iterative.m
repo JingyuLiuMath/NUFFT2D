@@ -2,10 +2,9 @@ clear;
 close all;
 
 p_list = (5 : 9)';
-% p_list = (5 : 8)';
 num_n = length(p_list);
 
-alpha_list = [1.5, 2.0, 2.5]';
+alpha_list = [2.0, 1.5]';
 num_alpha = length(alpha_list);
 
 tol_hss_list = [1e-2, 1e-4];
@@ -60,7 +59,7 @@ end
 
 for it_alpha = 1 : num_alpha
     alpha = alpha_list(it_alpha);
-    fprintf("alpha = %.1e: ", alpha);
+    fprintf("alpha = %.1e\n", alpha);
     disp(M_list(:, it_alpha) ./ N_list);
 end
 
@@ -76,7 +75,7 @@ for it_alpha = 1 : num_alpha
     fprintf("\\centering\n")
     fprintf("\\begin{tabular}{c c ccccc}\n")
     fprintf("\\toprule\n")
-    fprintf("\\(N\\) & Method & \\(t_{\\pre}\\) & \\(t_{\\iter}\\) & \\(n_{\\iter}\\) & \\(r_{\\solve}\\) & \\(e_{\\solve}\\) \\ \\n")
+    fprintf("\\(N\\) & Method & \\(t_{\\pre}\\) & \\(t_{\\iter}\\) & \\(n_{\\iter}\\) & \\(r_{\\solve}\\) & \\(e_{\\solve}\\) \\\\ \n")
     for it_n = 1 : num_n
         fprintf("\\midrule\n")
         n = n_list(it_n);
@@ -88,14 +87,14 @@ for it_alpha = 1 : num_alpha
         fprintf("& %d ", n_iter_list_lsqr(it_n, it_alpha));
         fprintf("& %.1e ", rel_res_list_lsqr(it_n, it_alpha));
         fprintf("& %.1e ", rel_acc_list_lsqr(it_n, it_alpha));
-        fprintf("\\ \\n");
+        fprintf("\\\\ \n");
         for it_tol = 1 : num_tol
             tol_hss = tol_hss_list(it_tol);
             fprintf(" ");
             if tol_hss == 1e-2
-                display_name = "tol = 1e-2";
+                display_name = "\\(\\varepsilon\\) = 1e-2";
             elseif tol_hss == 1e-4
-                display_name = "tol = 1e-4";
+                display_name = "\\(\\varepsilon\\) = 1e-4";
             end
             fprintf("& PLSQR (" + display_name + ") ");
             fprintf("& %.1e ", t_pre_list_plsqr(it_n, it_tol, it_alpha));
@@ -103,13 +102,18 @@ for it_alpha = 1 : num_alpha
             fprintf("& %d ", n_iter_list_plsqr(it_n, it_tol, it_alpha));
             fprintf("& %.1e ", rel_res_list_plsqr(it_n, it_tol, it_alpha));
             fprintf("& %.1e ", rel_acc_list_plsqr(it_n, it_tol, it_alpha));
-            fprintf("\\ \\n");
+            fprintf("\\\\ \n");
         end
     end
     fprintf("\\bottomrule\n")
     fprintf("\\end{tabular}\n")
-    fprintf("\\caption{Time cost, iteration number, relative residual and relative error of LSQR and PLSQR for 2D type-II NUDFT with a random grid. \\(M = %.1f N\\).}\n", alpha)
-    fprintf("\\label{tab:typeII_2d_rand_iterative_%.1f}\n", alpha)
+    if alpha == 1.5
+        fprintf("\\caption{Time cost, iteration number, relative residual and relative error of LSQR and PLSQR on a random grid. \\(M = 1.5 N\\).}\n")
+        fprintf("\\label{tab:typeII_2d_rand_iterative_1.5}\n")
+    elseif alpha == 2.0
+        fprintf("\\caption{Time cost, iteration number, relative residual and relative error of LSQR and PLSQR on a random grid. \\(M = 2 N\\).}\n")
+        fprintf("\\label{tab:typeII_2d_rand_iterative_2}\n")
+    end
     fprintf("\\end{table}\n")
     fprintf("\n\n")
 end

@@ -5,10 +5,10 @@ warning off;
 p_list = (5 : 9)';
 num_n = length(p_list);
 
-alpha_list = [1.5, 2.0, 2.5]';
+alpha_list = [1.5, 2.0]';
 num_alpha = length(alpha_list);
 
-tol_hss_list = [1e-2, 1e-4]';
+tol_hss_list = [1e-4, 1e-2]';
 num_tol_hss = length(tol_hss_list);
 
 tol_cg = 1e-12;
@@ -21,6 +21,7 @@ fprintf("maxit: %d\n", maxit);
 fprintf("maxit_condest: %d\n", maxit_condest);
 fprintf("restarts: %d\n", restarts);
 
+warmup = 1;
 for it_tol_hss = 1 : num_tol_hss
     for it_alpha = 1 : num_alpha
         for it_p = 1 : num_n
@@ -32,7 +33,7 @@ for it_tol_hss = 1 : num_tol_hss
             nx = n;
             ny = n;
             N = nx * ny;
-            
+
             load("../typeII_2d_rand_lsqr/data/typeII_2d_points_" + string(p) + "_" + string(alpha) + ".mat");
             M = size(x, 1);
 
@@ -47,6 +48,13 @@ for it_tol_hss = 1 : num_tol_hss
             fprintf("min_points: %d\n", min_points);
 
             % NUDFT2.
+            if warmup == 1
+                A = NUDFT2_2D(nx, ny);
+                A.Construct_ID_Proxy(x, min_points, tol_hss);
+                A.URV_Factor();
+                warmup = 0;
+            end
+
             tic;
             A = NUDFT2_2D(nx, ny);
             A.Construct_ID_Proxy(x, min_points, tol_hss);
@@ -79,7 +87,7 @@ for it_tol_hss = 1 : num_tol_hss
             t_direct = toc;
             fprintf("Time: %.1e\n", t_direct);
             u_direct = real(u_direct);
-            
+
             r_direct = f_nufft - MY_NUFFT2_2D(u_direct, x, nx, ny);
             rel_res_direct = norm(r_direct) / norm(f_nufft);
             fprintf("Rel res: %.1e\n", rel_res_direct);
@@ -97,15 +105,15 @@ for it_tol_hss = 1 : num_tol_hss
             fprintf("Time: %.1e\n", t_iter);
             fprintf("Iter number: %d\n", iter);
             u_iter = real(u_iter);
-            
+
             r_iter = f_nufft - MY_NUFFT2_2D(u_iter, x, nx, ny);
             rel_res_iter = norm(r_iter) / norm(f_nufft);
             fprintf("Rel res: %.1e\n", rel_res_iter);
-            
+
             e_iter = u_ex - u_iter;
             rel_acc_iter = norm(e_iter) / norm(u_ex);
             fprintf("Rel acc: %.1e\n", rel_acc_iter);
-            
+
             P_reconstruct_iter = reshape(u_iter, n, n);
 
             t_pre = t_construct + t_factor;
@@ -137,6 +145,7 @@ for it_tol_hss = 1 : num_tol_hss
                 else
                     fprintf("Skip explicit matrix cond for p=%d (rule: only condest for 8<=p<=9).\n", p);
                 end
+                clear A_exact ATA_exact;
             end
 
             save("./data/typeII_2d_results_" + string(p) + "_" + string(alpha) + "_tol_" + string(tol_hss) + ".mat", ...
@@ -159,6 +168,10 @@ for it_tol_hss = 1 : num_tol_hss
                 "cond_number_est", "cond_number_exact", "cond_number_exact_2norm", ...
                 ...
                 "t_cond_est", "t_cond_exact");
+            clear A;
+            clear P u_ex f_nufft;
+            clear u_direct r_direct e_direct P_reconstruct_direct;
+            clear u_iter r_iter e_iter P_reconstruct_iter;
         end
     end
 end

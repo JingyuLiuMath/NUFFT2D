@@ -27,6 +27,10 @@ t_solve_list = zeros(num_n, num_beta);
 rel_res_list = zeros(num_n, num_beta);
 rel_acc_list = zeros(num_n, num_beta);
 
+cond_est_list = zeros(num_n, 2);
+cond_exact_list = zeros(num_n, 2);
+cond_exact_2norm_list = zeros(num_n, 2);
+
 colors = ["#0072BD", "#D95319", "#77AC30", "#EDB120", "#7E2F8E", "#4DBEEE"];
 markers = ["o", "+", "x", "s", "d", "^"];
 
@@ -174,6 +178,10 @@ for it_n = 1 : num_n
 
     rel_res_list(it_n, 2) = rel_res_direct;
     rel_acc_list(it_n, 2) = rel_acc_direct;
+
+    cond_est_list(it_n, 2) = cond_number_est;
+    cond_exact_list(it_n, 2) = cond_number_exact;
+    cond_exact_2norm_list(it_n, 2) = cond_number_exact_2norm;
 end
 
 figure();
@@ -407,5 +415,51 @@ lgd.Interpreter = 'latex';
 set(gca, 'FontSize', 18);
 saveas(gcf, "./figure/polar_bad_rel_acc.png", "png");
 saveas(gcf, "./figure/polar_bad_rel_acc.eps", "epsc");
+
+% Condition Number (only tol_hss == 1e-4)
+figure();
+
+valid_ind = ~isnan(cond_est_list(:, 2));
+if any(valid_ind)
+    loglog(N_list(valid_ind), cond_est_list(valid_ind, 2), ...
+        "LineWidth", 2, ...
+        "Marker", "+", ...
+        "Color", "#0072BD", ...
+        "DisplayName", "Estimated cond (1-norm)");
+    hold on;
+end
+
+valid_ind = ~isnan(cond_exact_2norm_list(:, 2));
+if any(valid_ind)
+    loglog(N_list(valid_ind), cond_exact_2norm_list(valid_ind, 2), ...
+        "LineWidth", 2, ...
+        "Marker", "+", ...
+        "LineStyle", "--", ...
+        "Color", "#D95319", ...
+        "DisplayName", "Exact cond (2-norm)");
+    hold on;
+end
+
+valid_ind = ~isnan(cond_exact_list(:, 2));
+if any(valid_ind)
+    loglog(N_list(valid_ind), cond_exact_list(valid_ind, 2), ...
+        "LineWidth", 2, ...
+        "Marker", "o", ...
+        "LineStyle", ":", ...
+        "Color", "#77AC30", ...
+        "DisplayName", "Exact cond (1-norm)");
+    hold on;
+end
+
+title("Condition Number");
+xlabel("$N$", "Interpreter", "latex");
+ylabel("Condition Number", "Interpreter", "latex");
+lgd = legend("Location", "northwest");
+lgd.Interpreter = 'latex';
+set(gca, 'FontSize', 18);
+grid on;
+hold off;
+saveas(gcf, "./figure/polar_bad_cond.png", "png");
+saveas(gcf, "./figure/polar_bad_cond.eps", "epsc");
 
 fprintf("Figures saved to ./figure/\n");

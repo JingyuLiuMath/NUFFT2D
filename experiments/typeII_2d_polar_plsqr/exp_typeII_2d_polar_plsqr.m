@@ -5,10 +5,11 @@ warning off;
 p_list = (5 : 9)';
 num_n = length(p_list);
 
-beta_list = [0.5, 0.6, 0.7]';
+% beta_list = [0.6, 0.7]';
+beta_list = [0.7]';
 num_beta = length(beta_list);
 
-tol_hss_list = [1e-4, 1e-2]';
+tol_hss_list = [1e-4]';
 num_tol_hss = length(tol_hss_list);
 
 tol_cg = 1e-12;
@@ -21,6 +22,7 @@ fprintf("maxit: %d\n", maxit);
 fprintf("maxit_condest: %d\n", maxit_condest);
 fprintf("restarts: %d\n", restarts);
 
+warmup = 1;
 for it_tol_hss = 1 : num_tol_hss
     for it_beta = 1 : num_beta
         for it_p = 1 : num_n
@@ -47,6 +49,13 @@ for it_tol_hss = 1 : num_tol_hss
             fprintf("min_points: %d\n", min_points);
 
             % NUDFT2.
+            if warmup == 1
+                A = NUDFT2_2D(nx, ny);
+                A.Construct_ID_Proxy(x, min_points, tol_hss);
+                A.URV_Factor();
+                warmup = 0;
+            end
+
             tic;
             A = NUDFT2_2D(nx, ny);
             A.Construct_ID_Proxy(x, min_points, tol_hss);
@@ -137,6 +146,7 @@ for it_tol_hss = 1 : num_tol_hss
                 else
                     fprintf("Skip explicit matrix cond for p=%d (rule: only condest for 8<=p<=9).\n", p);
                 end
+                clear A_exact ATA_exact;
             end
 
             save("./data/typeII_2d_results_" + string(p) + "_" + string(beta) + "_tol_" + string(tol_hss) + ".mat", ...
@@ -159,6 +169,10 @@ for it_tol_hss = 1 : num_tol_hss
                 "cond_number_est", "cond_number_exact", "cond_number_exact_2norm", ...
                 ...
                 "t_cond_est", "t_cond_exact");
+            clear A;
+            clear P u_ex f_nufft;
+            clear u_direct r_direct e_direct P_reconstruct_direct;
+            clear u_iter r_iter e_iter P_reconstruct_iter;
         end
     end
 end
