@@ -38,7 +38,7 @@ for it_alpha = 1 : num_alpha
         for it_n = 1 : num_n
             p = p_list(it_n);
 
-            load("./data/typeII_2d_results_" + string(p) + "_" + string(alpha) + "_tol_" + string(tol_hss) + ".mat");
+            load("./data/typeII_2d_results_" + string(p) + "_" + string(alpha) + "_" + string(tol_hss) + ".mat");
 
             M_list(it_n, it_tol, it_alpha) = M;
 
@@ -72,9 +72,9 @@ for it_alpha = 1 : num_alpha
     for it_tol = 1 : num_tol
         tol_hss = tol_hss_list(it_tol);
         if tol_hss == 1e-2
-            display_name = "tol = 1e-2";
+            display_name = "$\varepsilon$ = 1e-2";
         elseif tol_hss == 1e-4
-            display_name = "tol = 1e-4";
+            display_name = "$\varepsilon$ = 1e-4";
         end
         loglog(N_list, hss_rank_list(:, it_tol, it_alpha), ...
             "LineWidth", 2, ...
@@ -110,9 +110,9 @@ for it_alpha = 1 : num_alpha
     for it_tol = 1 : num_tol
         tol_hss = tol_hss_list(it_tol);
         if tol_hss == 1e-2
-            display_name = "tol = 1e-2";
+            display_name = "$\varepsilon$ = 1e-2";
         elseif tol_hss == 1e-4
-            display_name = "tol = 1e-4";
+            display_name = "$\varepsilon$ = 1e-4";
         end
         loglog(N_list, mem_list(:, it_tol, it_alpha), ...
             "LineWidth", 2, ...
@@ -149,9 +149,9 @@ for it_alpha = 1 : num_alpha
     for it_tol = 1 : num_tol
         tol_hss = tol_hss_list(it_tol);
         if tol_hss == 1e-2
-            display_name = "tol = 1e-2";
+            display_name = "$\varepsilon$ = 1e-2";
         elseif tol_hss == 1e-4
-            display_name = "tol = 1e-4";
+            display_name = "$\varepsilon$ = 1e-4";
         end
         loglog(N_list, t_construct_list(:, it_tol, it_alpha), ...
             "LineWidth", 2, ...
@@ -168,7 +168,7 @@ for it_alpha = 1 : num_alpha
         "LineWidth", 2, ...
         "LineStyle", "--", ...
         "Color", ref_color, ...
-        "DisplayName", "$O(N^{1.5} \log^{3} N)$");
+        "DisplayName", "$O(N^{3 / 2} \log^{3} N)$");
     if alpha == 2.0
         title(sprintf("Construct Time ($M = 2 N$)"), "Interpreter", "latex");
     elseif alpha == 1.5
@@ -188,9 +188,9 @@ for it_alpha = 1 : num_alpha
     for it_tol = 1 : num_tol
         tol_hss = tol_hss_list(it_tol);
         if tol_hss == 1e-2
-            display_name = "tol = 1e-2";
+            display_name = "$\varepsilon$ = 1e-2";
         elseif tol_hss == 1e-4
-            display_name = "tol = 1e-4";
+            display_name = "$\varepsilon$ = 1e-4";
         end
         loglog(N_list, t_factor_list(:, it_tol, it_alpha), ...
             "LineWidth", 2, ...
@@ -207,7 +207,7 @@ for it_alpha = 1 : num_alpha
         "LineWidth", 2, ...
         "LineStyle", "--", ...
         "Color", ref_color, ...
-        "DisplayName", "$O(N^{1.5} \log^{3} N)$");
+        "DisplayName", "$O(N^{3 / 2} \log^{3} N)$");
     if alpha == 2.0
         title(sprintf("Factor Time ($M = 2 N$)"), "Interpreter", "latex");
     elseif alpha == 1.5
@@ -227,9 +227,9 @@ for it_alpha = 1 : num_alpha
     for it_tol = 1 : num_tol
         tol_hss = tol_hss_list(it_tol);
         if tol_hss == 1e-2
-            display_name = "tol = 1e-2";
+            display_name = "$\varepsilon$ = 1e-2";
         elseif tol_hss == 1e-4
-            display_name = "tol = 1e-4";
+            display_name = "$\varepsilon$ = 1e-4";
         end
         loglog(N_list, t_solve_list(:, it_tol, it_alpha), ...
             "LineWidth", 2, ...
@@ -266,9 +266,9 @@ for it_alpha = 1 : num_alpha
     for it_tol = 1 : num_tol
         tol_hss = tol_hss_list(it_tol);
         if tol_hss == 1e-2
-            display_name = "tol = 1e-2";
+            display_name = "$\varepsilon$ = 1e-2";
         elseif tol_hss == 1e-4
-            display_name = "tol = 1e-4";
+            display_name = "$\varepsilon$ = 1e-4";
         end
         loglog(N_list, rel_res_list(:, it_tol, it_alpha), ...
             "LineWidth", 2, ...
@@ -297,9 +297,9 @@ for it_alpha = 1 : num_alpha
     for it_tol = 1 : num_tol
         tol_hss = tol_hss_list(it_tol);
         if tol_hss == 1e-2
-            display_name = "tol = 1e-2";
+            display_name = "$\varepsilon$ = 1e-2";
         elseif tol_hss == 1e-4
-            display_name = "tol = 1e-4";
+            display_name = "$\varepsilon$ = 1e-4";
         end
         loglog(N_list, rel_acc_list(:, it_tol, it_alpha), ...
             "LineWidth", 2, ...

@@ -44,7 +44,7 @@ for it_alpha = 1 : num_alpha
 
         for it_tol = 1 : num_tol
             tol_hss = tol_hss_list(it_tol);
-            load("./typeII_2d_rand_plsqr/data/typeII_2d_results_" + string(p) + "_" + string(alpha) + "_tol_" + string(tol_hss) + ".mat");
+            load("./typeII_2d_rand_plsqr/data/typeII_2d_results_" + string(p) + "_" + string(alpha) + "_" + string(tol_hss) + ".mat");
 
             assert(M == M_list(it_n, it_alpha), "M does not match for LSQR and PLSQR.");
 
@@ -73,14 +73,16 @@ for it_alpha = 1 : num_alpha
     
     fprintf("\\begin{table}[tbhp]\n")
     fprintf("\\centering\n")
-    fprintf("\\begin{tabular}{c c ccccc}\n")
+    fprintf("\\begin{tabular}{cc c ccccc}\n")
     fprintf("\\toprule\n")
-    fprintf("\\(N\\) & Method & \\(t_{\\pre}\\) & \\(t_{\\iter}\\) & \\(n_{\\iter}\\) & \\(r_{\\solve}\\) & \\(e_{\\solve}\\) \\\\ \n")
+    fprintf("\\(N\\) & \\(M\\) & Method & \\(t_{\\pre}\\) & \\(t_{\\iter}\\) & \\(n_{\\iter}\\) & \\(r_{\\solve}\\) & \\(e_{\\solve}\\) \\\\ \n")
     for it_n = 1 : num_n
         fprintf("\\midrule\n")
         n = n_list(it_n);
         tmp_str = string(n) + "^2";
         fprintf("\\multirow{%d}{*}{\\(%s\\)} ", k, tmp_str);
+        tmp_str = string(M_list(it_n, it_alpha));
+        fprintf("& \\multirow{%d}{*}{\\(%s\\)} ", k, tmp_str);
         fprintf("& LSQR ");
         fprintf("& - ");
         fprintf("& %.1e ", t_iter_list_lsqr(it_n, it_alpha));
@@ -96,7 +98,7 @@ for it_alpha = 1 : num_alpha
             elseif tol_hss == 1e-4
                 display_name = "\\(\\varepsilon\\) = 1e-4";
             end
-            fprintf("& PLSQR (" + display_name + ") ");
+            fprintf("& & PLSQR (" + display_name + ") ");
             fprintf("& %.1e ", t_pre_list_plsqr(it_n, it_tol, it_alpha));
             fprintf("& %.1e ", t_iter_list_plsqr(it_n, it_tol, it_alpha));
             fprintf("& %d ", n_iter_list_plsqr(it_n, it_tol, it_alpha));
@@ -108,10 +110,10 @@ for it_alpha = 1 : num_alpha
     fprintf("\\bottomrule\n")
     fprintf("\\end{tabular}\n")
     if alpha == 1.5
-        fprintf("\\caption{Time cost, iteration number, relative residual and relative error of LSQR and PLSQR on a random grid. \\(M = 1.5 N\\).}\n")
+        fprintf("\\caption{Time cost, iteration number, relative residual and relative error of LSQR and PLSQR on a random grid. \\(\\alpha = 1.5 \\). \\(M = 1.5 N\\).}\n")
         fprintf("\\label{tab:typeII_2d_rand_iterative_1.5}\n")
     elseif alpha == 2.0
-        fprintf("\\caption{Time cost, iteration number, relative residual and relative error of LSQR and PLSQR on a random grid. \\(M = 2 N\\).}\n")
+        fprintf("\\caption{Time cost, iteration number, relative residual and relative error of LSQR and PLSQR on a random grid. \\(\\alpha = 2\\). \\(M = 2 N\\).}\n")
         fprintf("\\label{tab:typeII_2d_rand_iterative_2}\n")
     end
     fprintf("\\end{table}\n")

@@ -7,7 +7,7 @@ num_n = length(p_list);
 beta_list = [0.6]';
 num_beta = length(beta_list);
 
-tol_hss_list = [1e-4];
+tol_hss_list = [1e-2];
 num_tol = length(tol_hss_list);
 
 
@@ -21,7 +21,7 @@ for it_beta = 1 : num_beta
 
         for it_tol = 1 : num_tol
             tol_hss = tol_hss_list(it_tol);
-            load("./typeII_2d_polar_plsqr/data/typeII_2d_results_" + string(p) + "_" + string(beta) + "_tol_" + string(tol_hss) + ".mat");
+            load("./typeII_2d_polar_plsqr/data/typeII_2d_results_" + string(p) + "_" + string(beta) + "_" + string(tol_hss) + ".mat");
 
             norm_P = norm(P, "fro");
             fprintf("rel err of direct: %.1e\n", norm(P_reconstruct_direct - P, "fro") / norm_P);

@@ -21,7 +21,7 @@ for it_alpha = 1 : num_alpha
 
         for it_tol = 1 : num_tol
             tol_hss = tol_hss_list(it_tol);
-            load("./typeII_2d_rand_plsqr/data/typeII_2d_results_" + string(p) + "_" + string(alpha) + "_tol_" + string(tol_hss) + ".mat");
+            load("./typeII_2d_rand_plsqr/data/typeII_2d_results_" + string(p) + "_" + string(alpha) + "_" + string(tol_hss) + ".mat");
 
             norm_P = norm(P, "fro");
             fprintf("rel err of direct: %.1e\n", norm(P_reconstruct_direct - P, "fro") / norm_P);
