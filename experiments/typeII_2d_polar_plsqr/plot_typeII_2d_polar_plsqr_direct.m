@@ -101,7 +101,7 @@ for it_beta = 1 : num_beta
         title(sprintf("HSS Rank ($M \\approx 0.47 N \\log_{4} (N) $)", beta), "Interpreter", "latex");
     end
     xlabel("$N$", "Interpreter", "latex");
-    ylabel("$r_{\\mathrm{h}}$", "Interpreter", "latex");
+    ylabel("$r_{\mathrm{h}}$", "Interpreter", "latex");
     lgd = legend("Location", "southeast");
     lgd.Interpreter = 'latex';
     set(gca, 'FontSize', 18);
@@ -140,7 +140,7 @@ for it_beta = 1 : num_beta
         title(sprintf("Memory ($M \\approx 0.47 N \\log_{4} (N) $)", beta), "Interpreter", "latex");
     end
     xlabel("$N$", "Interpreter", "latex");
-    ylabel("$m_{\\mathrm{h}}$ (GB)", "Interpreter", "latex");
+    ylabel("$m_{\mathrm{h}}$ (GB)", "Interpreter", "latex");
     lgd = legend("Location", "southeast");
     lgd.Interpreter = 'latex';
     set(gca, 'FontSize', 18);
@@ -179,7 +179,7 @@ for it_beta = 1 : num_beta
         title(sprintf("Construct Time ($M \\approx 0.47 N \\log_{4} (N) $)", beta), "Interpreter", "latex");
     end
     xlabel("$N$", "Interpreter", "latex");
-    ylabel("$t_{\\mathrm{c}}$ (s)", "Interpreter", "latex");
+    ylabel("$t_{\mathrm{c}}$ (s)", "Interpreter", "latex");
     lgd = legend("Location", "southeast");
     lgd.Interpreter = 'latex';
     set(gca, 'FontSize', 18);
@@ -218,7 +218,7 @@ for it_beta = 1 : num_beta
         title(sprintf("Factor Time ($M \\approx 0.47 N \\log_{4} (N) $)", beta), "Interpreter", "latex");
     end
     xlabel("$N$", "Interpreter", "latex");
-    ylabel("$t_{\\mathrm{f}}$ (s)", "Interpreter", "latex");
+    ylabel("$t_{\mathrm{f}}$ (s)", "Interpreter", "latex");
     lgd = legend("Location", "southeast");
     lgd.Interpreter = 'latex';
     set(gca, 'FontSize', 18);
@@ -257,7 +257,7 @@ for it_beta = 1 : num_beta
         title(sprintf("Solve Time ($M \\approx 0.47 N \\log_{4} (N) $)", beta), "Interpreter", "latex");
     end
     xlabel("$N$", "Interpreter", "latex");
-    ylabel("$t_{\\mathrm{s}}$ (s)", "Interpreter", "latex");
+    ylabel("$t_{\mathrm{s}}$ (s)", "Interpreter", "latex");
     lgd = legend("Location", "southeast");
     lgd.Interpreter = 'latex';
     set(gca, 'FontSize', 18);
@@ -287,7 +287,7 @@ for it_beta = 1 : num_beta
         title(sprintf("Relative Residual ($M \\approx 0.47 N \\log_{4} (N) $)", beta), "Interpreter", "latex");
     end
     xlabel("$N$", "Interpreter", "latex");
-    ylabel("$r_{\\mathrm{s}}$", "Interpreter", "latex");
+    ylabel("$r_{\mathrm{s}}$", "Interpreter", "latex");
     lgd = legend("Location", "southeast");
     lgd.Interpreter = 'latex';
     set(gca, 'FontSize', 18);
@@ -317,7 +317,7 @@ for it_beta = 1 : num_beta
         title(sprintf("Relative Accuracy ($M \\approx 0.47 N \\log_{4} (N) $)", beta), "Interpreter", "latex");
     end
     xlabel("$N$", "Interpreter", "latex");
-    ylabel("$e_{\\mathrm{s}}$", "Interpreter", "latex");
+    ylabel("$e_{\mathrm{s}}$", "Interpreter", "latex");
     lgd = legend("Location", "southeast");
     lgd.Interpreter = 'latex';
     set(gca, 'FontSize', 18);
