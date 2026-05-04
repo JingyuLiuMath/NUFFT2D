@@ -18,7 +18,7 @@ end
 
 num_rhs = size(f, 2);
 
-op_A = @(v, opt) afun(v, opt, xy, nx, ny);
+op_A = @(v, opt) afun(v, opt, x, N);
 
 u = zeros(N, num_rhs);
 flag = zeros(1, num_rhs);
@@ -26,7 +26,7 @@ relres = zeros(1, num_rhs);
 iter = zeros(1, num_rhs);
 resvec = cell(1, num_rhs);
 for it = 1 : num_rhs
-    [u(:, it), flag(it), relres(it), iter(it), resvec{it}] = pcg(op_A, f(:, it), tol, maxit);
+    [u(:, it), flag(it), relres(it), iter(it), resvec{it}] = lsqr(op_A, f(:, it), tol, maxit);
 end
 
 end

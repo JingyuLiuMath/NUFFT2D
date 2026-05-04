@@ -1,4 +1,4 @@
-function f = MY_NUFFT(u, x, omega, method, acc)
+function f = MY_NUFFT3(u, x, omega, method, acc)
 % MY_NUFFT
 
 % f[j] = \sum_{k = 0}^{N - 1} exp(-2 * pi * 1i * x[j] * omega[k]) u[k]
