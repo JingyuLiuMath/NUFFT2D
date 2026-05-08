@@ -9,6 +9,7 @@ N = nx * ny;
 fprintf("Basic info.\n");
 fprintf("  M: %d\n", M);
 fprintf("  n: %d, N: %d\n", n, N);
+fprintf("  M/N: %.1e\n", M / N);
 
 fprintf("  min_points: %d\n", min_points);
 fprintf("  tol_hss: %.1e\n", tol_hss);
@@ -28,12 +29,12 @@ result.maxit_cg = maxit_cg;
 P = phantom('Modified Shepp-Logan', n);
 c_ex = reshape(P, N, []);
 result.c_ex = c_ex;
-f_ex = MY_NUFFT2_2D(c_ex, xy, n, ny);
+f_ex = MY_NUFFT2_2D(c_ex, xy, nx, ny);
 
 % NUDFT2.
 fprintf("NUDFT2.\n")
 tic;
-A = NUDFT2_2D(n, ny);
+A = NUDFT2_2D(nx, ny);
 A.Construct_ID_Proxy(xy, min_points, tol_hss);
 result.t_construct = toc;
 fprintf("  t_construct: %e\n", result.t_construct);
@@ -72,19 +73,19 @@ fprintf("  rel_err_direct: %.1e\n", result.rel_err_direct);
 % Iterative solution.
 fprintf("Iterative solution.\n");
 
-fprintf("  Without precond.\n")
-tic;
-[c_cg, result.flag_cg, ~, result.iter_cg, ~]  = INUDFT2_2D_CG(xy, nx, ny, f_ex, tol_cg, maxit_cg);
-result.t_cg = toc;
-c_cg = real(c_cg);
-result.c_cg = c_cg;
-
-fprintf("    t_cg: %.1e\n", result.t_cg);
-fprintf("    iter_cg: %d\n", result.iter_cg);
-result.rel_res_cg = norm(f_ex - MY_NUFFT2_2D(c_cg, xy, nx, ny)) / norm(f_ex);
-fprintf("    rel_res_cg: %.1e\n", result.rel_res_cg);
-result.rel_err_cg = norm(c_ex - c_cg) / norm(c_ex);
-fprintf("    rel_err_cg: %.1e\n", result.rel_err_cg);
+% fprintf("  Without precond.\n")
+% tic;
+% [c_cg, result.flag_cg, ~, result.iter_cg, ~]  = INUDFT2_2D_CG(xy, nx, ny, f_ex, tol_cg, maxit_cg);
+% result.t_cg = toc;
+% c_cg = real(c_cg);
+% result.c_cg = c_cg;
+% 
+% fprintf("    t_cg: %.1e\n", result.t_cg);
+% fprintf("    iter_cg: %d\n", result.iter_cg);
+% result.rel_res_cg = norm(f_ex - MY_NUFFT2_2D(c_cg, xy, nx, ny)) / norm(f_ex);
+% fprintf("    rel_res_cg: %.1e\n", result.rel_res_cg);
+% result.rel_err_cg = norm(c_ex - c_cg) / norm(c_ex);
+% fprintf("    rel_err_cg: %.1e\n", result.rel_err_cg);
 
 fprintf("  With precond.\n");
 tic;

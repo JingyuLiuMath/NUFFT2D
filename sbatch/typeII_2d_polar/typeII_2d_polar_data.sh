@@ -1,10 +1,10 @@
 #!/bin/bash
 
-#SBATCH --job-name=rand_lsqr
-#SBATCH --output=rand_lsqr_%j.out
-#SBATCH --error=rand_lsqr_%j.err
+#SBATCH --job-name=polar_data
+#SBATCH --output=polar_data_%j.out
+#SBATCH --error=polar_data_%j.err
 #SBATCH --nodelist=bigMem0
-#SBATCH --exclusive
+#SBATCH --time=18:00:00
 
 export PATH=$PATH:/home/jyliu/NUFFT2D/extern/fftw-3.3.10/build_double/bin:/home/jyliu/NUFFT2D/extern/fftw-3.3.10/build_single/bin
 export LIBRARY_PATH=$LIBRARY_PATH:/home/jyliu/NUFFT2D/extern/fftw-3.3.10/build_double/lib:/home/jyliu/NUFFT2D/extern/fftw-3.3.10/build_single/lib
@@ -53,10 +53,11 @@ echo "Job started at: $(date)"
 echo "=========================================="
 echo ""
 
-matlab -r 'cd /home/jyliu/NUFFT2D; nufft2d_startup; cd experiments/typeII_2d_rand_lsqr; exp_typeII_2d_rand_lsqr;'
+matlab -r 'cd /home/jyliu/NUFFT2D; nufft2d_startup; cd experiments/typeII_2d_polar; exp_typeII_2d_polar_data;'
 
 echo ""
 echo "MATLAB finished at: $(date)"
 echo "=========================================="
 echo "Job completed"
 echo "=========================================="
+

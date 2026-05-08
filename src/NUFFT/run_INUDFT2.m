@@ -65,17 +65,17 @@ fprintf("  rel_err_direct: %.1e\n", result.rel_err_direct);
 % Iterative solution.
 fprintf("Iterative solution.\n");
 
-fprintf("  Without precond.\n")
-tic;
-[c_cg, result.flag_cg, ~, result.iter_cg, ~]  = INUDFT2_CG(x, N, f_ex, tol_cg, maxit_cg);
-result.t_cg = toc;
-
-fprintf("    t_cg: %.1e\n", result.t_cg);
-fprintf("    iter_cg: %d\n", result.iter_cg);
-result.rel_res_cg = norm(f_ex - MY_NUFFT2(c_cg, x, N)) / norm(f_ex);
-fprintf("    rel_res_cg: %.1e\n", result.rel_res_cg);
-result.rel_err_cg = norm(c_ex - c_cg) / norm(c_ex);
-fprintf("    rel_err_cg: %.1e\n", result.rel_err_cg);
+% fprintf("  Without precond.\n")
+% tic;
+% [c_cg, result.flag_cg, ~, result.iter_cg, ~]  = INUDFT2_CG(x, N, f_ex, tol_cg, maxit_cg);
+% result.t_cg = toc;
+% 
+% fprintf("    t_cg: %.1e\n", result.t_cg);
+% fprintf("    iter_cg: %d\n", result.iter_cg);
+% result.rel_res_cg = norm(f_ex - MY_NUFFT2(c_cg, x, N)) / norm(f_ex);
+% fprintf("    rel_res_cg: %.1e\n", result.rel_res_cg);
+% result.rel_err_cg = norm(c_ex - c_cg) / norm(c_ex);
+% fprintf("    rel_err_cg: %.1e\n", result.rel_err_cg);
 
 fprintf("  With precond.\n");
 tic;

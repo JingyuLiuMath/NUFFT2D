@@ -1,0 +1,24 @@
+exp_typeII_2d_polar_settings;
+
+for it_beta = 1 : num_beta
+    for it_p = 1 : num_n
+        beta = beta_list(it_beta);
+        p = p_list(it_p);
+        n = 2^p;
+
+        load("./data/typeII_2d_points" ...
+            + "_" + string(p) ...
+            + "_" + string(beta) ...
+            + ".mat");
+
+        fprintf("\n\n\n\n");
+        fprintf("p: %d\n", p);
+
+        result = run_INUDFT2_2D_LSQR(x, n, tol_cg, maxit_cg);
+
+        save("./data/typeII_2d_results_lsqr" ...
+            + "_" + string(p) ...
+            + "_" + string(beta) ...
+            + ".mat", "result");
+    end
+end

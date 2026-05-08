@@ -1,0 +1,28 @@
+exp_typeII_2d_polar_settings;
+
+for it_tol_hss = 1 : num_tol_hss
+    for it_beta = 1 : num_beta
+        for it_p = 1 : num_n
+            tol_hss = tol_hss_list(it_tol_hss);
+            beta = beta_list(it_beta);
+            p = p_list(it_p);
+            n = 2^p;
+
+            load("./data/typeII_2d_points" ...
+                + "_" + string(p) ...
+                + "_" + string(beta) ...
+                + ".mat");
+
+            fprintf("\n\n\n\n");
+            fprintf("p: %d\n", p);
+
+            result = run_INUDFT2_2D(x, n, min_points, tol_hss, tol_cg, maxit_cg);
+
+            save("./data/typeII_2d_results" ...
+                + "_" + string(p) ...
+                + "_" + string(beta) ...
+                + "_" + string(tol_hss) ...
+                + ".mat", "result");
+        end
+    end
+end

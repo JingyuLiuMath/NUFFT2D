@@ -1,8 +1,8 @@
 #!/bin/bash
 
-#SBATCH --job-name=rand_plsqr
-#SBATCH --output=rand_plsqr_%j.out
-#SBATCH --error=rand_plsqr_%j.err
+#SBATCH --job-name=polar
+#SBATCH --output=polar_%j.out
+#SBATCH --error=polar_%j.err
 #SBATCH --nodelist=bigMem0
 #SBATCH --exclusive
 #SBATCH --time=18:00:00
@@ -54,7 +54,7 @@ echo "Job started at: $(date)"
 echo "=========================================="
 echo ""
 
-matlab -r 'cd /home/jyliu/NUFFT2D; nufft2d_startup; cd experiments/typeII_2d_rand_plsqr; exp_typeII_2d_rand_plsqr;'
+matlab -r 'cd /home/jyliu/NUFFT2D; nufft2d_startup; cd experiments/typeII_2d_polar; exp_typeII_2d_polar;'
 
 echo ""
 echo "MATLAB finished at: $(date)"
