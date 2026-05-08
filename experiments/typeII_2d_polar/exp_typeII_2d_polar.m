@@ -16,6 +16,7 @@ for it_tol_hss = 1 : num_tol_hss
             fprintf("\n\n\n\n");
             fprintf("p: %d\n", p);
 
+            result = [];
             result = run_INUDFT2_2D(x, n, min_points, tol_hss, tol_cg, maxit_cg);
 
             save("./data/typeII_2d_results" ...

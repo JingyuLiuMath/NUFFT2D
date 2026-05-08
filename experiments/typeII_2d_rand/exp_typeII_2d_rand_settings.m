@@ -20,3 +20,6 @@ tol_cg = 1e-12;
 maxit_cg = 500;
 
 figure_prefix = "./figure/rand";
+
+maxit_condest = 30;
+restarts = 2;
