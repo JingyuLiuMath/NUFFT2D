@@ -33,7 +33,7 @@ tic;
 A = NUDFT2_2D(nx, ny);
 A.Construct_ID_Proxy(xy, min_points, tol_hss);
 result.t_construct = toc;
-fprintf("  t_construct: %e\n", result.t_construct);
+fprintf("  t_construct: %.1e\n", result.t_construct);
 
 result.hss_rank = A.Rank();
 fprintf("  HSS rank: %d\n", result.hss_rank);
@@ -50,7 +50,7 @@ fprintf("  rel_err_apply: %.1e\n", result.rel_err_apply);
 tic;
 A.URV_Factor();
 result.t_factor = toc;
-fprintf("  t_factor: %e\n", result.t_factor);
+fprintf("  t_factor: %.1e\n", result.t_factor);
 
 % Direct solution.
 fprintf("Direct solution.\n");

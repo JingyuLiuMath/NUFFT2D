@@ -24,6 +24,6 @@ U(sk, :) = eye(length(sk));
 U(re, :) = Z;
 
 % err = norm(A - U * A(sk, :), "fro") / norm(A, "fro");
-% fprintf("err: %.4e\n", err);
+% fprintf("err: %.1e\n", err);
 
 end

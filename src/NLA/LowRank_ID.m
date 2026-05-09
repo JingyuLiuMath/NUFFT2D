@@ -24,6 +24,6 @@ V(sk, :) = eye(length(sk));
 V(re, :) = T';
 
 % err = norm(A - A(:, sk) * V', "fro") / norm(A, "fro");
-% fprintf("err: %.4e\n", err);
+% fprintf("err: %.1e\n", err);
 
 end

@@ -20,23 +20,18 @@ end
 
 [~, R, p, k] = MyQRSketch(A, rank_or_tol);
 
-% *************************************************************************
-% Do not adaptively compress when rank_or_tol >= 1.
-% [~, R, p] = qr(A, "econ", "vector");
-% k = rank_or_tol;
-% -------------------------------------------------------------------------
-
 sk = p(1 : k);
 re = p((k + 1) : end);
 T = R(1 : k, 1 : k) \ R(1 : k, (k + 1) : size(R, 2));
 
-% *************************************************************************
-% DEBUG.
-% tol = 1e-10;
-% if norm(A(:, re) - A(:, sk) * T, "fro") > tol * norm(A, "fro")
-%     keyboard
-% end
-% -------------------------------------------------------------------------
+% Exact ID.
+% [~, n] = size(A);
+% sk = 1 : n;
+% re = [];
+% T = zeros(n, 0);
+% k = n;
 
+% rel_err = norm(A(:, re) - A(:, sk) * T, "fro") / norm(A, "fro");
+% fprintf("rel_err: %.1e\n", rel_err);
 
 end
