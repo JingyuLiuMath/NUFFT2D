@@ -1,5 +1,6 @@
 function result = run_INUDFT2_2D_LSQR(xy, n, ...
-    tol_cg, maxit_cg)
+    tol_cg, maxit_cg, ...
+    c_ex, f_ex)
 
 M = size(xy, 1);
 nx = n;
@@ -19,11 +20,6 @@ result.n = n;
 result.N = N;
 result.tol_cg = tol_cg;
 result.maxit_cg = maxit_cg;
-
-P = phantom('Modified Shepp-Logan', n);
-c_ex = reshape(P, N, []);
-result.c_ex = c_ex;
-f_ex = MY_NUFFT2_2D(c_ex, xy, nx, ny);
 
 % Iterative solution.
 fprintf("Iterative solution.\n");

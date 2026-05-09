@@ -9,12 +9,16 @@ for it_beta = 1 : num_beta
         nx = n;
         ny = n;
         N = nx * ny;
-        x = PolarGrid(n, 1, beta * p);
-        M = size(x, 1);
+        xy = PolarGrid(n, 1, beta * p);
+        M = size(xy, 1);
+
+        P = phantom('Modified Shepp-Logan', n);
+        c_ex = reshape(P, N, []);
+        f_ex = MY_NUFFT2_2D(c_ex, xy, nx, ny);
 
         save("./data/typeII_2d_points" ...
             + "_" + string(p) ...
             + "_" + string(beta) ...
-            + ".mat", "x");
+            + ".mat", "xy", "c_ex", "f_ex", "n");
     end
 end

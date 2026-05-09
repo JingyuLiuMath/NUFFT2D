@@ -5,10 +5,10 @@ warning off;
 p_list = (5 : 9)';
 num_n = length(p_list);
 
-beta_list = [0.6; 0.7];
-beta_string_list = ["0.6"; "0.7"];
-beta_display_list = ["0.6"; "0.7"];
-beta_factor_display_list = ["0.47"; "0.55"];
+beta_list = [0.7; 0.6];
+beta_string_list = ["0.7"; "0.6"];
+beta_display_list = ["0.7"; "0.6"];
+beta_factor_display_list = ["0.55"; "0.47"];
 num_beta = length(beta_list);
 
 tol_hss_list = [1e-3; 1e-6];

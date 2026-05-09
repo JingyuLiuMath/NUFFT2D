@@ -1,6 +1,7 @@
 function result = run_INUDFT2_2D(xy, n, ...
     min_points, tol_hss, ...
-    tol_cg, maxit_cg)
+    tol_cg, maxit_cg, ...
+    c_ex, f_ex)
 
 M = size(xy, 1);
 nx = n;
@@ -26,11 +27,6 @@ result.tol_hss = tol_hss;
 result.tol_cg = tol_cg;
 result.maxit_cg = maxit_cg;
 
-P = phantom('Modified Shepp-Logan', n);
-c_ex = reshape(P, N, []);
-result.c_ex = c_ex;
-f_ex = MY_NUFFT2_2D(c_ex, xy, nx, ny);
-
 % NUDFT2.
 fprintf("NUDFT2.\n")
 tic;
@@ -48,8 +44,8 @@ mem_ratio = result.mem / mem_exact;
 fprintf("  Mem ratio: %.1e\n", mem_ratio);
 
 f = A.Apply(c_ex);
-result.rel_err = norm(f - f_ex) / norm(f_ex);
-fprintf("  rel_err: %.1e\n", result.rel_err);
+result.rel_err_apply = norm(f - f_ex) / norm(f_ex);
+fprintf("  rel_err_apply: %.1e\n", result.rel_err_apply);
 
 tic;
 A.URV_Factor();

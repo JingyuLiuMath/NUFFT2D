@@ -10,11 +10,15 @@ for it_alpha = 1 : num_alpha
         ny = n;
         N = nx * ny;
         M = round(alpha * N);
-        x = rand(M, 2);
+        xy = rand(M, 2);
+
+        P = phantom('Modified Shepp-Logan', n);
+        c_ex = reshape(P, N, []);
+        f_ex = MY_NUFFT2_2D(c_ex, xy, nx, ny);
 
         save("./data/typeII_2d_points" ...
             + "_" + string(p) ...
             + "_" + string(alpha) ...
-            + ".mat", "x");
+            + ".mat", "xy", "c_ex", "f_ex", "n");
     end
 end
