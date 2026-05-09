@@ -1,6 +1,7 @@
 function result = run_INUDFT2(x, N, ...
     min_points, tol, ...
-    tol_cg, maxit_cg)
+    tol_cg, maxit_cg, ...
+    c_ex, f_ex)
 
 M = size(x, 1);
 
@@ -21,9 +22,6 @@ result.min_points = min_points;
 result.tol = tol;
 result.tol_cg = tol_cg;
 result.maxit_cg = maxit_cg;
-
-c_ex = randn(N, 1) + 1i * randn(N, 1);
-f_ex = MY_NUFFT2(c_ex, x, N);
 
 % NUDFT2.
 fprintf("NUDFT2.\n")

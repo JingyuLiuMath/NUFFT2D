@@ -11,21 +11,19 @@ tol_hss = 1e-5;
 tol_cg = 1e-12;
 maxit_cg = 20;
 
-fprintf("tol_hss: %.1e\n", tol_hss);
-
 %% Generate points x and omega.
 n = 2^p;
 nx = n;
 ny = n;
 N = nx * ny;
 
-x = CartesianGrid(n);
-M = size(x, 1);
+xy = CartesianGrid(n);
+M = size(xy, 1);
 
 fprintf("M: %d, N: %d\n", M, N);
 
 figure();
-plot(x(:, 1), x(:, 2), "Marker", ".", "LineStyle", "none");
+plot(xy(:, 1), xy(:, 2), "Marker", ".", "LineStyle", "none");
 axis equal;
 xlim([0, 1]);
 ylim([0, 1]);
@@ -36,4 +34,12 @@ ylim([0, 1]);
 % fprintf("cond(A): %.1e\n", kappa_A);
 
 %% NUDFT2.
-run_INUDFT2_2D(x, n, min_points, tol_hss, tol_cg, maxit_cg);
+P = phantom('Modified Shepp-Logan', n);
+c_ex = reshape(P, N, []);
+f_ex = MY_NUFFT2_2D(c_ex, xy, nx, ny);
+
+run_INUDFT2_2D(...
+    xy, n, ...
+    min_points, tol_hss, ...
+    tol_cg, maxit_cg, ...
+    c_ex, f_ex);
