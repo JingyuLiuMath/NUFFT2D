@@ -10,8 +10,8 @@ alpha_string_list = ["2.0"; "1.5"];
 alpha_display_list = ["2"; "1.5"];
 num_alpha = length(alpha_list);
 
-tol_hss_list = [1e-3; 1e-6];
-tol_hss_display_list = ["10^{-3}"; "10^{-6}"];
+tol_hss_list = [1e-6; 1e-3];
+tol_hss_display_list = ["10^{-6}"; "10^{-3}"];
 num_tol_hss = length(tol_hss_list);
 
 min_points = 256;

@@ -3,10 +3,10 @@ clear;
 close all;
 warning off;
 
-p = 5;
+p = 6;
 
 min_points = 256;
-tol_hss = 1e-5;
+tol_hss = 1e-3;
 
 tol_cg = 1e-12;
 maxit_cg = 20;

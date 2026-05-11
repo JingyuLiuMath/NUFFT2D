@@ -11,8 +11,8 @@ beta_display_list = ["0.7"; "0.6"];
 beta_factor_display_list = ["0.55"; "0.47"];
 num_beta = length(beta_list);
 
-tol_hss_list = [1e-3; 1e-6];
-tol_hss_display_list = ["10^{-3}"; "10^{-6}"];
+tol_hss_list = [1e-6; 1e-3];
+tol_hss_display_list = ["10^{-6}"; "10^{-3}"];
 num_tol_hss = length(tol_hss_list);
 
 min_points = 256;
