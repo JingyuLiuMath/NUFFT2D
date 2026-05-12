@@ -11,8 +11,10 @@ N = A.col_global_size_;
 
 nx = A.nx_;
 ny = A.ny_;
-hx = 0.5 / nx;
-hy = 0.5 / ny;
+hx = 1 / nx;
+hhx = hx / 2;
+hy = 1 / ny;
+hhy = hy / 2;
 n = max(nx, ny);
 
 x_kernel_fun = @(z, w) NUFFT2_Kernel(z, w, nx);
@@ -22,7 +24,7 @@ local_nx = A.x_col_size_;
 local_ny = A.y_col_size_;
 local_n = max(local_nx, local_ny);
 
-proxy_layer_size = local_n / 2;
+proxy_layer_size = ceil(2 + log2(local_n));
 sampling_size = ceil(log(4 / tol) * log(4 * local_n) / 5) * local_n;
 
 if A.level_ == level
@@ -43,7 +45,7 @@ if A.level_ == level
             end
         end
     end
-
+    
     % Generate proxy surface.
     proxy_surface_real = [];
 
@@ -54,20 +56,20 @@ if A.level_ == level
 
     proxy_surface_real = [proxy_surface_real; ...
         RandRectangular(sampling_size, ...
-        x_pt_start - hx, x_pt_end + proxy_layer_size * hx, ...
-        y_pt_start - proxy_layer_size * hy, y_pt_start - hy)];
+        x_pt_start - hhx, x_pt_end + hhx + proxy_layer_size * hx, ...
+        y_pt_start - hhy - proxy_layer_size * hy, y_pt_start - hhy)];
     proxy_surface_real = [proxy_surface_real; ...
         RandRectangular(sampling_size, ...
-        x_pt_end + hx, x_pt_end + proxy_layer_size * hx, ...
-        y_pt_start - hy, y_pt_end + proxy_layer_size * hy)];
+        x_pt_end + hhx, x_pt_end + hhx + proxy_layer_size * hx, ...
+        y_pt_start - hhy, y_pt_end + hhy + proxy_layer_size * hy)];
      proxy_surface_real = [proxy_surface_real; ...
         RandRectangular(sampling_size, ...
-        x_pt_start - proxy_layer_size * hx, x_pt_end + hx, ...
-        y_pt_end + hy, y_pt_end + proxy_layer_size * hy)];
+        x_pt_start - hhx - proxy_layer_size * hx, x_pt_end + hhx, ...
+        y_pt_end + hhy, y_pt_end + hhy + proxy_layer_size * hy)];
     proxy_surface_real = [proxy_surface_real; ...
         RandRectangular(sampling_size, ...
-        x_pt_start - proxy_layer_size * hx, x_pt_start - hx, ...
-        y_pt_start - proxy_layer_size * hy, y_pt_end + hy)];
+        x_pt_start - hhx - proxy_layer_size * hx, x_pt_start - hhx, ...
+        y_pt_start - hhy - proxy_layer_size * hy, y_pt_end + hhy)];
     
     proxy_surface = [...
         exp(-2 * pi * 1i * proxy_surface_real(:, 1)), ...
