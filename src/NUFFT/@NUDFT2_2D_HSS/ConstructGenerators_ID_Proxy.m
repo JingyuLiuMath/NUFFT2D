@@ -25,8 +25,8 @@ local_ny = A.y_col_size_;
 local_n = max(local_nx, local_ny);
 
 proxy_layer_size = 2 + log2(local_n);
-rank_1d = ceil(log(4 / tol) * log(4 * local_n) / 5);
-sampling_size_cross = rank_1d * local_n;
+rank_1d = ceil(log(4 / tol) * log(2 * pi * (2 * local_n + 1)) * 2 / pi^2);
+sampling_size_cross = ceil(1.2 * rank_1d * local_n);
 sampling_size_diag = rank_1d^2;
 
 if A.level_ == level

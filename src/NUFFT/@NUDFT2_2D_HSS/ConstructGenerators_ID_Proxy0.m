@@ -1,11 +1,11 @@
-function ConstructGenerators_ID_Proxy0(A, level, rank_or_tol, ...
+function ConstructGenerators_ID_Proxy0(A, level, tol, ...
     xy, col_pos, ...
     row_inact, col_inact)
 
 arguments (Input)
     A NUDFT2_2D_HSS;
     level (1, 1) double;
-    rank_or_tol (1, 1) double;
+    tol (1, 1) double;
     xy (:, 2) double;
     col_pos (:, 2) double;
     row_inact (:, 1) double;
@@ -13,16 +13,27 @@ arguments (Input)
 end
 
 M = A.row_global_size_;
+N = A.col_global_size_;
+
 nx = A.nx_;
 ny = A.ny_;
-N = A.col_global_size_;
+hx = 1 / nx;
+hhx = hx / 2;
+hy = 1 / ny;
+hhy = hy / 2;
+n = max(nx, ny);
+
 x_kernel_fun = @(z, w) NUFFT2_Kernel(z, w, nx);
 y_kernel_fun = @(z, w) NUFFT2_Kernel(z, w, ny);
-hx = 1 / nx;
-hy = 1 / ny;
-nx_ny = max(nx, ny);
-proxy_layer_size = log2(nx_ny);
-sampling_size = 2 * nx_ny * proxy_layer_size;
+
+local_nx = A.x_col_size_;
+local_ny = A.y_col_size_;
+local_n = max(local_nx, local_ny);
+
+proxy_layer_size = 2 + log2(local_n);
+rank_1d = ceil(log(4 / tol) * log(2 * pi * (2 * local_n + 1)) * 2 / pi^2);
+sampling_size_cross = ceil(1.2 * rank_1d * local_n);
+sampling_size_diag = rank_1d^2;
 
 if A.level_ == level
     if A.leaf_ == 1
@@ -50,119 +61,60 @@ if A.level_ == level
     end
 
     % Generate proxy surface.
-    row_proxy_surface_real = [];
-    col_proxy_surface_real = [];
+    proxy_surface_real = [];
 
     x_pt_start = A.x_pos_start_ / nx;
     x_pt_end = A.x_pos_end_ / nx ;
     y_pt_start = A.y_pos_start_ / ny;
     y_pt_end = A.y_pos_end_ / ny;
 
-    x_self_proxy_size = A.x_col_size_;
-    x_self_pts = linspace(x_pt_start, x_pt_end, x_self_proxy_size)';
-    x_self_pts = [...
-        x_self_pts -  proxy_layer_size * hx;
-        x_self_pts;
-        x_self_pts +  proxy_layer_size * hx];
+    proxy_surface_real = [proxy_surface_real; ...
+        RandRectangular(sampling_size_cross, ...
+        x_pt_start - hhx, x_pt_end + hhx, ...
+        y_pt_start - hhy - proxy_layer_size * hy, y_pt_start - hhy)];
+    proxy_surface_real = [proxy_surface_real; ...
+        RandRectangular(sampling_size_cross, ...
+        x_pt_start - hhx, x_pt_end + hhx, ...
+        y_pt_end + hhy, y_pt_end + hhy + proxy_layer_size * hy)];
+    proxy_surface_real = [proxy_surface_real; ...
+        RandRectangular(sampling_size_cross, ...
+        x_pt_start - hhx - proxy_layer_size * hx, x_pt_start - hhx, ...
+        y_pt_start - hhy, y_pt_end + hhy)];
+    proxy_surface_real = [proxy_surface_real; ...
+        RandRectangular(sampling_size_cross, ...
+        x_pt_end + hhx, x_pt_end + hhx + proxy_layer_size * hx, ...
+        y_pt_start - hhy, y_pt_end + hhy)];
 
-    y_self_proxy_size = A.y_col_size_;
-    y_self_pts = linspace(y_pt_start, y_pt_end, y_self_proxy_size)';
-    y_self_pts = [...
-        y_self_pts -  proxy_layer_size * hy;
-        y_self_pts;
-        y_self_pts +  proxy_layer_size * hy];
-    
-    for ity = 1 : proxy_layer_size
-        row_proxy_surface_real = [row_proxy_surface_real; ...
-            [x_self_pts, (y_pt_start - ity * hy) * ones(size(x_self_pts))]];
-        row_proxy_surface_real = [row_proxy_surface_real; ...
-            [x_self_pts, (y_pt_end + ity * hy) * ones(size(x_self_pts))]];
-    end
-    for itx = 1 : proxy_layer_size
-        row_proxy_surface_real = [row_proxy_surface_real; ...
-            [(x_pt_start - itx * hx) * ones(size(y_self_pts)), y_self_pts]];
-        row_proxy_surface_real = [row_proxy_surface_real; ...
-            [(x_pt_end + itx * hx) * ones(size(y_self_pts)), y_self_pts]];
-    end
+    proxy_surface_real = [proxy_surface_real; ...
+        RandRectangular(sampling_size_diag, ...
+        x_pt_start - hhx - proxy_layer_size * hx, x_pt_start - hhx, ...
+        y_pt_start - hhy - proxy_layer_size * hy, y_pt_start - hhy)];
+    proxy_surface_real = [proxy_surface_real; ...
+        RandRectangular(sampling_size_diag, ...
+        x_pt_start - hhx - proxy_layer_size * hx, x_pt_start - hhx, ...
+        y_pt_end + hhy, y_pt_end + hhy + proxy_layer_size * hy)];
+    proxy_surface_real = [proxy_surface_real; ...
+        RandRectangular(sampling_size_diag, ...
+        x_pt_end + hhx, x_pt_end + hhx + proxy_layer_size * hx, ...
+        y_pt_start - hhy - proxy_layer_size * hy, y_pt_start - hhy)];
+    proxy_surface_real = [proxy_surface_real; ...
+        RandRectangular(sampling_size_diag, ...
+        x_pt_end + hhx, x_pt_end + hhx + proxy_layer_size * hx, ...
+        y_pt_end + hhy, y_pt_end + hhy + proxy_layer_size * hy)];
 
-    tmp_ind = row_proxy_surface_real(:, 1) < 0;
-    row_proxy_surface_real(tmp_ind, 1) = row_proxy_surface_real(tmp_ind, 1) + 1;
-    tmp_ind = row_proxy_surface_real(:, 1) >= 1;
-    row_proxy_surface_real(tmp_ind, 1) = row_proxy_surface_real(tmp_ind, 1) - 1;
 
-    tmp_ind = row_proxy_surface_real(:, 2) < 0;
-    row_proxy_surface_real(tmp_ind, 2) = row_proxy_surface_real(tmp_ind, 2) + 1;
-    tmp_ind = row_proxy_surface_real(:, 2) >= 1;
-    row_proxy_surface_real(tmp_ind, 2) = row_proxy_surface_real(tmp_ind, 2) - 1;
-
-    row_proxy_surface = [...
-        exp(-2 * pi * 1i * row_proxy_surface_real(:, 1)), ...
-        exp(-2 * pi * 1i * row_proxy_surface_real(:, 2))];
-
-    col_proxy_surface_real = [col_proxy_surface_real; ...
-        RandRectangular(sampling_size, ...
-        x_pt_start, x_pt_end, ...
-        y_pt_start - proxy_layer_size * hy, y_pt_start - hy)];
-    col_proxy_surface_real = [col_proxy_surface_real; ...
-        RandRectangular(sampling_size, ...
-        x_pt_start, x_pt_end, ...
-        y_pt_end + hy, y_pt_end + proxy_layer_size * hy)];
-    col_proxy_surface_real = [col_proxy_surface_real; ...
-        RandRectangular(sampling_size, ...
-        x_pt_start - proxy_layer_size * hx, x_pt_start - hx, ...
-        y_pt_start, y_pt_end)];
-    col_proxy_surface_real = [col_proxy_surface_real; ...
-        RandRectangular(sampling_size, ...
-        x_pt_end + hx, x_pt_end + proxy_layer_size * hx, ...
-        y_pt_start, y_pt_end)];
-    col_proxy_surface_real = [col_proxy_surface_real; ...
-        RandRectangular(proxy_layer_size^2, ...
-        x_pt_start - proxy_layer_size * hx, x_pt_start - hx, ...
-        y_pt_start - proxy_layer_size * hy, y_pt_start - hy)];
-    col_proxy_surface_real = [col_proxy_surface_real; ...
-        RandRectangular(proxy_layer_size^2, ...
-        x_pt_start - proxy_layer_size * hx, x_pt_start - hx, ...
-        y_pt_end + hy, y_pt_end + proxy_layer_size * hy)];
-    col_proxy_surface_real = [col_proxy_surface_real; ...
-        RandRectangular(proxy_layer_size^2, ...
-        x_pt_end + hx, x_pt_end + proxy_layer_size * hx, ...
-        y_pt_start - proxy_layer_size * hy, y_pt_start - hy)];
-    col_proxy_surface_real = [col_proxy_surface_real; ...
-        RandRectangular(proxy_layer_size^2, ...
-        x_pt_end + hx, x_pt_end + proxy_layer_size * hx, ...
-        y_pt_end + hy, y_pt_end + proxy_layer_size * hy)];
-
-    tmp_ind = col_proxy_surface_real(:, 1) < 0;
-    col_proxy_surface_real(tmp_ind, 1) = col_proxy_surface_real(tmp_ind, 1) + 1;
-    tmp_ind = col_proxy_surface_real(:, 1) >= 1;
-    col_proxy_surface_real(tmp_ind, 1) = col_proxy_surface_real(tmp_ind, 1) - 1;
-
-    tmp_ind = col_proxy_surface_real(:, 2) < 0;
-    col_proxy_surface_real(tmp_ind, 2) = col_proxy_surface_real(tmp_ind, 2) + 1;
-    tmp_ind = col_proxy_surface_real(:, 2) >= 1;
-    col_proxy_surface_real(tmp_ind, 2) = col_proxy_surface_real(tmp_ind, 2) - 1;
-    
-    col_proxy_surface = [...
-        exp(-2 * pi * 1i * col_proxy_surface_real(:, 1)), ...
-        exp(-2 * pi * 1i * col_proxy_surface_real(:, 2))];
+    proxy_surface = [...
+        exp(-2 * pi * 1i * proxy_surface_real(:, 1)), ...
+        exp(-2 * pi * 1i * proxy_surface_real(:, 2))];
 
     % Construct U using proxy surface.
     xy_I = xy(A.row_ind_, :);
     gamma_x_I = exp(-2 * pi * 1i * xy_I(:, 1));
     gamma_y_I = exp(-2 * pi * 1i * xy_I(:, 2));
-    Ax_I_proxy = x_kernel_fun(gamma_x_I, row_proxy_surface(:, 1));
-    Ay_I_proxy = y_kernel_fun(gamma_y_I, row_proxy_surface(:, 2));
+    Ax_I_proxy = x_kernel_fun(gamma_x_I, proxy_surface(:, 1));
+    Ay_I_proxy = y_kernel_fun(gamma_y_I, proxy_surface(:, 2));
     A_I_proxy = Ax_I_proxy .* Ay_I_proxy;
-    [row_sk, U, A.row_rank_, row_re] = LowRank_Row_ID(A_I_proxy, rank_or_tol);
-    
-    % figure();
-    % plot(xy_I(:, 1), xy_I(:, 2), "rx", "DisplayName", "row pts");
-    % hold on;
-    % plot(row_proxy_surface_real(:, 1), row_proxy_surface_real(:, 2), "bx", "DisplayName", "proxy pts");
-    % legend;
-    % xlim([0, 1]);
-    % ylim([0, 1]);
-    % axis equal;
+    [row_sk, U, A.row_rank_, row_re] = LowRank_Row_ID(A_I_proxy, tol);
 
     E_I_proxy = A_I_proxy - U * A_I_proxy(row_sk, :);
     rel_err_I_proxy = norm(E_I_proxy, "fro") / norm(A_I_proxy, "fro");
@@ -182,18 +134,18 @@ if A.level_ == level
     rel_err_I_Jc = norm(E_I_Jc, "fro") / norm(A_I_Jc, "fro");
     fprintf("rel_err_I_Jc: %.4e\n", rel_err_I_Jc);
 
-    if rel_err_I_Jc > rank_or_tol * 10
+    if rel_err_I_Jc > tol * 10
         figure();
         plot(xy_I(:, 1), xy_I(:, 2), "rx", "DisplayName", "row pts");
         hold on;
         plot(col_pos_Jc(:, 1) / nx, col_pos_Jc(:, 2) / ny, "go", "DisplayName", "HSS row pts");
-        plot(row_proxy_surface_real(:, 1), row_proxy_surface_real(:, 2), "bx", "DisplayName", "proxy pts");
+        plot(proxy_surface_real(:, 1), proxy_surface_real(:, 2), "bx", "DisplayName", "proxy pts");
         legend;
         xlim([0, 1]);
         ylim([0, 1]);
         axis equal;
 
-        [tmp_row_sk, tmp_U, tmp_row_rank, tmp_row_re] = LowRank_Row_ID(A_I_Jc, rank_or_tol);
+        [tmp_row_sk, tmp_U, tmp_row_rank, tmp_row_re] = LowRank_Row_ID(A_I_Jc, tol);
 
         tmp_E_I_Jc = A_I_Jc - tmp_U * A_I_Jc(tmp_row_sk, :);
         tmp_rel_err_I_Jc = norm(tmp_E_I_Jc, "fro") / norm(A_I_Jc, "fro");
@@ -203,12 +155,12 @@ if A.level_ == level
         tmp_rel_err_I_proxy = norm(tmp_E_I_proxy, "fro") / norm(A_I_proxy, "fro");
         fprintf("tmp_rel_err_I_proxy: %.4e\n", tmp_rel_err_I_proxy);
 
-        [tmp_col_sk, tmp_V, ~, ~] = LowRank_ID(A_I_Jc, rank_or_tol);
+        [tmp_col_sk, tmp_V, ~, ~] = LowRank_ID(A_I_Jc, tol);
         figure();
         plot(xy_I(:, 1), xy_I(:, 2), "rx", "DisplayName", "row pts");
         hold on;
         plot(col_pos_Jc(tmp_col_sk, 1) / nx, col_pos_Jc(tmp_col_sk, 2) / ny, "go", "DisplayName", "HSS col pts");
-        plot(row_proxy_surface_real(:, 1), row_proxy_surface_real(:, 2), "bx", "DisplayName", "proxy pts");
+        plot(proxy_surface_real(:, 1), proxy_surface_real(:, 2), "bx", "DisplayName", "proxy pts");
         legend;
         xlim([0, 1]);
         ylim([0, 1]);
@@ -221,10 +173,10 @@ if A.level_ == level
     col_pos_J = col_pos(A.col_ind_, :);
     xi_x_J = exp(-2 * pi * 1i * col_pos_J(:, 1) / nx);
     xi_y_J = exp(-2 * pi * 1i * col_pos_J(:, 2) / ny);
-    Ax_proxy_J = x_kernel_fun(col_proxy_surface(:, 1), xi_x_J);
-    Ay_proxy_J = y_kernel_fun(col_proxy_surface(:, 2), xi_y_J);
+    Ax_proxy_J = x_kernel_fun(proxy_surface(:, 1), xi_x_J);
+    Ay_proxy_J = y_kernel_fun(proxy_surface(:, 2), xi_y_J);
     A_proxy_J = Ax_proxy_J .* Ay_proxy_J;
-    [col_sk, V, A.col_rank_, col_re] = LowRank_ID(A_proxy_J, rank_or_tol);
+    [col_sk, V, A.col_rank_, col_re] = LowRank_ID(A_proxy_J, tol);
     
     % figure();
     % plot(col_pos_J(:, 1) / nx, col_pos_J(:, 2) / ny, "go", "DisplayName", "col pts");
@@ -253,18 +205,18 @@ if A.level_ == level
     rel_err_Ic_J = norm(E_Ic_J, "fro") / norm(A_Ic_J, "fro");
     fprintf("rel_err_Ic_J: %.4e\n", rel_err_Ic_J);
 
-    if rel_err_Ic_J > rank_or_tol * 10
+    if rel_err_Ic_J > tol * 10
         figure();
         plot(col_pos_J(:, 1) / nx, col_pos_J(:, 2) / ny, "rx", "DisplayName", "col pts");
         hold on;
         plot(xy_Ic(:, 1), xy_Ic(:, 2), "go", "DisplayName", "HSS col pts");
-        plot(col_proxy_surface_real(:, 1), col_proxy_surface_real(:, 2), "bx", "DisplayName", "proxy pts");
+        plot(proxy_surface_real(:, 1), proxy_surface_real(:, 2), "bx", "DisplayName", "proxy pts");
         legend;
         xlim([0, 1]);
         ylim([0, 1]);
         axis equal;
 
-        [tmp_col_sk, tmp_V, tmp_col_rank, tmp_col_re] = LowRank_ID(A_Ic_J, rank_or_tol);
+        [tmp_col_sk, tmp_V, tmp_col_rank, tmp_col_re] = LowRank_ID(A_Ic_J, tol);
 
         tmp_E_proxy_J = A_proxy_J - A_proxy_J(:, tmp_col_sk) * tmp_V';
         tmp_rel_err_proxy_J = norm(tmp_E_proxy_J, "fro") / norm(A_proxy_J, "fro");
@@ -274,12 +226,12 @@ if A.level_ == level
         tmp_rel_err_Ic_J = norm(tmp_E_Ic_J, "fro") / norm(A_Ic_J, "fro");
         fprintf("tmp_rel_err_Ic_J: %.4e\n", tmp_rel_err_Ic_J);
 
-        [tmp_row_sk, tmp_U, ~, ~] = LowRank_ID(A_Ic_J, rank_or_tol);
+        [tmp_row_sk, tmp_U, ~, ~] = LowRank_ID(A_Ic_J, tol);
         figure();
         plot(col_pos_J(:, 1) / nx, col_pos_J(:, 2) / ny, "rx", "DisplayName", "col pts");
         hold on;
         plot(xy_Ic(tmp_row_sk, 1), xy_Ic(tmp_row_sk, 2), "go", "DisplayName", "HSS row pts");
-        plot(col_proxy_surface_real(:, 1), col_proxy_surface_real(:, 2), "bx", "DisplayName", "proxy pts");
+        plot(proxy_surface_real(:, 1), proxy_surface_real(:, 2), "bx", "DisplayName", "proxy pts");
         legend;
         xlim([0, 1]);
         ylim([0, 1]);
@@ -327,7 +279,7 @@ if A.level_ == level
     A.col_ind_ = A.col_ind_(col_sk);
 else
     for i = 1 : A.num_children_
-        A.children_{i}.ConstructGenerators_ID_Proxy0(level, rank_or_tol, ...
+        A.children_{i}.ConstructGenerators_ID_Proxy0(level, tol, ...
             xy, col_pos, row_inact, col_inact);
     end
 end

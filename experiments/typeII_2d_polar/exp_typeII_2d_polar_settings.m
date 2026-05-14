@@ -2,7 +2,7 @@ clear;
 close all;
 warning off;
 
-p_list = (5 : 9)';
+p_list = (9 : -1 : 5)';
 num_n = length(p_list);
 
 beta_list = [0.7; 0.6];
