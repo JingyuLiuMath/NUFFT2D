@@ -6,7 +6,7 @@ warning off;
 p = 6;
 
 min_points = 256;
-tol_hss = 1e-3;
+tol_hss = 1e-4;
 
 tol_cg = 1e-12;
 maxit_cg = 20;

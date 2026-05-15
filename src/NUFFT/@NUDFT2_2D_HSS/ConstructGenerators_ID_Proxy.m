@@ -25,8 +25,8 @@ local_ny = A.y_col_size_;
 local_n = max(local_nx, local_ny);
 
 proxy_layer_size = 2 + log2(local_n);
-rank_1d = ceil(log(4 / tol) * log(2 * pi * (2 * local_n + 1)) * 2 / pi^2);
-sampling_size_cross = ceil(1.2 * rank_1d * local_n);
+rank_1d = ceil(1.5 * log(1 / tol) * log(2 * pi * (2 * local_n + 1)) * 2 / pi^2);
+sampling_size_cross = ceil(2 * rank_1d * local_n);
 sampling_size_diag = rank_1d^2;
 
 if A.level_ == level
@@ -156,6 +156,23 @@ if A.level_ == level
     Ay_proxy_J = y_kernel_fun(proxy_surface(:, 2), xi_y_J);
     A_proxy_J = Ax_proxy_J .* Ay_proxy_J;
     [col_sk, V, A.col_rank_, ~] = LowRank_ID(A_proxy_J, tol);
+
+    if A.row_offset_ == 0 && A.col_offset_ == 0
+        fprintf("    \n")
+        fprintf("    level: %d\n", A.level_);
+        fprintf("    local_n: %d\n", local_n);
+        fprintf("    row size: %d, col size: %d\n", ...
+            size(A.row_xy_, 1), ...
+            size(A.col_pos_, 1));
+        fprintf("    rank_1d: %d\n", rank_1d);
+        fprintf("    sampling_size_cross: %d\n", sampling_size_cross);
+        fprintf("    sampling_size_diag: %d\n", sampling_size_diag);
+        fprintf("    row rank: %d, col rank: %d\n", ...
+            A.row_rank_, ...
+            A.col_rank_);
+        sampling_size_old = 4 * local_n * proxy_layer_size;
+        fprintf("    sampling_size_old: %d\n", sampling_size_old);
+    end
 
     if A.leaf_ == 1
         % Assign U and V.

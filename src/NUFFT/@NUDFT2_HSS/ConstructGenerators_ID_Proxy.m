@@ -1,15 +1,24 @@
-function ConstructGenerators_ID_Proxy(A, level, rank_or_tol)
+function ConstructGenerators_ID_Proxy(A, level, tol)
 
 arguments (Input)
     A NUDFT2_HSS;
     level (1, 1) double;
-    rank_or_tol (1, 1) double;
+    tol (1, 1) double;
 end
 
 M = A.row_global_size_;
 N = A.col_global_size_;
+
+h = 1 / N;
+hh = h / 2;
+
 kernel_fun = @(z, w) NUFFT2_Kernel(z, w, N);
-half_length = 0.5 / N;
+
+local_n = A.col_size_;
+
+proxy_layer_size = 2 + log2(local_n);
+rank_1d = ceil(log(4 / tol) * log(2 * pi * (2 * local_n + 1)) * 2 / pi^2);
+sampling_size = ceil(1.2 * rank_1d);
 
 if A.level_ == level
     if A.leaf_ == 0
@@ -27,47 +36,28 @@ if A.level_ == level
         end
     end
 
-    row_x = A.row_x_;
-    tmp_ind = find(row_x >= (1 - 1 / N / 2));
-    row_x(tmp_ind) = row_x(tmp_ind) - 1;
-    if rank_or_tol >= 1
-        rank_or_tol = min([A.col_size_, rank_or_tol]);
-        proxy_size = min([A.col_size_, 2 * rank_or_tol]);
-    else
-        Ir = [...
-            exp(-2 * pi * 1i * min(row_x)), ...
-            exp(-2 * pi * 1i * max(row_x)), ...
-            exp(-2 * pi * 1i * (A.pos_end_ + 1) / N), ...
-            exp(-2 * pi * 1i * (A.pos_start_ - 1) / N)];
-        [~, ~, ~, cr] = mobiusT(Ir);
-        k = ceil(1/pi^2*log(4/rank_or_tol)*log(16*cr));
 
-        Ic = [...
-            exp(-2 * pi * 1i * (A.pos_end_ + 1 / 2) / N), ...
-            exp(-2 * pi * 1i * (A.pos_start_ - 1 / 2) / N), ...
-            exp(-2 * pi * 1i * min(A.col_pos_) / N), ...
-            exp(-2 * pi * 1i * max(A.col_pos_) / N)];
-        [~, ~, ~, cc] = mobiusT(Ic);
-        s = ceil(1/pi^2*log(4/rank_or_tol)*log(16*cc));
-        rank_or_tol = max(k, s);
-
-        proxy_size = min([A.col_size_, rank_or_tol]);
-    end
 
     % Generate proxy surface.
-    col_pt_start = A.pos_start_ / N;
-    col_pt_end = A.pos_end_ / N;
-    proxy = GenerateProxySurface(N, ...
-        col_pt_start - half_length, ...
-        col_pt_end + half_length, ...
-        proxy_size);
-    proxy_surface = exp(-2 * pi * 1i * proxy);
+    proxy_surface_real = [];
+
+    pt_start = A.pos_start_ / N;
+    pt_end = A.pos_end_ / N;
+
+    proxy_surface_real = [proxy_surface_real; ...
+        RandInterval(sampling_size, ...
+        pt_start - hh - proxy_layer_size * h, pt_start - hh)];
+    proxy_surface_real = [proxy_surface_real; ...
+        RandInterval(sampling_size, ...
+        pt_end + hh, pt_end + hh + proxy_layer_size * h)];
+
+    proxy_surface = exp(-2 * pi * 1i * proxy_surface_real);
 
     % Construct U using proxy surface.
-    z_I = exp(-2 * pi * 1i * A.row_x_);  % row points.
-    A_I_proxy = kernel_fun(z_I, proxy_surface);
+    gamma_I = exp(-2 * pi * 1i * A.row_x_);  % row points.
+    A_I_proxy = kernel_fun(gamma_I, proxy_surface);
     [row_sk, U, A.row_rank_, ~] ...
-        = LowRank_Row_ID(A_I_proxy, rank_or_tol);
+        = LowRank_Row_ID(A_I_proxy, tol);
     % *****************************************************************
     % Plot row points and proxy surface.
     % figure();
@@ -87,10 +77,10 @@ if A.level_ == level
     % -----------------------------------------------------------------
 
     % Construct V using proxy surface.
-    w_J = exp(-2 * pi * 1i * A.col_pos_ / N);  % col points.
-    A_proxy_J = kernel_fun(proxy_surface, w_J);
+    xi_J = exp(-2 * pi * 1i * A.col_pos_ / N);  % col points.
+    A_proxy_J = kernel_fun(proxy_surface, xi_J);
     [col_sk, V, A.col_rank_, ~] ...
-        = LowRank_ID(A_proxy_J, rank_or_tol);
+        = LowRank_ID(A_proxy_J, tol);
 
     if A.leaf_ == 1
         % Assign U and V.
@@ -98,7 +88,7 @@ if A.level_ == level
         A.Vmat_ = V;
 
         % Assign full mat.
-        A.Amat_ = kernel_fun(z_I, w_J);
+        A.Amat_ = kernel_fun(gamma_I, xi_J);
     else
         % Assign R and W.
         offset = 0;
@@ -127,7 +117,7 @@ if A.level_ == level
     A.col_pos_ = A.col_pos_(col_sk);
 else
     for i = 1 : A.num_children_
-        A.children_{i}.ConstructGenerators_ID_Proxy(level, rank_or_tol);
+        A.children_{i}.ConstructGenerators_ID_Proxy(level, tol);
     end
 end
 

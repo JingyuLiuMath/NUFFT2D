@@ -27,9 +27,9 @@ result.maxit_cg = maxit_cg;
 fprintf("NUDFT2.\n")
 tic;
 A = NUDFT2(N);
-A.Construct_fADI(x, min_points, tol);
+A.Construct_ID_Proxy(x, min_points, tol);
 result.t_construct = toc;
-fprintf("  t_construct: %e\n", result.t_construct);
+fprintf("  t_construct: %.1e\n", result.t_construct);
 
 r = A.Rank();
 fprintf("  HSS rank: %d\n", r);
@@ -40,13 +40,13 @@ mem_ratio = mem / mem_exact;
 fprintf("  Mem ratio: %.1e\n", mem_ratio);
 
 f = A.Apply(c_ex);
-result.rel_err = norm(f - f_ex) / norm(f_ex);
-fprintf("  rel_err: %.1e\n", result.rel_err);
+result.rel_err_apply = norm(f - f_ex) / norm(f_ex);
+fprintf("  rel_err_apply: %.1e\n", result.rel_err_apply);
 
 tic;
 A.URV_Factor();
 result.t_factor = toc;
-fprintf("  t_factor: %e\n", result.t_factor);
+fprintf("  t_factor: %.1e\n", result.t_factor);
 
 % Direct solution.
 fprintf("Direct solution.\n");
