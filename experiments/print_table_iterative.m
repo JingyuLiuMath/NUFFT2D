@@ -43,9 +43,9 @@ num_hss_tol = size(result_list, 2);
 fprintf("\\midrule\n");
 n = result_list(1).n;
 tmp_str = string(n) + "^2";
-fprintf("\\multirow{%d}{*}{\\(%s\\)} ", num_hss_tol, tmp_str);
+fprintf("\\multirow{%d}{*}{\\(%s\\)} ", num_hss_tol + 1, tmp_str);
 M = result_list(1).M;
-fprintf("& \\multirow{%d}{*}{%d} ", num_hss_tol, M);
+fprintf("& \\multirow{%d}{*}{%d} ", num_hss_tol + 1, M);
 
 fprintf("& lsqr ");
 fprintf("& - ");

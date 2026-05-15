@@ -34,7 +34,7 @@ for it_hss_tol = 1 : num_hss_tol
     display_name_list = [display_name_list; display_name];
 end
 
-scaling_type = "O(N^{0.5} \log N)";
+scaling_type = "O(N^{0.5} \log (N))";
 xlabel_name = "$N$";
 ylabel_name = "$r_{\mathrm{h}}$";
 title_name = "HSS rank";
@@ -45,9 +45,9 @@ plot_scaling(N_list, hss_rank_list, ...
     display_name_list, ...
     xlabel_name, ylabel_name, title_name, figure_name);
 
-scaling_type = "O(N^{1.5} \log^{3} N)";
+scaling_type = "O(N^{1.5} \log^{3} (N))";
 xlabel_name = "$N$";
-ylabel_name = "$t_{\mathrm{c}$ (s)";
+ylabel_name = "$t_{\mathrm{c}}$ (s)";
 title_name = "Construction time";
 my_name = "_t_construct";
 figure_name = figure_prefix + my_name;
@@ -56,9 +56,9 @@ plot_scaling(N_list, t_construct_list, ...
     display_name_list, ...
     xlabel_name, ylabel_name, title_name, figure_name);
 
-scaling_type = "O(N^{1.5} \log^{3} N)";
+scaling_type = "O(N^{1.5} \log^{3} (N))";
 xlabel_name = "$N$";
-ylabel_name = "$t_{\mathrm{f}$ (s)";
+ylabel_name = "$t_{\mathrm{f}}$ (s)";
 title_name = "Factorization time";
 my_name = "_t_factor";
 figure_name = figure_prefix + my_name;
@@ -67,9 +67,9 @@ plot_scaling(N_list, t_factor_list, ...
     display_name_list, ...
     xlabel_name, ylabel_name, title_name, figure_name);
 
-scaling_type = "O(N \log^{3} N)";
+scaling_type = "O(N \log^{3} (N))";
 xlabel_name = "$N$";
-ylabel_name = "$t_{\mathrm{s}$ (s)";
+ylabel_name = "$t_{\mathrm{s}}$ (s)";
 title_name = "Solution time";
 my_name = "_t_solve";
 figure_name = figure_prefix + my_name;
@@ -114,22 +114,34 @@ for it_param = 1 : num_param
         "DisplayName", "$" + display_name_list(it_param) + "$");
     hold on;
 end
+
+switch title_name
+    case "HSS rank"
+        scaling_factor = 1.5;
+    case "Construction time"
+        scaling_factor = 2;
+    case "Factorization time"
+        scaling_factor = 4;
+    case "Solution time"
+        scaling_factor = 10;
+end
+
 switch scaling_type
-    case "O(N^{0.5} \log N)"
+    case "O(N^{0.5} \log (N))"
         ref_line = sqrt(N_list) .* log2(N_list);
-        ref_line = ref_line / ref_line(1) * t_list(1, 1);
-    case "O(N \log N)"
+        ref_line = ref_line / ref_line(1) * max(t_list(1, :)) * scaling_factor;
+    case "O(N \log (N))"
         ref_line = N_list .* log2(N_list);
-        ref_line = ref_line / ref_line(1) * t_list(1, 1);
-    case "O(N \log^2 N)"
+        ref_line = ref_line / ref_line(1) * max(t_list(1, :)) * scaling_factor;
+    case "O(N \log^2 (N))"
         ref_line = N_list .* (log2(N_list).^2);
-        ref_line = ref_line / ref_line(1) * t_list(1, 1);
-    case "O(N \log^{3} N)"
+        ref_line = ref_line / ref_line(1) * max(t_list(1, :)) * scaling_factor;
+    case "O(N \log^{3} (N))"
         ref_line = N_list .* log2(N_list).^3;
-        ref_line = ref_line / ref_line(1) * t_list(1,1) * 1.1;
-    case "O(N^{1.5} \log^{3} N)"
+        ref_line = ref_line / ref_line(1) * max(t_list(1, :)) * scaling_factor;
+    case "O(N^{1.5} \log^{3} (N))"
         ref_line = N_list.^(1.5) .* log2(N_list).^3;
-        ref_line = ref_line / ref_line(1) * t_list(1, 1) * 1.1;
+        ref_line = ref_line / ref_line(1) * max(t_list(1, :)) * scaling_factor;
 end
 loglog(N_list, ref_line, ...
     "LineWidth", 2, ...
@@ -138,6 +150,17 @@ loglog(N_list, ref_line, ...
 xlabel(xlabel_name, "Interpreter", "latex");
 ylabel(ylabel_name, "Interpreter", "latex");
 title(title_name, "Interpreter", "latex");
+switch title_name
+    case "HSS rank"
+        yticks([10^2 10^3 10^4]);
+    case "Construction time"
+        yticks([10^0 10^2 10^4]);
+    case "Factorization time"
+        yticks([10^(-2) 10^0 10^2 10^4]);
+    case "Solution time"
+        yticks([10^(-2) 10^0 10^2]);
+end
+
 legend("Location", "southeast", "Interpreter", "latex");
 set(gca, 'FontSize', 24);
 saveas(gcf, figure_name + ".png", "png");
