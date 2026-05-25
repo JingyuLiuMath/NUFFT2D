@@ -2,7 +2,7 @@ exp_typeII_2d_polar_settings;
 
 for it_tol_hss = 1 : num_tol_hss
     for it_beta = 1 : num_beta
-        for it_p = 1 : num_n
+        for it_p = num_n : -1 : 1
             tol_hss = tol_hss_list(it_tol_hss);
             beta = beta_list(it_beta);
             p = p_list(it_p);

@@ -2,7 +2,7 @@ exp_typeII_2d_rand_settings;
 
 for it_tol_hss = 1 : num_tol_hss
     for it_alpha = 1 : num_alpha
-        for it_p = 1 : num_n
+        for it_p = num_n : -1 : 1
             tol_hss = tol_hss_list(it_tol_hss);
             alpha = alpha_list(it_alpha);
             p = p_list(it_p);
