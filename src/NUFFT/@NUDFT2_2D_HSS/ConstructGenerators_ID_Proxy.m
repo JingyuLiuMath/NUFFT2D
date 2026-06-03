@@ -170,8 +170,6 @@ if A.level_ == level
         fprintf("    row rank: %d, col rank: %d\n", ...
             A.row_rank_, ...
             A.col_rank_);
-        sampling_size_old = 4 * local_n * proxy_layer_size;
-        fprintf("    sampling_size_old: %d\n", sampling_size_old);
     end
 
     if A.leaf_ == 1
