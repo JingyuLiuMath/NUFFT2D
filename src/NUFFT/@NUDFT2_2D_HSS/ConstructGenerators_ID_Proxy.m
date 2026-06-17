@@ -105,15 +105,33 @@ if A.level_ == level
     %     tmp_ind = proxy_surface_real(:, 2) >= 1;
     %     proxy_surface_real(tmp_ind, 2) = proxy_surface_real(tmp_ind, 2) - 1;
     % 
+    %     x_col = (0 : (A.nx_ - 1))' / A.nx_;
+    %     y_col = (0 : (A.ny_ - 1))' / A.ny_;
+    %     col_xy = TensorProduct2D(x_col, y_col);
+    %     Ix = FindID_ExtendArc(...
+    %         A.nx_, ...
+    %         A.x_pos_start_, ...
+    %         A.x_pos_end_, ...
+    %         col_xy(:, 1));
+    %     Iy = FindID_ExtendArc(...
+    %         A.ny_, ...
+    %         A.y_pos_start_, ...
+    %         A.y_pos_end_, ...
+    %         col_xy(:, 2));
+    %     I = intersect(Ix, Iy, "sorted");
+    %     col_xy(I, :) = [];
     % 
     %     figure();
     %     plot(A.row_xy_(:, 1), A.row_xy_(:, 2), "rx", "DisplayName", "row pts");
     %     hold on;
-    %     plot(proxy_surface_real(:, 1), proxy_surface_real(:, 2), "bx", "DisplayName", "proxy pts");
-    %     legend;
+    %     plot(col_xy(:, 1), col_xy(:, 2), "bx", "DisplayName", "col pts");
+    %     plot(proxy_surface_real(:, 1), proxy_surface_real(:, 2), "cx", "DisplayName", "proxy pts");
+    %     legend("Location", "eastoutside");
     %     xlim([0, 1]);
     %     ylim([0, 1]);
     %     axis equal;
+    %     grid off;
+    %     axis off;
     %     filename = "./figure/row_proxy_surface_" ...
     %         + string(A.level_) ...
     %         + "_" + string(A.row_offset_)  ...
@@ -123,22 +141,22 @@ if A.level_ == level
     %     saveas(gcf, filename + ".png", "png");
     %     saveas(gcf, filename + ".eps", "epsc");
     % 
-    %     figure();
-    %     plot(A.col_pos_(:, 1) / nx, A.col_pos_(:, 2) / ny, "rx", "DisplayName", "col pts");
-    %     hold on;
-    %     plot(proxy_surface_real(:, 1), proxy_surface_real(:, 2), "bx", "DisplayName", "proxy pts");
-    %     legend;
-    %     xlim([0, 1]);
-    %     ylim([0, 1]);
-    %     axis equal;
-    %     filename = "./figure/col_proxy_surface_" ...
-    %         + string(A.level_) ...
-    %         + "_" + string(A.row_offset_)  ...
-    %         + "_" + string(A.col_offset_)  ...
-    %         + "_" + string(A.row_size_) ...
-    %         + "_" + string(A.col_size_);
-    %     saveas(gcf, filename + ".png", "png");
-    %     saveas(gcf, filename + ".eps", "epsc");
+    %     % figure();
+    %     % plot(A.col_pos_(:, 1) / nx, A.col_pos_(:, 2) / ny, "rx", "DisplayName", "col pts");
+    %     % hold on;
+    %     % plot(proxy_surface_real(:, 1), proxy_surface_real(:, 2), "bx", "DisplayName", "proxy pts");
+    %     % legend;
+    %     % xlim([0, 1]);
+    %     % ylim([0, 1]);
+    %     % axis equal;
+    %     % filename = "./figure/col_proxy_surface_" ...
+    %     %     + string(A.level_) ...
+    %     %     + "_" + string(A.row_offset_)  ...
+    %     %     + "_" + string(A.col_offset_)  ...
+    %     %     + "_" + string(A.row_size_) ...
+    %     %     + "_" + string(A.col_size_);
+    %     % saveas(gcf, filename + ".png", "png");
+    %     % saveas(gcf, filename + ".eps", "epsc");
     % end
 
     % Construct U using proxy surface.
