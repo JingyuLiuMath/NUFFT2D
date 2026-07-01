@@ -94,7 +94,7 @@ for i = 1:length(regions)
 end
 
 %% Add axis labels a, b, c, d
-label_fontsize = 14;
+label_fontsize = 40;
 label_offset = 0.03;  % Distance from axis
 
 % X-axis labels (below the figure)
@@ -130,6 +130,7 @@ text(-label_offset, d, '$d$', 'Interpreter', 'latex', ...
 %% Set coordinate limits (expanded to accommodate labels)
 xlim([-0.08, 1.05]);
 ylim([-0.08, 1.05]);
+set(gca, 'FontSize', 40);
 
 %% Save figure
 saveas(gcf, './figure/low_rank_intuition.png');
