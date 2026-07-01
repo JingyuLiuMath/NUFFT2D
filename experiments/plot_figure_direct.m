@@ -70,7 +70,7 @@ plot_scaling(N_list, t_factor_list, ...
 scaling_type = "O(N \log^{3} (N))";
 xlabel_name = "$N$";
 ylabel_name = "$t_{\mathrm{s}}$ (s)";
-title_name = "Solution time";
+title_name = "Solving time";
 my_name = "_t_solve";
 figure_name = figure_prefix + my_name;
 plot_scaling(N_list, t_solve_list, ...
@@ -122,7 +122,7 @@ switch title_name
         scaling_factor = 2;
     case "Factorization time"
         scaling_factor = 4;
-    case "Solution time"
+    case "Solving time"
         scaling_factor = 10;
 end
 
