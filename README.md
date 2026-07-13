@@ -60,10 +60,8 @@ run("test/typeII_2d/test_typeII_2d_polar.m");
 
 ## Reproducing the experiments
 
-Experiment families are stored in:
-
-- `experiments/typeII_2d_rand/` — 2D random-point experiments.
-- `experiments/typeII_2d_polar/` — 2D polar-grid experiments.
+- `experiments/typeII_2d_rand/` — 2D Type-II problem on a random uniform grid.
+- `experiments/typeII_2d_polar/` — 2D Type-II problem on a modified polar grid.
 
 ## Developers
 
