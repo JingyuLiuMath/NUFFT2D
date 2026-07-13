@@ -7,14 +7,14 @@ MATLAB research code for fast direct inversion of two-dimensional type-II nonuni
 For two-dimensional type-II NUDFT, this project uses
 
 ```math
-f_j
+f_{j}
 =
-\sum_{k^{[x]}=0}^{n^{[x]}-1}
-\sum_{k^{[y]}=0}^{n^{[y]}-1}
-e^{-2\pi \mathrm{i}
-\left(k^{[x]}x_j+k^{[y]}y_j\right)}
-c_{k^{[x]},k^{[y]}},
-\qquad
+\sum_{k^{[x]} = 0}^{n^{[x]}-1}
+\sum_{k^{[y]} = 0}^{n^{[y]}-1}
+e^{-2 \pi \mathrm{i}
+\bigl(k^{[x]} x_{j} + k^{[y]} y_{j}\bigr)}
+c_{k^{[x]}, k^{[y]}},
+\quad
 0 \leq j \leq M-1.
 ```
 
