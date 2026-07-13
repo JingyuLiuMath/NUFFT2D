@@ -15,10 +15,10 @@ e^{-2 \pi \mathrm{i}
 \bigl(k^{[x]} x_{j} + k^{[y]} y_{j}\bigr)}
 c_{k^{[x]}, k^{[y]}},
 \quad
-0 \leq j \leq M-1.
+0 \leq j \leq M - 1.
 ```
 
-where the *sample points* $\{(x_{j}, y_{j})\}$  are distributed arbitrarily in $[0,1)^{2}$ and the *frequencies* $\{(k^{[x]}, k^{[y]})\}$ are distributed on a Cartesian grid of contiguous integers.
+where the *sample points* $\{(x_{j}, y_{j})\}$ are distributed arbitrarily in $[0,1)^{2}$ and the *frequencies* $\{(k^{[x]}, k^{[y]})\}$ are distributed on a Cartesian grid of contiguous integers.
 The *coefficients* $\{c_{k^{[x]}, k^{[y]}}\}$ and the target values $\{f_{j}\}$ are assumed to be in $\mathbb{C}$.
 The number of sample points and the number of frequencies are $M$ an $N = n^{[x]} n^{[y]}$ respectively. 
 
