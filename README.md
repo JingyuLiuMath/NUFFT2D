@@ -20,7 +20,7 @@ c_{k^{[x]}, k^{[y]}},
 
 where the *sample points* $\{(x_{j}, y_{j})\}$ are distributed arbitrarily in $[0,1)^{2}$ and the *frequencies* $\{(k^{[x]}, k^{[y]})\}$ are distributed on a Cartesian grid of contiguous integers.
 The *coefficients* $\{c_{k^{[x]}, k^{[y]}}\}$ and the target values $\{f_{j}\}$ are assumed to be in $\mathbb{C}$.
-The number of sample points and the number of frequencies are $M$ an $N = n^{[x]} n^{[y]}$ respectively. 
+The number of sample points and the number of frequencies are $M$ and $N = n^{[x]} n^{[y]}$ respectively. 
 
 The inversion routines recover the coefficient vector or image from the nonuniform samples.
 Rectangular systems ($M \geq N$) are supported and are treated as least-squares problems.
