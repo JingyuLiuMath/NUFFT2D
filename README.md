@@ -6,11 +6,18 @@ MATLAB research code for fast direct inversion of two-dimensional type-II nonuni
 
 For two-dimensional type-II NUDFT, this project uses
 
-$$
-f_{j} = \sum_{k^{[x]} = 0}^{n^{[x]} - 1} \sum_{k^{[y]} = 0}^{n^{[y]} - 1}
-e^{-2 \pi \mathrm{i} (k^{[x]} x_{j} + k^{[y]} y_{j})} c_{k^{[x]}, k^{[y]}},
-\quad 0 \leq j \leq M - 1,
-$$
+```math
+f_j
+=
+\sum_{k^{[x]}=0}^{n^{[x]}-1}
+\sum_{k^{[y]}=0}^{n^{[y]}-1}
+e^{-2\pi \mathrm{i}
+\left(k^{[x]}x_j+k^{[y]}y_j\right)}
+c_{k^{[x]},k^{[y]}},
+\qquad
+0 \leq j \leq M-1.
+```
+
 where the *sample points* $\{(x_{j}, y_{j})\}$  are distributed arbitrarily in $[0,1)^{2}$ and the *frequencies* $\{(k^{[x]}, k^{[y]})\}$ are distributed on a Cartesian grid of contiguous integers.
 The *coefficients* $\{c_{k^{[x]}, k^{[y]}}\}$ and the target values $\{f_{j}\}$ are assumed to be in $\mathbb{C}$.
 The number of sample points and the number of frequencies are $M$ an $N = n^{[x]} n^{[y]}$ respectively. 
@@ -57,6 +64,11 @@ Experiment families are stored in:
 
 - `experiments/typeII_2d_rand/` — 2D random-point experiments.
 - `experiments/typeII_2d_polar/` — 2D polar-grid experiments.
+
+## Developers
+
+- [Yingzhou Li](https://yingzhouli.com/), School of Mathematical Sciences, Fudan University.
+- [Jingyu Liu](https://jingyuliumath.github.io/), School of Mathematical Sciences, Fudan University.
 
 ## Related papers
 
