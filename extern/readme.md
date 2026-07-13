@@ -56,3 +56,5 @@ M = 1e5; x = 2*pi*rand(M,1); c = randn(M,1)+1i*randn(M,1); N = 2e5; f = finufft1
 ```
 
 to verify its success.
+
+If you cannot get FINUFFT to compile, as a last resort you might find a precompiled binary for your platform under Assets for various [releases](https://github.com/flatironinstitute/finufft/releases).
