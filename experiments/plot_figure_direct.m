@@ -163,8 +163,8 @@ end
 
 legend("Location", "southeast", "Interpreter", "latex");
 set(gca, 'FontSize', 24);
-saveas(gcf, figure_name + ".png", "png");
-saveas(gcf, figure_name + ".eps", "epsc");
+exportgraphics(gcf, figure_name + ".pdf", "ContentType", "vector");
+exportgraphics(gcf, figure_name + ".png", "Resolution", 300);
 
 end
 
@@ -188,7 +188,7 @@ ylabel(ylabel_name, "Interpreter", "latex");
 title(title_name, "Interpreter", "latex");
 legend("Location", "southeast", "Interpreter", "latex");
 set(gca, 'FontSize', 24);
-saveas(gcf, figure_name + ".png", "png");
-saveas(gcf, figure_name + ".eps", "epsc");
+exportgraphics(gcf, figure_name + ".pdf", "ContentType", "vector");
+exportgraphics(gcf, figure_name + ".png", "Resolution", 300);
 
 end

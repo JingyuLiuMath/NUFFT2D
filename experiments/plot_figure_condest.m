@@ -44,8 +44,8 @@ ylabel("$\kappa$", "Interpreter", "latex");
 title("Condition number", "Interpreter", "latex");
 legend("Location", "southeast", "Interpreter", "latex");
 set(gca, 'FontSize', 24);
-saveas(gcf, figure_name + ".png", "png");
-saveas(gcf, figure_name + ".eps", "epsc");
+exportgraphics(gcf, figure_name + ".pdf", "ContentType", "vector");
+exportgraphics(gcf, figure_name + ".png", "Resolution", 300);
 
 
 end
