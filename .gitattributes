@@ -1,0 +1,33 @@
+# Normalize text files to LF in the repository and working tree.
+* text=auto eol=lf
+
+# Files executed by Unix tools must always use LF.
+Makefile text eol=lf
+makefile text eol=lf
+*.mk text eol=lf
+*.sh text eol=lf
+
+# Preserve binary and generated assets exactly.
+*.pdf binary
+*.eps binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ttf binary
+*.otf binary
+*.zip binary
+*.gz binary
+*.tar binary
+*.mp3 binary
+*.wav binary
+*.mp4 binary
+*.mov binary
+*.webm binary
+*.mat binary
+*.npy binary
+*.npz binary
+*.fig binary
+*.mex* binary
+*.h5 binary
+*.hdf5 binary
