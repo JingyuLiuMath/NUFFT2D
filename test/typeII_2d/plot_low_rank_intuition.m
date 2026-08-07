@@ -134,6 +134,6 @@ set(gca, 'FontSize', 40);
 
 %% Save figure
 saveas(gcf, './figure/low_rank_intuition.png');
-saveas(gcf, './figure/low_rank_intuition.eps', 'epsc');
+saveas(gcf, './figure/low_rank_intuition.pdf', 'pdf');
 
 hold off;

@@ -99,12 +99,12 @@ if A.level_ == level
     %     proxy_surface_real(tmp_ind, 1) = proxy_surface_real(tmp_ind, 1) + 1;
     %     tmp_ind = proxy_surface_real(:, 1) >= 1;
     %     proxy_surface_real(tmp_ind, 1) = proxy_surface_real(tmp_ind, 1) - 1;
-    % 
+    
     %     tmp_ind = proxy_surface_real(:, 2) < 0;
     %     proxy_surface_real(tmp_ind, 2) = proxy_surface_real(tmp_ind, 2) + 1;
     %     tmp_ind = proxy_surface_real(:, 2) >= 1;
     %     proxy_surface_real(tmp_ind, 2) = proxy_surface_real(tmp_ind, 2) - 1;
-    % 
+    
     %     x_col = (0 : (A.nx_ - 1))' / A.nx_;
     %     y_col = (0 : (A.ny_ - 1))' / A.ny_;
     %     col_xy = TensorProduct2D(x_col, y_col);
@@ -120,7 +120,7 @@ if A.level_ == level
     %         col_xy(:, 2));
     %     I = intersect(Ix, Iy, "sorted");
     %     col_xy(I, :) = [];
-    % 
+    
     %     figure();
     %     plot(A.row_xy_(:, 1), A.row_xy_(:, 2), "rx", "DisplayName", "row pts");
     %     hold on;
@@ -140,7 +140,7 @@ if A.level_ == level
     %         + "_" + string(A.col_size_);
     %     saveas(gcf, filename + ".png", "png");
     %     saveas(gcf, filename + ".eps", "epsc");
-    % 
+    
     %     % figure();
     %     % plot(A.col_pos_(:, 1) / nx, A.col_pos_(:, 2) / ny, "rx", "DisplayName", "col pts");
     %     % hold on;

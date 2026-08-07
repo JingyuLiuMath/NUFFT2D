@@ -24,13 +24,13 @@ M = size(x, 1);
 fprintf("M: %d, N: %d\n", M, N);
 fprintf("M/N: %.1e\n", M / N);
 
-% figure();
-% plot(x(:, 1), x(:, 2), "Marker", ".", "LineStyle", "none");
-% axis equal;
-% xlim([0, 1]);
-% ylim([0, 1]);
-% saveas(gcf, './figure/rand_grid.png');
-% saveas(gcf, './figure/rand_grid.eps', 'epsc');
+figure();
+plot(x(:, 1), x(:, 2), "Marker", ".", "LineStyle", "none");
+axis equal;
+xlim([0, 1]);
+ylim([0, 1]);
+saveas(gcf, './figure/rand_grid.png');
+saveas(gcf, './figure/rand_grid.pdf', 'pdf');
 
 fprintf("Polar grid:\n")
 x = PolarGrid(n, 1, beta * p);
@@ -40,11 +40,10 @@ fprintf("M/N: %.1e\n", M / N);
 fprintf("M/N/logN: %.1e\n", M / N / p);
 M / N / p / beta
 
-% figure();
-% plot(x(:, 1), x(:, 2), "Marker", ".", "LineStyle", "none");
-% axis equal;
-% xlim([0, 1]);
-% ylim([0, 1]);
-% saveas(gcf, './figure/polar_grid.png');
-% saveas(gcf, './figure/polar_grid.eps', 'epsc');
-
+figure();
+plot(x(:, 1), x(:, 2), "Marker", ".", "LineStyle", "none");
+axis equal;
+xlim([0, 1]);
+ylim([0, 1]);
+saveas(gcf, './figure/polar_grid.png');
+saveas(gcf, './figure/polar_grid.pdf', 'pdf');
