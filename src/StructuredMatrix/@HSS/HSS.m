@@ -50,6 +50,14 @@ classdef (Abstract) HSS < handle
         %------------------------------------------------------------------
 
         % *****************************************************************
+        % PROPERTY: Recompression.
+        Compress_Tu_ (:, :) double;
+        Compress_Tv_ (:, :) double;
+        Compress_Su_ (:, :) double;
+        Compress_Sv_ (:, :) double;
+        %------------------------------------------------------------------
+
+        % *****************************************************************
         % PROPERTY: URV.
         % Matrices.
         urv_leaf_ (1, 1) double;
@@ -112,6 +120,14 @@ classdef (Abstract) HSS < handle
         StarApply_Upward(A, level);
         StarApply_Root(A);
         StarApply_Downward(A, level);
+        %-----------------------------------------------------------------
+
+        % ****************************************************************
+        % METHOD: Recompression.
+        Compress(A, tol);
+        Compress_Upward(A, level);
+        Compress_Root(A, tol);
+        Compress_Downward(A, level, tol);
         %-----------------------------------------------------------------
 
         % ****************************************************************

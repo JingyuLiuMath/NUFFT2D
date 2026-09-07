@@ -1,7 +1,4 @@
 function r = Rank(A)
-% Storage
-
-% Jingyu Liu, November 19, 2024.
 
 arguments (Input)
     A HSS;

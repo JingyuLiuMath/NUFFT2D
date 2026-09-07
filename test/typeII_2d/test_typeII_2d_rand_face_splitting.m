@@ -5,8 +5,8 @@ warning off;
 
 p = 6;
 
-min_points = 256;
-tol_hss = 1e-3;
+n_leaf = 16;
+tol_hss = 1e-4;
 
 tol_cg = 1e-12;
 maxit_cg = 20;
@@ -16,9 +16,9 @@ n = 2^p;
 nx = n;
 ny = n;
 N = nx * ny;
+M = 2 * N;
 
-xy = PolarGrid(n);
-M = size(xy, 1);
+xy = rand(M, 2);
 
 fprintf("M: %d, N: %d\n", M, N);
 
@@ -38,8 +38,8 @@ P = phantom('Modified Shepp-Logan', n);
 c_ex = reshape(P, N, []);
 f_ex = MY_NUFFT2_2D(c_ex, xy, nx, ny);
 
-run_INUDFT2_2D(...
+run_INUDFT2_2D_FaceSplitting(...
     xy, n, ...
-    min_points, tol_hss, ...
+    n_leaf, tol_hss, ...
     tol_cg, maxit_cg, ...
     c_ex, f_ex);

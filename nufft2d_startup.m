@@ -1,6 +1,8 @@
 function nufft2d_startup()
 % nufft2d_startup
 
+mip load finufft;
+
 file_path = mfilename('fullpath');
 tmp = strfind(file_path, 'nufft2d');
 file_path = file_path(1:(tmp(end)-1));

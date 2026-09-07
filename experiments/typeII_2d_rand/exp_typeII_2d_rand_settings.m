@@ -14,6 +14,7 @@ tol_hss_list = [1e-2; 1e-4];
 tol_hss_display_list = ["10^{-2}"; "10^{-4}"];
 num_tol_hss = length(tol_hss_list);
 
+n_leaf = 16;
 min_points = 256;
 
 tol_cg = 1e-12;

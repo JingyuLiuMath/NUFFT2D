@@ -1,8 +1,8 @@
 #!/bin/bash
 
-#SBATCH --job-name=rand
-#SBATCH --output=rand_%j.out
-#SBATCH --error=rand_%j.err
+#SBATCH --job-name=rand_face_splitting
+#SBATCH --output=rand_face_splitting_%j.out
+#SBATCH --error=rand_face_splitting_%j.err
 #SBATCH --nodelist=bigMem0
 #SBATCH --exclusive
 #SBATCH --time=18:00:00
@@ -54,7 +54,7 @@ echo "Job started at: $(date)"
 echo "=========================================="
 echo ""
 
-matlab -r 'cd /home/jyliu/NUFFT2D; nufft2d_startup; cd experiments/typeII_2d_rand; exp_typeII_2d_rand;'
+matlab -r 'cd /home/jyliu/NUFFT2D; nufft2d_startup; cd experiments/typeII_2d_rand; exp_typeII_2d_rand_face_splitting;'
 
 echo ""
 echo "MATLAB finished at: $(date)"

@@ -34,9 +34,25 @@ git clone https://github.com/JingyuLiuMath/NUFFT2D.git
 cd NUFFT2D
 ```
 
-### Build FFTW and FINUFFT
+### Install FINUFFT
 
-Detailed dependency instructions are in [`extern/readme.md`](extern/readme.md).
+We strongly recommend using [mip](https://mip.sh/) to install [FINUFFT](https://finufft.readthedocs.io/en/latest/index.html).
+
+#### mip
+
+To install [mip](https://mip.sh/), run the following command in the MATLAB Command Window:
+
+```matlab
+eval(webread('https://mip.sh/install.txt'))
+```
+
+#### FINUFFT
+
+To install [FINUFFT](https://finufft.readthedocs.io/en/latest/index.html), run:
+
+```matlab
+mip install finufft
+```
 
 ### Set the MATLAB path
 
@@ -54,8 +70,8 @@ From the repository root:
 nufft2d_startup();
 
 % 2D random and polar sampling examples.
-run("test/typeII_2d/test_typeII_2d_rand.m");
-run("test/typeII_2d/test_typeII_2d_polar.m");
+run("test/typeII_2d/test_typeII_2d_rand_face_splitting.m");
+run("test/typeII_2d/test_typeII_2d_polar_face_splitting.m");
 ```
 
 ## Reproducing the experiments
