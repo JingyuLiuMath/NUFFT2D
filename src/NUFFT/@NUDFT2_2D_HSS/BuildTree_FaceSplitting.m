@@ -1,5 +1,4 @@
 function [p, q] = BuildTree_FaceSplitting(A, Ax, Ay, px, py)
-% Build the product tree directly from the two 1D leaf partitions.
 
 arguments (Input)
     A NUDFT2_2D_HSS;

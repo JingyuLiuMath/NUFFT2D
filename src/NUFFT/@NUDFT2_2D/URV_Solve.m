@@ -1,5 +1,4 @@
 function u = URV_Solve(A, f)
-% URV_Solve
 
 arguments (Input)
     A NUDFT2_2D;

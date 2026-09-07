@@ -1,9 +1,4 @@
 function Construct_FaceSplitting(A, xy, n_leaf, tol_hss)
-% Construct the 1D HSS approximations and combine them by face splitting.
-% n_leaf and tol_hss control both 1D fADI constructions. The face product
-% is then recompressed with local relative SVD tolerance tol_hss.
-% Recompression error is additional to the 1D approximation errors.
-% Example: A.Construct_FaceSplitting(xy, 16, 1e-4).
 
 arguments (Input)
     A NUDFT2_2D;
@@ -25,7 +20,7 @@ rank_before = A.Rank();
 A.AFinv_HSS_.Compress(tol_hss);
 mem_after = A.Storage();
 compress_ratio = mem_after / mem_before;
-fprintf("HSS compression: rank %d -> %d, stored entries %.1e -> %.1e\n", ...
+fprintf("HSS compression: rank %d -> %d, stored bytes %.1e -> %.1e\n", ...
     rank_before, A.Rank(), mem_before, mem_after);
 fprintf("compress ratio (after/before): %.1e\n", compress_ratio);
 A.M_ = size(xy, 1);

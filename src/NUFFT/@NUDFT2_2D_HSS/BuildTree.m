@@ -1,7 +1,4 @@
 function [p, q] = BuildTree(A, row_xy, min_points, eta, store_points)
-% BuildTree
-
-% Jingyu Liu, January 27, 2025.
 
 arguments (Input)
     A NUDFT2_2D_HSS;

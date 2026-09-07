@@ -1,4 +1,4 @@
-function A = NUDFT_Matrix(x, omega)
+function A = NUDFT3_Matrix(x, omega)
 
 arguments (Input)
     x (:, 1) double;

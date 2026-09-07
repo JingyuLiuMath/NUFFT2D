@@ -38,7 +38,7 @@ fprintf("  t_construct: %.1e\n", result.t_construct);
 result.hss_rank = A.Rank();
 fprintf("  HSS rank: %d\n", result.hss_rank);
 
-mem_exact = M * N;
+mem_exact = M * N * 2 * 8;
 result.mem = A.Storage();
 mem_ratio = result.mem / mem_exact;
 fprintf("  Mem ratio: %.1e\n", mem_ratio);

@@ -11,19 +11,19 @@ arguments (Output)
     mem (1, 1) double;
 end
 
-mem = numel(A.Amat_) + numel(A.Umat_) + numel(A.Vmat_);
+mem = byte_size(A.Amat_) + byte_size(A.Umat_) + byte_size(A.Vmat_);
 
 for i = 1 : size(A.Rmat_, 2)
-    mem = mem + numel(A.Rmat_{i});
+    mem = mem + byte_size(A.Rmat_{i});
 end
 
 for i = 1 : size(A.Wmat_, 2)
-    mem = mem + numel(A.Wmat_{i});
+    mem = mem + byte_size(A.Wmat_{i});
 end
 
 for i = 1 : size(A.Bmat_, 1)
     for j = 1 : size(A.Bmat_, 2)
-        mem = mem + numel(A.Bmat_{i, j});
+        mem = mem + byte_size(A.Bmat_{i, j});
     end
 end
 

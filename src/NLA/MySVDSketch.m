@@ -1,8 +1,6 @@
 function [U, S, V] = MySVDSketch(A, rank_or_tol)
 % MySVDSketch
 
-% Jingyu Liu, May 9, 2024.
-
 % If rank_or_tol >= 1, it is treated as target rank. Otherwise it is
 % treated as relative tolerance.
 
@@ -17,24 +15,34 @@ arguments (Output)
     V (:, :) double;
 end
 
-if rank_or_tol >= 1
-    [U, S, V] = svds(A, rank_or_tol);
-else
-    if isempty(A)
-        U = zeros(size(A, 1), 0);
-        S = zeros(0);
-        V = zeros(size(A, 2), 0);
-        return;
-    end
-    [U, S, V] = svd(A, "econ");
-    sigma = diag(S);
-    k = find(sigma >= rank_or_tol * sigma(1) & sigma > 0, 1, "last");
-    if isempty(k)
-        k = 0;
-    end
-    U = U(:, 1 : k);
-    S = S(1 : k, 1 : k);
-    V = V(:, 1 : k);
+[m, n] = size(A);
+if isempty(A)
+    U = zeros(m, 0);
+    S = zeros(0);
+    V = zeros(n, 0);
+    return;
 end
+
+[U, S, V] = svd(A, "econ");
+sigma = diag(S);
+
+if rank_or_tol >= 1
+    threshold = max(m, n) * eps(sigma(1));
+else
+    threshold = rank_or_tol * sigma(1);
+end
+
+k = find(sigma <= threshold, 1) - 1;
+if isempty(k)
+    k = length(sigma);
+end
+
+if rank_or_tol >= 1
+    k = min(k, rank_or_tol);
+end
+
+U = U(:, 1 : k);
+S = S(1 : k, 1 : k);
+V = V(:, 1 : k);
 
 end

@@ -1,7 +1,4 @@
 function [p, q] = Construct_FaceSplitting(A, Ax, Ay, px, py)
-% Construct F(p,q), where F(j,:) = kron(Hy(j,:), Hx(j,:)).
-% Ax and Ay are unfactored 1D HSS roots. px and py label their original rows.
-% Section 3.2: form the generators exactly, then reduce their widths by QR.
 
 arguments (Input)
     A NUDFT2_2D_HSS;

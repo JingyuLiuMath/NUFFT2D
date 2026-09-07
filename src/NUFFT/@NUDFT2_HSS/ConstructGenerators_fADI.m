@@ -1,9 +1,9 @@
-function ConstructGenerators_fADI(A, level, rank_or_tol)
+function ConstructGenerators_fADI(A, level, tol)
 
 arguments (Input)
     A NUDFT2_HSS;
     level (1, 1) double;
-    rank_or_tol (1, 1) double;
+    tol (1, 1) double;
 end
 
 M = A.row_global_size_;
@@ -38,17 +38,10 @@ if A.level_ == level
         exp(-2 * pi * 1i * (A.pos_end_ + 1) / N), ...
         exp(-2 * pi * 1i * (A.pos_start_ - 1) / N)];
     [~, ~, ~, cr] = mobiusT(Ir);
-    if rank_or_tol >= 1
-        k = min(rank_or_tol, A.row_size_);
-    else
-        k = ceil(1/pi^2*log(4/rank_or_tol)*log(16*cr));
-    end
+    k = ceil(1/pi^2*log(4/tol)*log(16*cr));
     [alpha, beta] = getshifts_adi(Ir, k);
     [row_sk, U, A.row_rank_] = fADI_Row_NUDFT2(...
         z_I, u, k, alpha, beta);
-
-    % A_I_Jc = kernel_fun_real(A.row_x_, A.real_res_col_pos_);
-    % [row_sk, U, A.row_rank_] = LowRank_Row_ID(A_I_Jc, k);
 
     % Construct V or W.
     w_J = exp(-2 * pi * 1i * A.col_pos_ / N);
@@ -59,17 +52,10 @@ if A.level_ == level
         exp(-2 * pi * 1i * min(A.col_pos_) / N), ...
         exp(-2 * pi * 1i * max(A.col_pos_) / N)];
     [~, ~, ~, cc] = mobiusT(Ic);
-    if rank_or_tol >= 1
-        s = min(rank_or_tol, A.col_size_);
-    else
-        s = ceil(1/pi^2*log(4/rank_or_tol)*log(16*cc));
-    end
+    s = ceil(1/pi^2*log(4/tol)*log(16*cc));
     [alpha, beta] = getshifts_adi(Ic, s);
     [col_sk, V, A.col_rank_] = fADI_Col_NUDFT2(...
         w_J, v, s, alpha, beta);
-
-    % A_Ic_J = kernel_fun_real(A.real_res_row_x_, A.col_pos_);
-    % [col_sk, V, A.col_rank_] = LowRank_ID(A_Ic_J, s);
 
     if A.leaf_ == 1
         % Assign U and V.
@@ -107,7 +93,7 @@ if A.level_ == level
 
 else
     for i = 1 : A.num_children_
-        A.children_{i}.ConstructGenerators_fADI(level, rank_or_tol);
+        A.children_{i}.ConstructGenerators_fADI(level, tol);
     end
 end
 

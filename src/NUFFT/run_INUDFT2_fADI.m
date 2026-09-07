@@ -1,4 +1,4 @@
-function result = run_INUDFT2_Proxy(x, N, ...
+function result = run_INUDFT2_fADI(x, N, ...
     min_points, tol, ...
     tol_cg, maxit_cg, ...
     c_ex, f_ex)
@@ -27,14 +27,14 @@ result.maxit_cg = maxit_cg;
 fprintf("NUDFT2.\n")
 tic;
 A = NUDFT2(N);
-A.Construct_ID_Proxy(x, min_points, tol);
+A.Construct_fADI(x, min_points, tol);
 result.t_construct = toc;
 fprintf("  t_construct: %.1e\n", result.t_construct);
 
 r = A.Rank();
 fprintf("  HSS rank: %d\n", r);
 
-mem_exact = M * N;
+mem_exact = M * N * 8 * 2;
 mem = A.Storage();
 mem_ratio = mem / mem_exact;
 fprintf("  Mem ratio: %.1e\n", mem_ratio);

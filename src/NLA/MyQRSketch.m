@@ -2,8 +2,6 @@ function [Q, R, p, k] = MyQRSketch(A, rank_or_tol)
 % MyQRSketch For a m-by-n matrix A, compute A(:, p) = Q * R where Q is
 % m-by-k and R is k-by-n.
 
-% Jingyu Liu, January 5, 2024.
-
 % If rank_or_tol >= 1, it is treated as target rank. Otherwise it is
 % treated as relative tolerance.
 
@@ -19,34 +17,40 @@ arguments (Output)
     k (1, 1) double;
 end
 
+[m, n] = size(A);
 if isempty(A)
-    % m = 0; n = 0;
-    Q = zeros(0, 0);
-    R = zeros(0, 0);
-    p = [];
+    Q = zeros(m, 0);
+    R = zeros(0, n);
+    p = 1 : n;
     k = 0;
     return;
 end
 
-% A(:, p) = Q * R where abs(diag(R)) is is decreasing.
 [Q, R, p] = qr(A, "econ", "vector");
+if isvector(R)
+    d = abs(R(1));
+else
+    d = abs(diag(R));
+end
 
 if rank_or_tol >= 1
-    k = min(rank_or_tol, size(Q, 2));
-    Q = Q(:, 1 : k);
-    R = R(1 : k, :);
+    % The requested rank is an upper bound on the numerical rank.
+    threshold = max(m, n) * eps(d(1));
 else
-    k1 = find(abs(diag(R)) >= rank_or_tol * 1e-1 * max(abs(R(1, 1)), 1), ...
-        1, "last");
-    k = min(size(R, 1));
-    if ~isempty(k1)
-        k = min(k1, k);
-    else
-        k = 0;
-    end
-    Q = Q(:, 1 : k);
-    R = R(1 : k, :);
+    threshold = 0.1 * rank_or_tol * d(1);
 end
+
+k = find(d <= threshold, 1) - 1;
+if isempty(k)
+    k = length(d);
+end
+
+if rank_or_tol >= 1
+    k = min(k, rank_or_tol);
+end
+
+Q = Q(:, 1 : k);
+R = R(1 : k, :);
 
 if nargout < 3
     [~, p_inv] = sort(p);

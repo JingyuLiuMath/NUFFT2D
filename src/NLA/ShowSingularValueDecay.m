@@ -1,8 +1,6 @@
 function s = ShowSingularValueDecay(A, title_name)
 % ShowSingularValueDecay
 
-% Jingyu Liu, October 23, 2023.
-
 arguments (Input)
     A (:, :) double;
     title_name string = "ShowSingularValueDecay";
@@ -13,6 +11,11 @@ arguments (Output)
 end
 
 s = svd(A);
+
+if isempty(s) || s(1) == 0
+    return;
+end
+
 figure();
 semilogy(1 : length(s), s / s(1), "LineWidth", 2);
 xlabel("i");

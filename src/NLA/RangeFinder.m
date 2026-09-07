@@ -8,8 +8,6 @@ function [Q, B] = RangeFinder(A, rank_or_tol, power_iter)
 % Find orthonormal Q (m-by-l) and B (l-by-n) of a m-by-n matrix A such that
 % norm(A - Q * B, "fro") / norm(A, "fro") < rank_or_tol.
 
-% Jingyu Liu, January 6, 2024.
-
 arguments (Input)
     A (:, :) double;
     rank_or_tol (1, 1) double;
@@ -23,6 +21,12 @@ end
 
 [m, n] = size(A);
 min_szA = min(m, n);
+
+if min_szA == 0
+    Q = zeros(m, 0);
+    B = zeros(0, n);
+    return;
+end
 
 if rank_or_tol >= 1
     oversampling_number = min(min_szA, 5);
@@ -46,6 +50,11 @@ else
     Q = zeros(m, 0);
     B = zeros(0, n);
     normA = norm(A, "fro");
+
+    if normA == 0
+        return;
+    end
+    
     normB = 0;
     old_approx_err = Inf;
 

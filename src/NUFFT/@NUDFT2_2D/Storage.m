@@ -1,5 +1,4 @@
 function mem = Storage(A)
-% Storage
 
 arguments (Input)
     A NUDFT2_2D;
