@@ -55,7 +55,7 @@ fprintf("  t_factor: %.1e\n", result.t_factor);
 % Direct solution.
 fprintf("Direct solution.\n");
 tic;
-c_direct = A.URV_Solve(f_ex);
+c_direct = A.Solve(f_ex);
 result.t_direct = toc;
 c_direct = real(c_direct);
 result.c_direct = c_direct;

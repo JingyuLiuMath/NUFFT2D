@@ -1,7 +1,5 @@
 function f = Apply(A, u)
-% Apply f = A * u + f.
-
-% Jingyu Liu, November 18, 2024.
+% Apply f = A * u.
 
 arguments (Input)
     A HSS;
@@ -12,21 +10,11 @@ arguments (Output)
     f (:, :) double;
 end
 
-A.FillVector_Col(u);
-
-% Upward.
-for level = A.max_level_ : -1 : 1
-    A.Apply_Upward(level);
+if A.leaf_ == 1
+    f = A.Amat_ * u;
+else
+    data = Apply_Upward(A, u);
+    f = Apply_Downward(A, data, zeros(A.row_rank_, size(u, 2)));
 end
-
-% Root.
-A.Apply_Root();
-
-% Downward
-for level = 1 : 1 : A.max_level_
-    A.Apply_Downward(level);
-end
-
-f = A.FetchVector_Row();
 
 end

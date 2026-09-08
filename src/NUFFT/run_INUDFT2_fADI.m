@@ -1,5 +1,5 @@
 function result = run_INUDFT2_fADI(x, N, ...
-    min_points, tol, ...
+    N_leaf, tol, ...
     tol_cg, maxit_cg, ...
     c_ex, f_ex)
 
@@ -9,7 +9,7 @@ fprintf("Basic info.\n");
 fprintf("  N: %d\n", N);
 fprintf("  M: %d\n", M);
 
-fprintf("  min_points: %d\n", min_points);
+fprintf("  N_leaf: %d\n", N_leaf);
 fprintf("  tol: %.1e\n", tol);
 
 fprintf("  tol_cg: %.1e\n", tol_cg);
@@ -18,7 +18,7 @@ fprintf("  maxit_cg: %d\n", maxit_cg);
 result = struct();
 result.N = N;
 result.M = M;
-result.min_points = min_points;
+result.N_leaf = N_leaf;
 result.tol = tol;
 result.tol_cg = tol_cg;
 result.maxit_cg = maxit_cg;
@@ -27,7 +27,7 @@ result.maxit_cg = maxit_cg;
 fprintf("NUDFT2.\n")
 tic;
 A = NUDFT2(N);
-A.Construct_fADI(x, min_points, tol);
+A.Construct_fADI(x, N_leaf, tol);
 result.t_construct = toc;
 fprintf("  t_construct: %.1e\n", result.t_construct);
 
@@ -51,7 +51,7 @@ fprintf("  t_factor: %.1e\n", result.t_factor);
 % Direct solution.
 fprintf("Direct solution.\n");
 tic;
-c_direct = A.URV_Solve(f_ex);
+c_direct = A.Solve(f_ex);
 result.t_direct = toc;
 
 fprintf("  t_direct: %.1e\n", result.t_direct);

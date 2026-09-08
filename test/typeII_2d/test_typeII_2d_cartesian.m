@@ -5,7 +5,7 @@ warning off;
 
 p = 5;
 
-min_points = 256;
+N_leaf = 256;
 tol_hss = 1e-5;
 
 tol_cg = 1e-12;
@@ -40,6 +40,6 @@ f_ex = MY_NUFFT2_2D(c_ex, xy, nx, ny);
 
 run_INUDFT2_2D(...
     xy, n, ...
-    min_points, tol_hss, ...
+    N_leaf, tol_hss, ...
     tol_cg, maxit_cg, ...
     c_ex, f_ex);

@@ -7,6 +7,7 @@ arguments (Input)
     tol_hss (1, 1) double;
 end
 
+A.Factor_ = struct();
 Ax = NUDFT2(A.nx_);
 Ax.Construct_fADI(xy(:, 1), n_leaf, tol_hss / 10);
 Ay = NUDFT2(A.ny_);
@@ -17,7 +18,7 @@ A.AFinv_HSS_ = NUDFT2_2D_HSS(A.nx_, A.ny_);
     Ax.AFinv_HSS_, Ay.AFinv_HSS_, Ax.x_perm_, Ay.x_perm_);
 mem_before = A.Storage();
 rank_before = A.Rank();
-A.AFinv_HSS_.Compress(tol_hss);
+A.AFinv_HSS_.Recompress(tol_hss);
 mem_after = A.Storage();
 compress_ratio = mem_after / mem_before;
 fprintf("HSS compression: rank %d -> %d, stored bytes %.1e -> %.1e\n", ...

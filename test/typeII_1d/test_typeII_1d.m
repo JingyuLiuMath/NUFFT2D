@@ -5,7 +5,7 @@ warning off;
 
 p = 10;
 
-min_points = 128;
+N_leaf = 128;
 tol_hss = 1e-6;
 
 tol_cg = 1e-12;
@@ -25,6 +25,6 @@ f_ex = MY_NUFFT2(c_ex, x, N);
 
 run_INUDFT2_fADI(...
     x, N, ...
-    min_points, tol_hss, ...
+    N_leaf, tol_hss, ...
     tol_cg, maxit_cg, ...
     c_ex, f_ex);

@@ -4,6 +4,6 @@ arguments (Input)
     A NUDFT2;
 end
 
-A.AFinv_HSS_.URV_Factor();
+A.Factor_ = A.AFinv_HSS_.URV_Factor();
 
 end

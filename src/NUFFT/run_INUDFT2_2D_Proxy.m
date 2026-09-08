@@ -1,5 +1,5 @@
 function result = run_INUDFT2_2D_Proxy(xy, n, ...
-    min_points, tol_hss, ...
+    N_leaf, tol_hss, ...
     tol_cg, maxit_cg, ...
     c_ex, f_ex)
 
@@ -12,7 +12,7 @@ fprintf("  M: %d\n", M);
 fprintf("  n: %d, N: %d\n", n, N);
 fprintf("  M/N: %.1e\n", M / N);
 
-fprintf("  min_points: %d\n", min_points);
+fprintf("  N_leaf: %d\n", N_leaf);
 fprintf("  tol_hss: %.1e\n", tol_hss);
 
 fprintf("  tol_cg: %.1e\n", tol_cg);
@@ -22,7 +22,7 @@ result = struct();
 result.M = M;
 result.n = n;
 result.N = N;
-result.min_points = min_points;
+result.N_leaf = N_leaf;
 result.tol_hss = tol_hss;
 result.tol_cg = tol_cg;
 result.maxit_cg = maxit_cg;
@@ -31,7 +31,7 @@ result.maxit_cg = maxit_cg;
 fprintf("NUDFT2.\n")
 tic;
 A = NUDFT2_2D(nx, ny);
-A.Construct_ID_Proxy(xy, min_points, tol_hss);
+A.Construct_ID_Proxy(xy, N_leaf, tol_hss);
 result.t_construct = toc;
 fprintf("  t_construct: %.1e\n", result.t_construct);
 
@@ -55,7 +55,7 @@ fprintf("  t_factor: %.1e\n", result.t_factor);
 % Direct solution.
 fprintf("Direct solution.\n");
 tic;
-c_direct = A.URV_Solve(f_ex);
+c_direct = A.Solve(f_ex);
 result.t_direct = toc;
 c_direct = real(c_direct);
 result.c_direct = c_direct;

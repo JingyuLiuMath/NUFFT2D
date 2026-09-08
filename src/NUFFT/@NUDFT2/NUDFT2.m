@@ -9,6 +9,7 @@ classdef NUDFT2 < handle
         M_ (1, 1) double;
         N_ (1, 1) double;
         AFinv_HSS_ NUDFT2_HSS;
+        Factor_ struct = struct();
         x_perm_ (:, 1) double;
         x_inv_perm_ (:, 1) double;
     end

@@ -47,9 +47,9 @@ end
 function y = mfun(v, opt, A)
 
 if strcmp(opt,'notransp')
-    y = A.URV_Solve(v);
+    y = A.Solve(v);
 else
-    y = A.URV_StarSolve(v);
+    y = A.Adjoint_Solve(v);
 end
 
 end

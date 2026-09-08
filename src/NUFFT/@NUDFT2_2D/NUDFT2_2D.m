@@ -14,6 +14,7 @@ classdef NUDFT2_2D < handle
         ny_ (1, 1) double;
         N_ (1, 1) double;
         AFinv_HSS_  NUDFT2_2D_HSS;
+        Factor_ struct = struct();
         xy_perm_ (:, 1) double;
         xy_inv_perm_ (:, 1) double;
         omega_perm_ (:, 1) double;
