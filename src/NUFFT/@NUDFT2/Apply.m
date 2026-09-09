@@ -9,7 +9,7 @@ arguments (Output)
     f (:, :) double;
 end
 
-c = fft(c);
+c = fft(c, [], 1);
 f = A.AFinv_HSS_.Apply(c);
 f = f(A.x_inv_perm_, :);
 

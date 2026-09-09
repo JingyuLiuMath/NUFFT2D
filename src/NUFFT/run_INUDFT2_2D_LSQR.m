@@ -28,7 +28,7 @@ fprintf("  Without precond.\n")
 tic;
 [c_cg, result.flag_cg, ~, result.iter_cg, ~]  = INUDFT2_2D_CG(xy, nx, ny, f_ex, tol_cg, maxit_cg);
 result.t_cg = toc;
-c_cg = real(c_cg);
+% c_cg = real(c_cg);
 result.c_cg = c_cg;
 
 fprintf("    t_cg: %.1e\n", result.t_cg);

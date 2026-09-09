@@ -9,7 +9,7 @@ arguments (Output)
     f (:, :) double;
 end
 
-u = fft(u) / A.N_;
+u = fft(u, [], 1) / A.N_;
 f = URV_Adjoint_Solve(A.Factor_, u);
 f = f(A.x_inv_perm_, :);
 

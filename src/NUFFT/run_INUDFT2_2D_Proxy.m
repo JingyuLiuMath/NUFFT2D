@@ -57,7 +57,7 @@ fprintf("Direct solution.\n");
 tic;
 c_direct = A.Solve(f_ex);
 result.t_direct = toc;
-c_direct = real(c_direct);
+% c_direct = real(c_direct);
 result.c_direct = c_direct;
 
 fprintf("  t_direct: %.1e\n", result.t_direct);
@@ -87,7 +87,7 @@ fprintf("  With precond.\n");
 tic;
 [c_pcg, result.flag_pcg, ~, result.iter_pcg] = INUDFT2_2D_PCG(A, xy, nx, ny, f_ex, tol_cg, maxit_cg);
 result.t_pcg = toc;
-c_pcg = real(c_pcg);
+% c_pcg = real(c_pcg);
 result.c_pcg = c_pcg;
 
 fprintf("    t_pcg: %.1e\n", result.t_pcg);

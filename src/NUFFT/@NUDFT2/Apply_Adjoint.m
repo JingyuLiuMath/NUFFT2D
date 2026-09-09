@@ -11,6 +11,6 @@ end
 
 f = f(A.x_perm_, :);
 c = A.AFinv_HSS_.Apply_Adjoint(f);
-c = ifft(c) * A.N_;
+c = ifft(c, [], 1) * A.N_;
 
 end

@@ -1,5 +1,5 @@
-function data = ConstructGenerators_FaceSplitting(A, Ax, Ay, Fx, Fy, index, is_root)
-% Recursively assemble raw generators on the prebuilt product tree.
+function data = ConstructGenerators_FaceSplitting(A, Ax, Ay, Fx, Fy, row_index)
+% Construct the 2D HSS generators.
 
 nx = Ax.col_size_;
 ny = Ay.col_size_;
@@ -9,19 +9,28 @@ vx = Ax.col_rank_ * (Ax.level_ > 0);
 vy = Ay.col_rank_ * (Ay.level_ > 0);
 data.nx = nx;
 data.ny = ny;
-% Boundaries of the y-only, x-only and both-axis interaction groups.
-data.row_ranges = [0, nx * ry, nx * ry + rx * ny, nx * ry + rx * ny + rx * ry];
-data.col_ranges = [0, nx * vy, nx * vy + vx * ny, nx * vy + vx * ny + vx * vy];
+% Basis groups: y, x, xy.
+data.row_ranges = cumsum([0, nx * ry, rx * ny, rx * ry]);
+data.col_ranges = cumsum([0, nx * vy, vx * ny, vx * vy]);
+A.row_rank_ = data.row_ranges(4);
+A.col_rank_ = data.col_ranges(4);
+I_y = 1 : data.row_ranges(2);
+I_x = (data.row_ranges(2) + 1) : data.row_ranges(3);
+I_xy = (data.row_ranges(3) + 1) : data.row_ranges(4);
+J_y = 1 : data.col_ranges(2);
+J_x = (data.col_ranges(2) + 1) : data.col_ranges(3);
+J_xy = (data.col_ranges(3) + 1) : data.col_ranges(4);
 
+% Leaf generators.
 if A.leaf_ == 1
-    p_leaf = index.p(A.row_offset_ + (1 : A.row_size_));
-    row_x = index.posx(p_leaf) - Ax.row_offset_;
-    row_y = index.posy(p_leaf) - Ay.row_offset_;
     M = A.row_size_;
-    Dx = reshape(Ax.Amat_(row_x, :), M, nx, 1);
-    Dy = reshape(Ay.Amat_(row_y, :), M, 1, ny);
+    I = A.row_offset_ + (1 : M);
+    rows_x = row_index.x(I) - Ax.row_offset_;
+    rows_y = row_index.y(I) - Ay.row_offset_;
+    Dx = reshape(Ax.Amat_(rows_x, :), M, nx, 1);
+    Dy = reshape(Ay.Amat_(rows_y, :), M, 1, ny);
     A.Amat_ = reshape(Dx .* Dy, M, nx * ny);
-    if is_root
+    if A.level_ == 0
         return;
     end
 
@@ -29,138 +38,131 @@ if A.leaf_ == 1
         Ux = zeros(M, 0);
         Vx = zeros(nx, 0);
     else
-        Ux = Ax.Umat_(row_x, :);
+        Ux = Ax.Umat_(rows_x, :);
         Vx = Ax.Vmat_;
     end
     if Ay.level_ == 0
         Uy = zeros(M, 0);
         Vy = zeros(ny, 0);
     else
-        Uy = Ay.Umat_(row_y, :);
+        Uy = Ay.Umat_(rows_y, :);
         Vy = Ay.Vmat_;
     end
     Ux = reshape(Ux, M, rx, 1);
     Uy = reshape(Uy, M, 1, ry);
-    U = zeros(M, data.row_ranges(4));
-    V = zeros(nx * ny, data.col_ranges(4));
-    U(:, 1 : data.row_ranges(2)) = reshape(Dx .* Uy, M, nx * ry);
-    U(:, (data.row_ranges(2) + 1) : data.row_ranges(3)) = reshape(Ux .* Dy, M, rx * ny);
-    U(:, (data.row_ranges(3) + 1) : data.row_ranges(4)) = reshape(Ux .* Uy, M, rx * ry);
-    V(:, 1 : data.col_ranges(2)) = kron(Vy, eye(nx));
-    V(:, (data.col_ranges(2) + 1) : data.col_ranges(3)) = kron(eye(ny), Vx);
-    V(:, (data.col_ranges(3) + 1) : data.col_ranges(4)) = kron(Vy, Vx);
-else
-    num_x = max(Ax.num_children_, 1);
-    children = cell(1, A.num_children_);
-    row_size = 0;
-    col_size = 0;
-    for i = 1 : A.num_children_
-        ix = mod(i - 1, num_x) + 1;
-        iy = floor((i - 1) / num_x) + 1;
-        if Ax.leaf_ == 1
-            children{i} = ConstructGenerators_FaceSplitting( ...
-                A.children_{i}, Ax, Ay.children_{iy}, Fx, Fy.children{iy}, index, false);
-        elseif Ay.leaf_ == 1
-            children{i} = ConstructGenerators_FaceSplitting( ...
-                A.children_{i}, Ax.children_{ix}, Ay, Fx.children{ix}, Fy, index, false);
-        else
-            children{i} = ConstructGenerators_FaceSplitting( ...
-                A.children_{i}, Ax.children_{ix}, Ay.children_{iy}, ...
-                Fx.children{ix}, Fy.children{iy}, index, false);
-        end
-        row_size = row_size + A.children_{i}.row_rank_;
-        col_size = col_size + A.children_{i}.col_rank_;
-    end
+    U = zeros(M, A.row_rank_);
+    V = zeros(nx * ny, A.col_rank_);
+    U(:, I_y) = reshape(Dx .* Uy, M, nx * ry);
+    U(:, I_x) = reshape(Ux .* Dy, M, rx * ny);
+    U(:, I_xy) = reshape(Ux .* Uy, M, rx * ry);
+    V(:, J_y) = kron(Vy, eye(nx));
+    V(:, J_x) = kron(eye(ny), Vx);
+    V(:, J_xy) = kron(Vy, Vx);
+    A.Umat_ = U;
+    A.Vmat_ = V;
+    return;
+end
 
-    A.Bmat_ = cell(A.num_children_);
-    for i = 1 : A.num_children_
-        ix = mod(i - 1, num_x) + 1;
-        iy = floor((i - 1) / num_x) + 1;
-        for j = 1 : A.num_children_
-            if i == j
-                continue;
-            end
-            jx = mod(j - 1, num_x) + 1;
-            jy = floor((j - 1) / num_x) + 1;
-            if ix == jx
-                g = 1;
-                K = kron(Ay.Bmat_{iy, jy}, eye(children{i}.nx));
-            elseif iy == jy
-                g = 2;
-                K = kron(eye(children{i}.ny), Ax.Bmat_{ix, jx});
-            else
-                g = 3;
-                K = kron(Ay.Bmat_{iy, jy}, Ax.Bmat_{ix, jx});
-            end
-            I = (children{i}.row_ranges(g) + 1) : children{i}.row_ranges(g + 1);
-            J = (children{j}.col_ranges(g) + 1) : children{j}.col_ranges(g + 1);
-            A.Bmat_{i, j} = zeros(A.children_{i}.row_rank_, A.children_{j}.col_rank_);
-            A.Bmat_{i, j}(I, J) = K;
-        end
-    end
-    if is_root
-        return;
-    end
-
-    U = zeros(row_size, data.row_ranges(4));
-    V = zeros(col_size, data.col_ranges(4));
-    row_offset = 0;
-    col_offset = 0;
-    for i = 1 : A.num_children_
-        ix = mod(i - 1, num_x) + 1;
-        iy = floor((i - 1) / num_x) + 1;
-        if Ax.leaf_ == 1
-            Ex = eye(nx); Rx = eye(rx); Wx = eye(vx);
-            Fxi = zeros(rx, nx);
-        else
-            Ex = zeros(Ax.children_{ix}.col_size_, nx);
-            J = Ax.children_{ix}.col_offset_ - Ax.col_offset_ + (1 : Ax.children_{ix}.col_size_);
-            Ex(:, J) = eye(Ax.children_{ix}.col_size_);
-            Rx = Ax.children_{ix}.Rmat_; Wx = Ax.children_{ix}.Wmat_; Fxi = Fx.mat{ix};
-        end
-        if Ay.leaf_ == 1
-            Ey = eye(ny); Ry = eye(ry); Wy = eye(vy);
-            Fyi = zeros(ry, ny);
-        else
-            Ey = zeros(Ay.children_{iy}.col_size_, ny);
-            J = Ay.children_{iy}.col_offset_ - Ay.col_offset_ + (1 : Ay.children_{iy}.col_size_);
-            Ey(:, J) = eye(Ay.children_{iy}.col_size_);
-            Ry = Ay.children_{iy}.Rmat_; Wy = Ay.children_{iy}.Wmat_; Fyi = Fy.mat{iy};
-        end
-        % Fill the nonzero blocks of the three interaction groups.
-        I = row_offset + (1 : children{i}.row_ranges(2));
-        U(I, 1 : data.row_ranges(2)) = kron(Ry, Ex);
-        I = row_offset + ((children{i}.row_ranges(2) + 1) : children{i}.row_ranges(3));
-        U(I, (data.row_ranges(2) + 1) : data.row_ranges(3)) = kron(Ey, Rx);
-        I = row_offset + ((children{i}.row_ranges(3) + 1) : children{i}.row_ranges(4));
-        U(I, 1 : data.row_ranges(2)) = kron(Ry, Fxi);
-        U(I, (data.row_ranges(2) + 1) : data.row_ranges(3)) = kron(Fyi, Rx);
-        U(I, (data.row_ranges(3) + 1) : data.row_ranges(4)) = kron(Ry, Rx);
-        J = col_offset + (1 : children{i}.col_ranges(2));
-        V(J, 1 : data.col_ranges(2)) = kron(Wy, Ex);
-        J = col_offset + ((children{i}.col_ranges(2) + 1) : children{i}.col_ranges(3));
-        V(J, (data.col_ranges(2) + 1) : data.col_ranges(3)) = kron(Ey, Wx);
-        J = col_offset + ((children{i}.col_ranges(3) + 1) : children{i}.col_ranges(4));
-        V(J, (data.col_ranges(3) + 1) : data.col_ranges(4)) = kron(Wy, Wx);
-        row_offset = row_offset + A.children_{i}.row_rank_;
-        col_offset = col_offset + A.children_{i}.col_rank_;
+% Recursion.
+num_children_x = max(Ax.num_children_, 1);
+child_data = cell(1, A.num_children_);
+for i = 1 : A.num_children_
+    ix = mod(i - 1, num_children_x) + 1;
+    iy = floor((i - 1) / num_children_x) + 1;
+    if Ax.leaf_ == 1
+        child_data{i} = ConstructGenerators_FaceSplitting( ...
+            A.children_{i}, Ax, Ay.children_{iy}, Fx, Fy.children{iy}, row_index);
+    elseif Ay.leaf_ == 1
+        child_data{i} = ConstructGenerators_FaceSplitting( ...
+            A.children_{i}, Ax.children_{ix}, Ay, Fx.children{ix}, Fy, row_index);
+    else
+        child_data{i} = ConstructGenerators_FaceSplitting( ...
+            A.children_{i}, Ax.children_{ix}, Ay.children_{iy}, ...
+            Fx.children{ix}, Fy.children{iy}, row_index);
     end
 end
 
-A.row_rank_ = size(U, 2);
-A.col_rank_ = size(V, 2);
-if A.leaf_ == 1
-    A.Umat_ = U;
-    A.Vmat_ = V;
-else
-    row_offset = 0;
-    col_offset = 0;
-    for i = 1 : A.num_children_
-        A.children_{i}.Rmat_ = U(row_offset + (1 : A.children_{i}.row_rank_), :);
-        A.children_{i}.Wmat_ = V(col_offset + (1 : A.children_{i}.col_rank_), :);
-        row_offset = row_offset + A.children_{i}.row_rank_;
-        col_offset = col_offset + A.children_{i}.col_rank_;
+% Off-diagonal blocks. Each block uses one basis group.
+A.Bmat_ = cell(A.num_children_);
+for i = 1 : A.num_children_
+    ix = mod(i - 1, num_children_x) + 1;
+    iy = floor((i - 1) / num_children_x) + 1;
+    for j = 1 : A.num_children_
+        if i == j
+            continue;
+        end
+        jx = mod(j - 1, num_children_x) + 1;
+        jy = floor((j - 1) / num_children_x) + 1;
+        if ix == jx
+            group = 1;  % Only y changes.
+            K = kron(Ay.Bmat_{iy, jy}, eye(child_data{i}.nx));
+        elseif iy == jy
+            group = 2;  % Only x changes.
+            K = kron(eye(child_data{i}.ny), Ax.Bmat_{ix, jx});
+        else
+            group = 3;  % Both x and y change.
+            K = kron(Ay.Bmat_{iy, jy}, Ax.Bmat_{ix, jx});
+        end
+        I = (child_data{i}.row_ranges(group) + 1) : child_data{i}.row_ranges(group + 1);
+        J = (child_data{j}.col_ranges(group) + 1) : child_data{j}.col_ranges(group + 1);
+        A.Bmat_{i, j} = zeros(A.children_{i}.row_rank_, A.children_{j}.col_rank_);
+        A.Bmat_{i, j}(I, J) = K;
     end
+end
+if A.level_ == 0
+    return;
+end
+
+% Transfer matrices.
+for i = 1 : A.num_children_
+    ix = mod(i - 1, num_children_x) + 1;
+    iy = floor((i - 1) / num_children_x) + 1;
+    % E selects child columns; F accounts for the other sibling columns.
+    if Ax.leaf_ == 1
+        Ex = eye(nx);
+        Rx = eye(rx);
+        Wx = eye(vx);
+        Fxi = zeros(rx, nx);
+    else
+        Ex = zeros(Ax.children_{ix}.col_size_, nx);
+        J = Ax.children_{ix}.col_offset_ - Ax.col_offset_ + (1 : Ax.children_{ix}.col_size_);
+        Ex(:, J) = eye(Ax.children_{ix}.col_size_);
+        Rx = Ax.children_{ix}.Rmat_;
+        Wx = Ax.children_{ix}.Wmat_;
+        Fxi = Fx.mat{ix};
+    end
+    if Ay.leaf_ == 1
+        Ey = eye(ny);
+        Ry = eye(ry);
+        Wy = eye(vy);
+        Fyi = zeros(ry, ny);
+    else
+        Ey = zeros(Ay.children_{iy}.col_size_, ny);
+        J = Ay.children_{iy}.col_offset_ - Ay.col_offset_ + (1 : Ay.children_{iy}.col_size_);
+        Ey(:, J) = eye(Ay.children_{iy}.col_size_);
+        Ry = Ay.children_{iy}.Rmat_;
+        Wy = Ay.children_{iy}.Wmat_;
+        Fyi = Fy.mat{iy};
+    end
+
+    R = zeros(A.children_{i}.row_rank_, A.row_rank_);
+    W = zeros(A.children_{i}.col_rank_, A.col_rank_);
+    I = 1 : child_data{i}.row_ranges(2);
+    R(I, I_y) = kron(Ry, Ex);
+    I = (child_data{i}.row_ranges(2) + 1) : child_data{i}.row_ranges(3);
+    R(I, I_x) = kron(Ey, Rx);
+    I = (child_data{i}.row_ranges(3) + 1) : child_data{i}.row_ranges(4);
+    R(I, I_y) = kron(Ry, Fxi);
+    R(I, I_x) = kron(Fyi, Rx);
+    R(I, I_xy) = kron(Ry, Rx);
+    J = 1 : child_data{i}.col_ranges(2);
+    W(J, J_y) = kron(Wy, Ex);
+    J = (child_data{i}.col_ranges(2) + 1) : child_data{i}.col_ranges(3);
+    W(J, J_x) = kron(Ey, Wx);
+    J = (child_data{i}.col_ranges(3) + 1) : child_data{i}.col_ranges(4);
+    W(J, J_xy) = kron(Wy, Wx);
+    A.children_{i}.Rmat_ = R;
+    A.children_{i}.Wmat_ = W;
 end
 
 end

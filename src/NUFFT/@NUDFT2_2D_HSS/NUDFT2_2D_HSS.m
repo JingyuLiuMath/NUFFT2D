@@ -13,8 +13,10 @@ classdef NUDFT2_2D_HSS < HSS
             A.col_size_ = nx * ny;
         end
 
-        [p, q] = Construct_FaceSplitting(A, Ax, Ay, px, py);
-        [p, q] = Construct_ID_Proxy(A, xy, nx, ny, N_leaf, tol);
+        [p, q] = BuildTree(A, xy, nx, ny, N_leaf, ranges);
+        Construct_ID_Proxy(A, xy, nx, ny, tol);
+        [p, q, row_index] = BuildTree_FaceSplitting(A, Ax, Ay, px, py);
+        Construct_FaceSplitting(A, Ax, Ay, row_index);
     end
 
 end

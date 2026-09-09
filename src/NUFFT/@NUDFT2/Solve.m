@@ -11,6 +11,6 @@ end
 
 f = f(A.x_perm_, :);
 c = URV_Solve(A.Factor_, f);
-u = ifft(c);
+u = ifft(c, [], 1);
 
 end

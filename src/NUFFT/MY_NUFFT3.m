@@ -21,7 +21,7 @@ end
 
 switch method
     case "direct"
-        f = NUDFT_Matrix(x, omega) * u;
+        f = NUDFT3_Matrix(x, omega) * u;
     case "matlab"
         f = nufft(u, omega, x);
     case "finufft"

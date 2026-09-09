@@ -23,9 +23,7 @@ x_end = pos_end / M;
 if pos_start == 0
     I = [find(x < x_end + half_length); find(x >= 1 - half_length)];
 else
-    I = intersect(...
-        find(x < x_end + half_length), ...
-        find(x >= x_start - half_length));
+    I = find((x < x_end + half_length) & (x >= x_start - half_length));
 end
 
 end
