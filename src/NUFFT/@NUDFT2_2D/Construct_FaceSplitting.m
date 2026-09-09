@@ -20,9 +20,9 @@ py = Ay.BuildTree(xy(:, 2), n_leaf, 2);
 Ay.Construct_fADI(tol_hss / 10);
 
 A.AFinv_HSS_ = NUDFT2_2D_HSS(nx, ny);
-[A.xy_perm_, A.omega_perm_, row_index] = ...
+[A.xy_perm_, A.omega_perm_] = ...
     A.AFinv_HSS_.BuildTree_FaceSplitting(Ax, Ay, px, py);
-A.AFinv_HSS_.Construct_FaceSplitting(Ax, Ay, row_index);
+A.AFinv_HSS_.Construct_FaceSplitting(Ax, Ay);
 
 mem_before = A.Storage();
 rank_before = A.Rank();
