@@ -13,10 +13,10 @@ nx = A.nx_;
 ny = A.ny_;
 
 Ax = NUDFT2_HSS(nx);
-px = Ax.BuildTree(xy(:, 1), n_leaf);
+px = Ax.BuildTree(xy(:, 1), n_leaf, 2);
 Ax.Construct_fADI(tol_hss / 10);
 Ay = NUDFT2_HSS(ny);
-py = Ay.BuildTree(xy(:, 2), n_leaf);
+py = Ay.BuildTree(xy(:, 2), n_leaf, 2);
 Ay.Construct_fADI(tol_hss / 10);
 
 A.AFinv_HSS_ = NUDFT2_2D_HSS(nx, ny);

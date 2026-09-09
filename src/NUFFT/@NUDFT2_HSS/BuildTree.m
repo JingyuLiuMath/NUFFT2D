@@ -61,7 +61,7 @@ else
     for i = 1 : A.num_children_
         A.children_{i}.row_global_size_ = A.row_global_size_;
         pi = A.children_{i}.BuildTree(...
-            row_x(I{i}), n_leaf, eta, store_points);
+            row_x(I{i}), n_leaf, eta);
         current_row_size = length(I{i});
         c_pi = p((row_offset + 1) : (row_offset + current_row_size));
         p((row_offset + 1) : (row_offset + current_row_size)) = c_pi(pi);

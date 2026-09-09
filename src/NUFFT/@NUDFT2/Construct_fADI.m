@@ -7,6 +7,8 @@ arguments (Input)
     tol (1, 1) double;
 end
 
+A.Factor_ = struct();
+
 A.M_ = size(x, 1);
 M = A.M_;
 N = A.N_;
