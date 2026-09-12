@@ -79,7 +79,7 @@ plot_scaling(N_list, t_solve_list, ...
     xlabel_name, ylabel_name, title_name, figure_name);
 
 xlabel_name = "$N$";
-ylabel_name = "$r_{\mathrm{s}}$ (s)";
+ylabel_name = "$r_{\mathrm{s}}$";
 title_name = "Relative residual";
 my_name = "r_s";
 figure_name = figure_prefix + my_name;
@@ -88,7 +88,7 @@ plot_err(N_list, rel_res_list, ...
     xlabel_name, ylabel_name, title_name, figure_name);
 
 xlabel_name = "$N$";
-ylabel_name = "$e_{\mathrm{s}}$ (s)";
+ylabel_name = "$e_{\mathrm{s}}$";
 title_name = "Relative error";
 my_name = "e_s";
 figure_name = figure_prefix + my_name;
@@ -157,7 +157,7 @@ switch title_name
         yticks([10^0 10^2 10^4]);
     case "Factorization time"
         yticks([10^(-2) 10^0 10^2 10^4]);
-    case "Solution time"
+    case "Solving time"
         yticks([10^(-2) 10^0 10^2]);
 end
 
