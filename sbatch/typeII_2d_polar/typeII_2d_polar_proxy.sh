@@ -7,10 +7,7 @@
 #SBATCH --exclusive
 #SBATCH --time=18:00:00
 
-export PATH=$PATH:/home/jyliu/NUFFT2D/extern/fftw-3.3.10/build_double/bin:/home/jyliu/NUFFT2D/extern/fftw-3.3.10/build_single/bin
-export LIBRARY_PATH=$LIBRARY_PATH:/home/jyliu/NUFFT2D/extern/fftw-3.3.10/build_double/lib:/home/jyliu/NUFFT2D/extern/fftw-3.3.10/build_single/lib
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/jyliu/NUFFT2D/extern/fftw-3.3.10/build_double/lib:/home/jyliu/NUFFT2D/extern/fftw-3.3.10/build_single/lib
-export CPATH=$CPATH:/home/jyliu/NUFFT2D/extern/fftw-3.3.10/build_double/include:/home/jyliu/NUFFT2D/extern/fftw-3.3.10/build_single/include
+export MATLABPATH="/home/jyliu/mip/packages/gh/mip-org/core/mip/mip${MATLABPATH:+:$MATLABPATH}"
 
 module unload MATLAB
 module load MATLAB/R2023b

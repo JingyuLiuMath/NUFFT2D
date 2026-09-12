@@ -7,7 +7,7 @@ p = p_list(num_n);
 n = 2^p;
 fprintf("n: %d\n", n);
 
-selected_row = ceil(n * 0.7);
+selected_row = round(n * 832 / 1024);
 fprintf("selected_row: %d\n", selected_row);
 
 
